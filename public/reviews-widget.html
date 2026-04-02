@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reviews Widget</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #00B67A;
+      --green-dark: #007B52;
+      --green-light: #E8F9F2;
+      --star-1: #FF3722;
+      --star-2: #FF8622;
+      --star-3: #FFCE00;
+      --star-4: #73CF11;
+      --star-5: #00B67A;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --white: #ffffff;
+      --radius: 12px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.06);
+      --shadow-hover: 0 4px 20px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    /* ── WIDGET WRAPPER ── */
+    .widget {
+      width: 100%;
+      max-width: 1080px;
+    }
+
+    /* ── HEADER ── */
+    .widget-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .widget-score {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .score-number {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      line-height: 1;
+    }
+
+    .score-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .score-label {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    .score-stars {
+      display: flex;
+      gap: 3px;
+    }
+
+    .score-count {
+      font-size: 0.8125rem;
+      color: var(--gray-500);
+    }
+
+    /* Trustpilot Logo */
+    .tp-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .tp-logo-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .tp-logo-text {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      letter-spacing: -0.02em;
+    }
+
+    /* ── STAR COMPONENT ── */
+    .star-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .star-box.sm {
+      width: 20px;
+      height: 20px;
+    }
+
+    .star-box.lg {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+    }
+
+    .star-box svg {
+      width: 70%;
+      height: 70%;
+    }
+
+    .star-box.filled-5 { background: var(--star-5); }
+    .star-box.filled-4 { background: var(--star-4); }
+    .star-box.filled-3 { background: var(--star-3); }
+    .star-box.filled-2 { background: var(--star-2); }
+    .star-box.filled-1 { background: var(--star-1); }
+    .star-box.empty    { background: var(--gray-200); }
+
+    /* ── CAROUSEL ── */
+    .carousel-wrap {
+      position: relative;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+      scrollbar-width: none;
+    }
+
+    .carousel-track::-webkit-scrollbar { display: none; }
+
+    /* ── REVIEW CARD ── */
+    .review-card {
+      flex: 0 0 300px;
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: default;
+    }
+
+    .review-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .card-stars {
+      display: flex;
+      gap: 3px;
+    }
+
+    .card-title {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      line-height: 1.35;
+    }
+
+    .card-text {
+      font-size: 0.875rem;
+      color: var(--gray-500);
+      line-height: 1.65;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid var(--gray-100);
+    }
+
+    .card-reviewer {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .card-date {
+      font-size: 0.75rem;
+      color: var(--gray-400);
+    }
+
+    /* ── NAV ARROWS ── */
+    .carousel-nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .nav-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid var(--gray-200);
+      background: var(--white);
+      color: var(--gray-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+      flex-shrink: 0;
+    }
+
+    .nav-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--white);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* ── FOOTER ── */
+    .widget-footer {
+      text-align: center;
+      margin-top: 28px;
+    }
+
+    .read-all {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--green-dark);
+      text-decoration: none;
+      border-bottom: 1.5px solid transparent;
+      transition: border-color 0.15s;
+    }
+
+    .read-all:hover {
+      border-color: var(--green-dark);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .widget-header { flex-direction: column; align-items: flex-start; }
+      .score-number { font-size: 2.75rem; }
+      .review-card { flex: 0 0 260px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="widget" id="reviews-widget"></div>
+
+  <script>
+    // ─────────────────────────────────────────────
+    //  REVIEWS DATA — edit freely
+    // ─────────────────────────────────────────────
+    const REVIEWS_DATA = [
+      {
+        name: "Mohammad A.",
+        rating: 5,
+        title: "Started making sales in my first week",
+        text: "I was skeptical at first but Droparabia made everything so simple. Within my first week I had my store live and my first sale came in. The platform truly handles everything for you.",
+        date: "Dec 18, 2024"
+      },
+      {
+        name: "Lara T.",
+        rating: 5,
+        title: "Best decision I made this year",
+        text: "As someone with zero tech background, I was worried. But the onboarding was so smooth. I'm now running a full online store from home with no warehouse needed. Highly recommend.",
+        date: "Dec 10, 2024"
+      },
+      {
+        name: "Karim H.",
+        rating: 5,
+        title: "Finally a platform built for Lebanon",
+        text: "Every other platform I tried had issues with Lebanese payment methods or shipping. Droparabia solved all of that. It feels like it was specifically designed for us.",
+        date: "Nov 29, 2024"
+      },
+      {
+        name: "Nour S.",
+        rating: 4,
+        title: "Great platform, solid support team",
+        text: "The platform itself is excellent and very easy to use. The support team responds fast and actually helps. I'd give it 5 stars when the product catalog expands a bit more.",
+        date: "Nov 21, 2024"
+      },
+      {
+        name: "Rami B.",
+        rating: 5,
+        title: "Profitable in under 2 weeks",
+        text: "I followed their tutorial and within 14 days I had my store up and profitable. No upfront costs, no inventory stress. This is genuinely the fastest way to start a business in Lebanon.",
+        date: "Nov 14, 2024"
+      },
+      {
+        name: "Dana M.",
+        rating: 5,
+        title: "Changed how I think about e-commerce",
+        text: "I've tried other dropshipping tools before and they were all complicated. Droparabia is different — clean, simple, and actually works with Lebanese suppliers. Love it.",
+        date: "Nov 3, 2024"
+      },
+      {
+        name: "Tarek F.",
+        rating: 5,
+        title: "The free courses alone are worth it",
+        text: "Even before I made my first sale, the free courses taught me everything I needed to know about running an online store. The value is insane. Most platforms charge for this.",
+        date: "Oct 27, 2024"
+      },
+      {
+        name: "Maya K.",
+        rating: 4,
+        title: "Smooth setup and real results",
+        text: "Setup took me one afternoon. I was up and running the same day. My first order came in 3 days later. There are still a few features I'd like to see but overall very impressed.",
+        date: "Oct 19, 2024"
+      },
+    ];
+
+    // ─────────────────────────────────────────────
+    //  CONFIG
+    // ─────────────────────────────────────────────
+    const CONFIG = {
+      overallScore: 4.8,
+      totalReviews: 532,
+      trustpilotUrl: "https://www.trustpilot.com/review/droparabia.com",
+    };
+
+    // ─────────────────────────────────────────────
+    //  HELPERS
+    // ─────────────────────────────────────────────
+    const STAR_SVG = `<svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+    </svg>`;
+
+    function starBoxes(rating, size = '') {
+      let html = '';
+      for (let i = 1; i <= 5; i++) {
+        const cls = i <= rating ? `filled-${rating}` : 'empty';
+        html += `<span class="star-box ${size} ${cls}">${STAR_SVG}</span>`;
+      }
+      return html;
+    }
+
+    function scoreToLabel(score) {
+      if (score >= 4.5) return 'Excellent';
+      if (score >= 3.5) return 'Great';
+      if (score >= 2.5) return 'Average';
+      return 'Poor';
+    }
+
+    function roundedScore(score) {
+      return Math.round(score);
+    }
+
+    // ─────────────────────────────────────────────
+    //  RENDER
+    // ─────────────────────────────────────────────
+    function render() {
+      const widget = document.getElementById('reviews-widget');
+
+      const cards = REVIEWS_DATA.map(r => `
+        <div class="review-card">
+          <div class="card-stars">${starBoxes(r.rating, 'sm')}</div>
+          <div class="card-title">${r.title}</div>
+          <div class="card-text">${r.text}</div>
+          <div class="card-footer">
+            <span class="card-reviewer">${r.name}</span>
+            <span class="card-date">${r.date}</span>
+          </div>
+        </div>
+      `).join('');
+
+      widget.innerHTML = `
+        <div class="widget-header">
+          <div class="widget-score">
+            <div class="score-number">${CONFIG.overallScore}</div>
+            <div class="score-meta">
+              <div class="score-label">${scoreToLabel(CONFIG.overallScore)}</div>
+              <div class="score-stars">${starBoxes(roundedScore(CONFIG.overallScore), 'lg')}</div>
+              <div class="score-count">Based on ${CONFIG.totalReviews.toLocaleString()} reviews</div>
+            </div>
+          </div>
+          <a class="tp-logo" href="${CONFIG.trustpilotUrl}" target="_blank" rel="noopener">
+            <svg class="tp-logo-icon" viewBox="0 0 126 126" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="126" height="126" rx="4" fill="#00B67A"/>
+              <path d="M63 18l11.8 36.3H113L82.1 75.7l11.8 36.3L63 90.6 32.1 112l11.8-36.3L13 54.3h38.2L63 18z" fill="white"/>
+            </svg>
+            <span class="tp-logo-text">Trustpilot</span>
+          </a>
+        </div>
+
+        <div class="carousel-wrap">
+          <div class="carousel-track" id="carousel-track">
+            ${cards}
+          </div>
+          <div class="carousel-nav">
+            <button class="nav-btn" id="btn-prev" aria-label="Previous">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <button class="nav-btn" id="btn-next" aria-label="Next">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="widget-footer">
+          <a class="read-all" href="${CONFIG.trustpilotUrl}" target="_blank" rel="noopener">
+            Read all reviews on Trustpilot
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </a>
+        </div>
+      `;
+
+      // Navigation
+      const track = document.getElementById('carousel-track');
+      const btnPrev = document.getElementById('btn-prev');
+      const btnNext = document.getElementById('btn-next');
+      const cardWidth = 300 + 16; // card width + gap
+
+      btnNext.addEventListener('click', () => {
+        track.scrollBy({ left: cardWidth * 2, behavior: 'smooth' });
+      });
+
+      btnPrev.addEventListener('click', () => {
+        track.scrollBy({ left: -cardWidth * 2, behavior: 'smooth' });
+      });
+    }
+
+    render();
+  </script>
+</body>
+</html>

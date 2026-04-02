@@ -1,0 +1,430 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Watch Your Free Droparabia Tutorial">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <span class="logo">Droparabia</span>
+    </div>
+  </header>
+
+  <!-- VIDEO SECTION -->
+  <section class="video-section">
+    <div class="container">
+      <h1>Learn How <span class="brand-inline">Droparabia</span> Works</h1>
+
+      <!--
+        ── VIDEO EMBED ───────────────────────────────────────────
+        Replace the placeholder below with your actual embed.
+
+        YouTube:
+          <iframe
+            src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+            title="Free Droparabia Tutorial"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+
+        Vimeo:
+          <iframe
+            src="https://player.vimeo.com/video/YOUR_VIDEO_ID"
+            title="Free Droparabia Tutorial"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        ─────────────────────────────────────────────────────── -->
+      <div class="video-wrap">
+        <div class="video-placeholder">
+          <div class="play-btn">▶</div>
+          <p>Free Droparabia Tutorial</p>
+          <small>Replace with your YouTube, Vimeo, or Loom embed</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOK A CALL (optional CTA) -->
+  <section class="book-call">
+    <div class="container">
+      <div class="scarcity-bar">
+        <span class="scarcity-dot"></span>
+        Only <strong>{10} spots</strong> are available this week
+      </div>
+      <h2>Book a call with our team to Gain access to Droparabia</h2>
+      <p>We accept certain numbers of users each week to make sure we're helping everyone.</p>
+      <!-- Replace href with your Calendly or booking link -->
+      <a href="#" class="btn-cta">Book a Free Call</a>
+    </div>
+  </section>
+
+  <!-- CASE STUDIES -->
+  <section class="case-studies">
+    <div class="container">
+      <h2>Special Case Studies</h2>
+      <!-- Replace with real case study images or content -->
+      <div class="cases-grid">
+        <div class="case-placeholder">
+          <span>Case Study 1</span>
+          <small>Replace with real case study</small>
+        </div>
+        <div class="case-placeholder">
+          <span>Case Study 2</span>
+          <small>Replace with real case study</small>
+        </div>
+        <div class="case-placeholder">
+          <span>Case Study 3</span>
+          <small>Replace with real case study</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUSTPILOT -->
+  <section class="trustpilot-section">
+    <div class="container">
+      <!-- Replace YOUR_TRUSTPILOT_ID with your actual Trustpilot business unit ID -->
+      <div
+        class="trustpilot-widget"
+        data-locale="en-US"
+        data-template-id="54ad5defc6454f065c28af8b"
+        data-businessunitid="YOUR_TRUSTPILOT_ID"
+        data-style-height="240px"
+        data-style-width="100%"
+        data-theme="light"
+      >
+        <a href="https://www.trustpilot.com/review/droparabia.com" target="_blank" rel="noopener" class="trustpilot-fallback">
+          ⭐⭐⭐⭐⭐ Read our reviews on Trustpilot
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- P.S. -->
+  <section class="ps-section">
+    <div class="container">
+      <p class="ps-tag">P.S.</p>
+      <p class="ps-text">While everyone are trying to sell you a course and a promise to "hit your first 10k per month", we're giving a tool you can use right away and free courses.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="footer-logo">Droparabia</span>
+      <p>© 2025 Droparabia. All rights reserved.</p>
+    </div>
+  </footer>
+
+</Layout>
+
+<!-- Trustpilot -->
+<script>
+  (function() {
+    const s = document.createElement('script');
+    s.src = 'https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js';
+    s.async = true;
+    document.head.appendChild(s);
+  })();
+</script>
+
+<style>
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ─── HEADER ─── */
+  .site-header {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 16px 0;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo {
+    font-family: var(--font-brand);
+    font-size: 1.75rem;
+    color: var(--blue);
+  }
+
+  /* ─── VIDEO SECTION ─── */
+  .video-section {
+    padding: 72px 0 64px;
+    background: var(--white);
+    text-align: center;
+  }
+
+  h1 {
+    font-size: clamp(1.875rem, 4vw, 2.625rem);
+    font-weight: 900;
+    color: var(--gray-900);
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    margin-bottom: 36px;
+  }
+
+  .brand-inline {
+    font-family: var(--font-brand);
+    color: var(--blue);
+    font-weight: normal;
+  }
+
+  .video-wrap {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--gray-200);
+    background: var(--gray-900);
+    aspect-ratio: 16 / 9;
+  }
+
+  .video-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  .video-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    height: 100%;
+    min-height: 400px;
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--gray-400);
+  }
+
+  .play-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    background: rgba(37, 99, 235, 0.9);
+    color: white;
+    font-size: 1.5rem;
+    border-radius: 50%;
+    box-shadow: 0 8px 32px rgba(37, 99, 235, 0.4);
+  }
+
+  .video-placeholder p {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--gray-200);
+    margin: 0;
+  }
+
+  .video-placeholder small {
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+    max-width: 380px;
+  }
+
+  /* ─── BOOK A CALL ─── */
+  .book-call {
+    padding: 72px 0;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    text-align: center;
+  }
+
+  .book-call h2 {
+    font-size: clamp(1.5rem, 3.5vw, 2.125rem);
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .book-call > p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 28px;
+  }
+
+  .scarcity-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: var(--white);
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+
+  .scarcity-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f87171;
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.3);
+    animation: pulse 2s infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.3); }
+    50% { box-shadow: 0 0 0 6px rgba(248, 113, 113, 0.15); }
+  }
+
+  .btn-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    color: var(--blue);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    padding: 15px 48px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    transition: all 0.15s ease;
+  }
+
+  .btn-cta:hover {
+    background: var(--gray-50);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+  }
+
+  /* ─── CASE STUDIES ─── */
+  .case-studies {
+    padding: 80px 0;
+    background: var(--gray-50);
+    border-top: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .case-studies h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    color: var(--gray-900);
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .case-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 56px 20px;
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    text-align: center;
+    color: var(--gray-500);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    min-height: 280px;
+  }
+
+  .case-placeholder small {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    font-weight: 400;
+  }
+
+  /* ─── TRUSTPILOT ─── */
+  .trustpilot-section {
+    padding: 56px 0;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .trustpilot-fallback {
+    display: block;
+    text-align: center;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    padding: 14px;
+    border: 1px dashed var(--gray-300);
+    border-radius: var(--radius);
+    text-decoration: none;
+  }
+
+  /* ─── P.S. ─── */
+  .ps-section {
+    padding: 56px 0;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .ps-tag {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .ps-text {
+    font-size: 1rem;
+    color: var(--gray-700);
+    line-height: 1.7;
+    max-width: 620px;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    padding: 28px 0;
+    background: var(--gray-900);
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer-logo {
+    font-family: var(--font-brand);
+    color: var(--white);
+    font-size: 1.25rem;
+  }
+
+  .footer p {
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .cases-grid { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; text-align: center; }
+    .btn-cta { width: 100%; padding: 15px 24px; }
+  }
+</style>

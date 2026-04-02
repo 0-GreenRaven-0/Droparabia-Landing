@@ -1,11 +1,1002 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-	<Welcome />
+
+  <!-- HEADER -->
+  <header class="site-header">
+
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <p class="hero-eyebrow">Learn how to use</p>
+      <h1>
+        <span class="brand-logo-inline">
+          <img src="/Droparabia.png" alt="Droparabia logo" class="brand-img" />
+          <span class="brand-name-black">Droparabia</span>
+        </span>
+        <br />
+        The 1st Dropshipping Platform in Lebanon that allowed
+        <span class="accent">+400 Lebanese</span> to start a profitable online business
+        in just <span class="accent">10–14 days!</span>
+      </h1>
+      <ul class="hero-sub">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#2563eb"/><path d="M7 12.5l3.5 3.5 6.5-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          No Huge Upfront Costs
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#2563eb"/><path d="M7 12.5l3.5 3.5 6.5-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          No Risky Chinese Imports
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#2563eb"/><path d="M7 12.5l3.5 3.5 6.5-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          No Warehouses
+        </li>
+      </ul>
+    </div>
+  </section>
+
+
+  <!-- CTA FORM -->
+  <section class="form-section">
+    <div class="container">
+      <div class="form-card">
+        <h3 class="form-section-heading">Subscribe to Watch a Free Tutorial</h3>
+        <h3 class="bonuses-heading">And Claim these bonuses</h3>
+
+        <div class="bonus-list">
+          <div class="bonus-item">
+            <div class="bonus-check">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="bonus-text">+20 Hours of free courses and recorded tutorial</div>
+          </div>
+          <div class="bonus-item">
+            <div class="bonus-check">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="bonus-text">
+              Access to our <span class="bonus-dropvault">Dropvault</span> <span class="bonus-skool"><span style="color:#3D4DB7">s</span><span style="color:#D94535">k</span><span style="color:#E8A83A">o</span><span style="color:#5BB5E5">o</span><span style="color:#D94535">l</span></span> Community
+            </div>
+          </div>
+          <div class="bonus-item">
+            <div class="bonus-check">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="bonus-text">Invitation to our WhatsApp channel where we share interesting content</div>
+          </div>
+        </div>
+
+        <form class="lead-form" action="/watch" method="GET">
+          <div class="field-line">
+            <span class="field-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </span>
+            <input type="email" name="email" placeholder="Your Best Email" required autocomplete="email" />
+          </div>
+          <div class="field-line">
+            <span class="field-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.31 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.45 5.45l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </span>
+            <input type="tel" name="phone" placeholder="(+961) WhatsApp Number" required autocomplete="tel" />
+          </div>
+          <button type="submit" class="btn-primary">Watch the Free Tutorial!</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS WIDGET -->
+  <section class="reviews-section">
+    <div class="reviews-widget">
+
+      <div class="reviews-header">
+        <a class="tp-logo" href="https://www.trustpilot.com/review/droparabia.com" target="_blank" rel="noopener">
+          <svg class="tp-logo-icon" viewBox="0 0 126 126" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="126" height="126" rx="4" fill="#00B67A"/>
+            <path d="M63 18l11.8 36.3H113L82.1 75.7l11.8 36.3L63 90.6 32.1 112l11.8-36.3L13 54.3h38.2L63 18z" fill="white"/>
+          </svg>
+          <span class="tp-logo-text">Trustpilot</span>
+        </a>
+        <div class="reviews-score">
+          <div class="rs-top-row">
+            <div class="rs-number">3.9</div>
+            <div class="rs-label">Great</div>
+          </div>
+          <div class="rs-stars" id="header-stars"></div>
+        </div>
+      </div>
+
+      <div class="reviews-track-wrap">
+        <div class="reviews-track" id="reviews-track"></div>
+
+      </div>
+
+      <div class="reviews-footer">
+        <a class="reviews-read-all" href="https://www.trustpilot.com/review/droparabia.com" target="_blank" rel="noopener">
+          Read all reviews on Trustpilot
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+
+
+  <!-- TESTIMONIALS CAROUSEL -->
+  <section class="carousel-section">
+    <h2 class="carousel-heading"><span class="carousel-brand">Droparabia</span>'s Latest Case studies</h2>
+    <div class="carousel-container">
+      <div class="swiper testimonials-swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo.png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(1).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(2).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(3).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(4).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(5).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(6).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(7).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(8).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(9).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(10).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(11).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(12).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(13).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(14).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(15).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(16).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(17).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(18).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <button class="swiper-button-prev" aria-label="Previous">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+        <button class="swiper-button-next" aria-label="Next">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="footer-logo">Droparabia</span>
+      <p>© 2025 Droparabia. All rights reserved.</p>
+    </div>
+  </footer>
+
 </Layout>
+
+<style>
+  .container {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ─── HEADER ─── */
+  .site-header {
+    background: transparent;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 16px 0;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo {
+    font-family: var(--font-brand);
+    font-size: 1.75rem;
+    color: var(--blue);
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 22px 0 20px;
+    text-align: center;
+    background: transparent;
+  }
+
+  .brand-inline {
+    font-family: var(--font-brand);
+    color: var(--blue);
+    font-weight: normal;
+    font-size: 1.15em;
+  }
+
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--blue);
+    background: var(--blue-light);
+    border: 1px solid var(--blue-border);
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: clamp(1.75rem, 4vw, 2.625rem);
+    font-weight: 800;
+    color: var(--gray-900);
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    max-width: 960px;
+    margin: 0 auto 16px;
+  }
+
+  .brand-logo-inline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .brand-img {
+    height: 88px;
+    width: auto;
+  }
+
+  .brand-name-black {
+    font-family: var(--font-brand);
+    color: var(--gray-900);
+    font-size: 2.75rem;
+    font-weight: normal;
+    line-height: 1;
+  }
+
+  .accent {
+    color: var(--blue);
+  }
+
+  .hero-sub {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    margin-top: 8px;
+  }
+
+  .hero-sub li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--gray-900);
+  }
+
+  .hero-sub svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  /* ─── TRUSTPILOT TOP ─── */
+  .trustpilot-top {
+    padding: 12px 0;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  /* ─── FORM SECTION ─── */
+  .form-section {
+    padding: 16px 0 40px;
+    background: transparent;
+  }
+
+  .form-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 32px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .bonuses-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .bonus-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .bonus-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .bonus-check {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    border-radius: 50%;
+    background: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .bonus-text {
+    font-size: 0.9375rem;
+    color: var(--gray-700);
+    line-height: 1.55;
+    font-weight: 500;
+  }
+
+  .bonus-dropvault {
+    font-family: var(--font-brand);
+    font-size: 1.0625rem;
+    color: var(--gray-900);
+  }
+
+  .bonus-skool {
+    font-weight: 700;
+  }
+
+  .lead-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .form-section-heading {
+    text-align: center;
+    font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+    font-weight: 800;
+    color: var(--blue);
+    letter-spacing: -0.02em;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+  }
+
+  .bonuses-heading {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .field-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    border: 1.5px solid var(--blue);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .field-line:focus-within {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  .field-icon {
+    color: var(--gray-500);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .field-line:focus-within .field-icon {
+    color: var(--blue);
+  }
+
+  .field-line input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.9375rem;
+    color: var(--gray-900);
+    background: transparent;
+    font-family: var(--font-body);
+  }
+
+  .field-line input::placeholder {
+    color: var(--gray-500);
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 16px 24px;
+    background: var(--blue);
+    color: var(--white);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+    box-shadow: var(--shadow-blue);
+    margin-top: 24px;
+  }
+
+  .btn-primary:hover {
+    background: var(--blue-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 36px rgba(37, 99, 235, 0.28);
+  }
+
+  .form-privacy {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    margin-top: 12px;
+  }
+
+  /* ─── TESTIMONIALS ─── */
+  .testimonials-section {
+    padding: 80px 0;
+    background: var(--white);
+  }
+
+  .trustpilot-fallback {
+    display: block;
+    text-align: center;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    padding: 14px;
+    border: 1px dashed var(--gray-300);
+    border-radius: var(--radius);
+    text-decoration: none;
+    margin-bottom: 40px;
+  }
+
+  .trustpilot-widget {
+    margin-bottom: 40px;
+  }
+
+  .screenshots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .screenshot-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 56px 20px;
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--radius-lg);
+    background: var(--gray-50);
+    text-align: center;
+    color: var(--gray-500);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    min-height: 240px;
+  }
+
+  .screenshot-placeholder small {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    font-weight: 400;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    padding: 28px 0;
+    background: var(--gray-900);
+    border-top: 1px solid var(--gray-800);
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer-logo {
+    font-family: var(--font-brand);
+    color: var(--white);
+    font-size: 1.25rem;
+  }
+
+  .footer p {
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+  }
+
+  /* ─── REVIEWS WIDGET ─── */
+  .reviews-section {
+    padding: 72px 0;
+    background: transparent;
+    border-top: 1px solid var(--gray-200);
+  }
+
+  .reviews-widget {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .reviews-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .reviews-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .rs-top-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .rs-number {
+    font-size: 1.625rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    line-height: 1;
+  }
+
+  .rs-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .rs-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+
+  .rs-stars {
+    display: flex;
+    gap: 3px;
+  }
+
+  .rs-count {
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+  }
+
+  .tp-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .tp-logo-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 4px;
+  }
+
+  .tp-logo-text {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    letter-spacing: -0.02em;
+  }
+
+  /* Star boxes */
+  .r-star {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    flex-shrink: 0;
+    line-height: 0;
+  }
+
+  .r-star svg {
+    display: block;
+    flex-shrink: 0;
+  }
+  .r-star.s5 { background: #00B67A; }
+  .r-star.s4 { background: #73CF11; }
+  .r-star.s3 { background: #FFCE00; }
+  .r-star.s2 { background: #FF8622; }
+  .r-star.s1 { background: #FF3722; }
+  .r-star.s0 { background: var(--gray-200); }
+
+  /* Track */
+  .reviews-track-wrap { position: relative; }
+
+  .reviews-track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .reviews-track::-webkit-scrollbar { display: none; }
+
+  /* Card */
+  .r-card {
+    flex: 0 0 320px;
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px 24px 16px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .r-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .r-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .r-card-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .r-card-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+
+  .r-card-userinfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .r-card-name {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    line-height: 1.2;
+  }
+
+  .r-card-sub {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+  }
+
+  .r-card-date {
+    font-size: 0.8125rem;
+    color: var(--gray-400);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .r-card-stars { display: flex; gap: 3px; }
+
+  .r-card-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    line-height: 1.35;
+  }
+
+  .r-card-text {
+    font-size: 0.875rem;
+    color: var(--gray-700);
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .r-card-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .r-card-tag {
+    font-size: 0.6875rem;
+    color: var(--gray-500);
+    background: var(--gray-100);
+    border-radius: 100px;
+    padding: 3px 10px;
+  }
+
+  /* Nav */
+  .reviews-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .rnav-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gray-200);
+    background: var(--white);
+    color: var(--gray-700);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+  }
+
+  .rnav-btn svg { width: 18px; height: 18px; }
+
+  .rnav-btn:hover {
+    border-color: #00B67A;
+    background: #00B67A;
+    color: var(--white);
+  }
+
+  /* Footer */
+  .reviews-footer {
+    text-align: center;
+    margin-top: 24px;
+  }
+
+  .reviews-read-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #007B52;
+    text-decoration: none;
+    border-bottom: 1.5px solid transparent;
+    transition: border-color 0.15s;
+  }
+
+  .reviews-read-all:hover { border-color: #007B52; }
+
+  /* ─── CAROUSEL ─── */
+  .carousel-section {
+    padding: 72px 0 80px;
+    background: transparent;
+    border-top: 1px solid var(--gray-200);
+  }
+
+  .carousel-heading {
+    text-align: center;
+    font-size: clamp(1.375rem, 3vw, 1.875rem);
+    font-weight: 800;
+    color: var(--gray-900);
+    letter-spacing: -0.025em;
+    margin-bottom: 36px;
+    text-decoration: underline;
+    text-decoration-color: var(--blue);
+    text-underline-offset: 6px;
+  }
+
+  .carousel-brand {
+    font-family: var(--font-brand);
+    font-size: 1.45em;
+    color: var(--gray-900);
+    font-weight: normal;
+    vertical-align: middle;
+  }
+
+  .carousel-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .testimonials-swiper {
+    padding-bottom: 48px;
+  }
+
+  .testimonials-swiper .swiper-slide {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    height: 420px;
+  }
+
+  .testimonials-swiper .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+
+  .testimonials-swiper .swiper-button-prev,
+  .testimonials-swiper .swiper-button-next {
+    width: 56px;
+    height: 56px;
+    background: var(--blue);
+    color: #fff;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+  }
+
+  .testimonials-swiper .swiper-button-prev::after,
+  .testimonials-swiper .swiper-button-next::after {
+    display: none;
+  }
+
+  .testimonials-swiper .swiper-button-prev svg,
+  .testimonials-swiper .swiper-button-next svg {
+    width: 26px;
+    height: 26px;
+    display: block;
+  }
+
+  .testimonials-swiper .swiper-pagination-bullet {
+    background: var(--gray-300);
+    opacity: 1;
+  }
+
+  .testimonials-swiper .swiper-pagination-bullet-active {
+    background: var(--blue);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .form-card { padding: 32px 24px; }
+    .screenshots-grid { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; text-align: center; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const REVIEWS = [
+      { name: "Rocket Leads", rating: 5, title: "Super helpful", text: "Super helpful, they are actually trying to help as much as possible and the experience was super smooth", date: "Apr 1, 2026" },
+      { name: "Mohammad Kanso", rating: 4, title: "Easy to Use", text: "Quick, dependable, and simple to use. The process was smooth overall and everything worked as expected", date: "Apr 1, 2026" },
+      { name: "Majed Hammoud", rating: 5, title: "Fast", text: "Fast, reliable, and easy to use. Everything went perfectly. Highly recommended!", date: "Apr 1, 2026" },
+    ];
+
+    const STAR_COLORS = ['', '#FF3722', '#FF8622', '#FFCE00', '#73CF11', '#00B67A'];
+
+    function starBox(filled, color, size) {
+      const bg = filled ? color : '#9CA3AF';
+      const s = Math.round(size * 0.7);
+      return `<span class="r-star" style="width:${size}px;height:${size}px;background:${bg};display:inline-flex;align-items:center;justify-content:center;border-radius:2px;flex-shrink:0;"><svg width="${s}" height="${s}" viewBox="7 7 112 112" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M63 18l11.8 36.3H113L82.1 75.7l11.8 36.3L63 90.6 32.1 112l11.8-36.3L13 54.3h38.2L63 18z"/></svg></span>`;
+    }
+
+    function stars(rating, size) {
+      const color = STAR_COLORS[rating] || '#00B67A';
+      return Array.from({ length: 5 }, (_, i) => starBox(i < rating, color, size)).join('');
+    }
+
+    // Render header stars
+    document.getElementById('header-stars').innerHTML = stars(4, 32);
+
+    const AVATAR_COLORS = ['#2563eb','#7c3aed','#db2777','#059669','#d97706','#dc2626'];
+
+    function avatarColor(name) {
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+    }
+
+    function initials(name) {
+      return name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+    }
+
+    // Render cards
+    const track = document.getElementById('reviews-track');
+    track.innerHTML = REVIEWS.map(r => `
+      <div class="r-card" style="flex:0 0 320px;background:#fff;border-radius:12px;padding:20px 24px 16px;box-shadow:0 1px 3px rgba(0,0,0,0.07);border:1px solid #e2e8f0;scroll-snap-align:start;display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:40px;height:40px;min-width:40px;border-radius:50%;background:${avatarColor(r.name)};display:flex;align-items:center;justify-content:center;font-size:0.875rem;font-weight:700;color:#fff;">${initials(r.name)}</div>
+            <div style="display:flex;flex-direction:column;gap:2px;">
+              <div style="font-size:0.9375rem;font-weight:700;color:#0f172a;">${r.name}</div>
+              <div style="font-size:0.75rem;color:#64748b;">LB &bull; 1 review</div>
+            </div>
+          </div>
+          <div style="font-size:0.8125rem;color:#94a3b8;white-space:nowrap;">${r.date}</div>
+        </div>
+        <div style="display:flex;gap:3px;">${stars(r.rating, 22)}</div>
+        <div style="font-size:0.9375rem;font-weight:700;color:#0f172a;">${r.title}</div>
+        <div style="font-size:0.875rem;color:#334155;line-height:1.65;">${r.text}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
+          <span style="font-size:0.6875rem;color:#64748b;background:#f1f5f9;border-radius:100px;padding:3px 10px;">${r.date}</span>
+          <span style="font-size:0.6875rem;color:#64748b;background:#f1f5f9;border-radius:100px;padding:3px 10px;">Verified review</span>
+        </div>
+      </div>
+    `).join('');
+
+    // Navigation
+    const cardWidth = 280 + 16;
+    document.getElementById('rnav-next').addEventListener('click', () => track.scrollBy({ left: cardWidth * 2, behavior: 'smooth' }));
+    document.getElementById('rnav-prev').addEventListener('click', () => track.scrollBy({ left: -cardWidth * 2, behavior: 'smooth' }));
+  })();
+</script>
+
+<script>
+  import Swiper from 'swiper';
+  import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+  import 'swiper/css';
+  import 'swiper/css/navigation';
+  import 'swiper/css/pagination';
+
+  new Swiper('.testimonials-swiper', {
+    modules: [Navigation, Pagination, Autoplay],
+    slidesPerView: 1,
+    spaceBetween: 24,
+    breakpoints: {
+      640: { slidesPerView: 2, spaceBetween: 20 },
+      1024: { slidesPerView: 3, spaceBetween: 24 },
+    },
+    loop: true,
+    autoplay: {
+      delay: 3500,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
+</script>
