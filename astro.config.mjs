@@ -4,6 +4,5 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
   devToolbar: { enabled: false },
-  site: 'https://0-GreenRaven-0.github.io',
-  base: '/Droparabia-Landing',
+  site: 'https://droparabia.com',
 });
