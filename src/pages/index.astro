@@ -71,21 +71,34 @@ import Layout from '../layouts/Layout.astro';
           </div>
         </div>
 
-        <form class="lead-form" action="/watch" method="GET">
+        <div id="error-message" class="brevo-alert brevo-alert--error">
+          Your subscription could not be saved. Please try again.
+        </div>
+        <div id="success-message" class="brevo-alert brevo-alert--success">
+          Subscribed! Check your Phone Please
+        </div>
+
+        <form id="sib-form" class="lead-form" method="POST" action="https://1c3c2cfb.sibforms.com/serve/MUIFAPxMXGELK2J9d0Xxt3PwFRUjxtJZk3Qry8euC5hSvSAPkpZ5LwbXq06mSFZBI-LU2EsYia4abUYDywf846KcddyPIkRgIFLUpa3_CyPYrdcOpuqUjIFu9NxywX-BK3vSvfZ91Wbu_AqEdPe41syClQfRlwdi0VA6Qv-l0kWohS7W5HfLAD_dBWKErnr8MpmZrbTofjCmMm-oXA==" data-type="subscription">
           <div class="field-line">
             <span class="field-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </span>
-            <input type="email" name="email" placeholder="Your Best Email" required autocomplete="email" />
+            <input type="text" id="EMAIL" name="EMAIL" placeholder="Your Best Email" required autocomplete="email" />
           </div>
           <div class="field-line">
             <span class="field-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.31 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.45 5.45l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </span>
-            <input type="tel" name="phone" placeholder="(+961) WhatsApp Number" required autocomplete="tel" />
+            <input type="hidden" name="SMS__COUNTRY_CODE" value="+961" />
+            <span class="sms-country-fixed">+961</span>
+            <span class="sms-divider">|</span>
+            <input type="tel" id="SMS" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
           </div>
           <button type="submit" class="btn-primary">Watch the Free Tutorial!</button>
+          <input type="text" name="email_address_check" value="" style="display:none">
+          <input type="hidden" name="locale" value="en">
         </form>
+        <p class="form-privacy">By subscribing, you agree to receive promotional messages on WhatsApp</p>
       </div>
     </div>
   </section>
@@ -370,6 +383,41 @@ import Layout from '../layouts/Layout.astro';
     flex-direction: column;
     gap: 12px;
     text-align: left;
+  }
+
+  .brevo-alert {
+    display: none;
+    font-size: 0.875rem;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+  }
+
+  .brevo-alert--error {
+    color: #991b1b;
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+  }
+
+  .brevo-alert--success {
+    color: #166534;
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+  }
+
+  .sms-country-fixed {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    font-family: var(--font-body);
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .sms-divider {
+    color: var(--gray-300);
+    flex-shrink: 0;
+    font-size: 1rem;
+    line-height: 1;
   }
 
   .form-section-heading {
@@ -1040,5 +1088,56 @@ import Layout from '../layouts/Layout.astro';
       el: '.swiper-pagination',
       clickable: true,
     },
+  });
+</script>
+
+<script is:inline>
+  var DA_WATCH_SECRET = 'droparabia-w4tch-key-2025';
+
+  async function generateWatchToken() {
+    var nonce = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2, 18);
+    var ts = Date.now().toString();
+    var payload = nonce + '.' + ts;
+    var enc = new TextEncoder();
+    var key = await crypto.subtle.importKey(
+      'raw', enc.encode(DA_WATCH_SECRET),
+      { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+    );
+    var sig = await crypto.subtle.sign('HMAC', key, enc.encode(payload));
+    var sigHex = Array.from(new Uint8Array(sig)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+    return payload + '.' + sigHex;
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('sib-form');
+    if (!form) return;
+    var successEl = document.getElementById('success-message');
+    var errorEl = document.getElementById('error-message');
+    var btn = form.querySelector('button[type="submit"]');
+    var btnText = btn.textContent;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+      successEl.style.display = 'none';
+      errorEl.style.display = 'none';
+
+      fetch(form.action, { method: 'POST', body: new FormData(form), mode: 'no-cors' })
+        .then(function () {
+          return generateWatchToken();
+        })
+        .then(function (token) {
+          successEl.style.display = 'block';
+          setTimeout(function () {
+            window.location.href = '/watch?t=' + encodeURIComponent(token);
+          }, 1500);
+        })
+        .catch(function () {
+          btn.disabled = false;
+          btn.textContent = btnText;
+          errorEl.style.display = 'block';
+        });
+    });
   });
 </script>

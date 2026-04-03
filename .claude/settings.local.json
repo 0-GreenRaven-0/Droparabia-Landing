@@ -8,7 +8,8 @@
       "Bash(npm install:*)",
       "WebFetch(domain:www.trustpilot.com)",
       "WebFetch(domain:share.google)",
-      "WebFetch(domain:www.google.com)"
+      "WebFetch(domain:www.google.com)",
+      "Bash(node -e \"const pkg = require\\('./node_modules/swiper/package.json'\\); const exports = pkg.exports; Object.keys\\(exports\\).filter\\(k => k.includes\\('css'\\) || k.includes\\('navigation'\\) || k.includes\\('pagination'\\)\\).forEach\\(k => console.log\\(k\\)\\)\")"
     ]
   }
 }
