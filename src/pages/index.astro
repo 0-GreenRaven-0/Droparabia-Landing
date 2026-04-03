@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { siInstagram, siThreads, siFacebook } from 'simple-icons';
 ---
 
 <Layout>
@@ -23,6 +24,24 @@ import Layout from '../layouts/Layout.astro';
         <span class="accent">+400 Lebanese</span> to start a profitable online business
         in just <span class="accent">10–14 days!</span>
       </h1>
+
+      <!-- Mini Trustpilot bar -->
+      <div class="tp-mini-bar">
+        <a href="https://www.trustpilot.com/review/droparabia.com" target="_blank" rel="noopener" class="tp-mini-link">
+          <svg class="tp-mini-icon" viewBox="0 0 126 126" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="126" height="126" rx="4" fill="#00B67A"/>
+            <path d="M63 18l11.8 36.3H113L82.1 75.7l11.8 36.3L63 90.6 32.1 112l11.8-36.3L13 54.3h38.2L63 18z" fill="white"/>
+          </svg>
+          <span class="tp-mini-name">Trustpilot</span>
+          <div class="tp-mini-stars" id="tp-mini-stars"></div>
+          <span class="tp-mini-score">3.9 <strong>Great!</strong></span>
+        </a>
+        <a href="https://www.trustpilot.com/review/droparabia.com" target="_blank" rel="noopener" class="tp-mini-readall">
+          See all reviews
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
       <ul class="hero-sub">
         <li>
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#2563eb"/><path d="M7 12.5l3.5 3.5 6.5-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -44,6 +63,7 @@ import Layout from '../layouts/Layout.astro';
   <!-- CTA FORM -->
   <section class="form-section">
     <div class="container">
+
       <div class="form-card">
         <h3 class="form-section-heading">Subscribe to Watch a Free Tutorial</h3>
         <h3 class="bonuses-heading">And Claim these bonuses</h3>
@@ -103,42 +123,6 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- REVIEWS WIDGET -->
-  <section class="reviews-section">
-    <div class="reviews-widget">
-
-      <div class="reviews-header">
-        <a class="tp-logo" href="https://www.trustpilot.com/review/droparabia.com" target="_blank" rel="noopener">
-          <svg class="tp-logo-icon" viewBox="0 0 126 126" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="126" height="126" rx="4" fill="#00B67A"/>
-            <path d="M63 18l11.8 36.3H113L82.1 75.7l11.8 36.3L63 90.6 32.1 112l11.8-36.3L13 54.3h38.2L63 18z" fill="white"/>
-          </svg>
-          <span class="tp-logo-text">Trustpilot</span>
-        </a>
-        <div class="reviews-score">
-          <div class="rs-top-row">
-            <div class="rs-number">3.9</div>
-            <div class="rs-label">Great!</div>
-          </div>
-          <div class="rs-stars" id="header-stars"></div>
-        </div>
-      </div>
-
-      <div class="reviews-track-wrap">
-        <div class="reviews-track" id="reviews-track"></div>
-
-      </div>
-
-      <div class="reviews-footer">
-        <a class="reviews-read-all" href="https://www.trustpilot.com/review/droparabia.com" target="_blank" rel="noopener">
-          Read all reviews on Trustpilot
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </a>
-      </div>
-
-    </div>
-  </section>
-
   <!-- TESTIMONIALS CAROUSEL -->
   <section class="carousel-section">
     <h2 class="carousel-heading"><span class="carousel-brand">Droparabia</span>'s Latest Case studies</h2>
@@ -176,6 +160,42 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
+  <!-- REVIEWS WIDGET -->
+  <section class="reviews-section">
+    <div class="reviews-widget">
+
+      <div class="reviews-header">
+        <a class="tp-logo" href="https://www.trustpilot.com/review/droparabia.com" target="_blank" rel="noopener">
+          <svg class="tp-logo-icon" viewBox="0 0 126 126" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="126" height="126" rx="4" fill="#00B67A"/>
+            <path d="M63 18l11.8 36.3H113L82.1 75.7l11.8 36.3L63 90.6 32.1 112l11.8-36.3L13 54.3h38.2L63 18z" fill="white"/>
+          </svg>
+          <span class="tp-logo-text">Trustpilot</span>
+        </a>
+        <div class="reviews-score">
+          <div class="rs-top-row">
+            <div class="rs-number">3.9</div>
+            <div class="rs-label">Great!</div>
+          </div>
+          <div class="rs-stars" id="header-stars"></div>
+        </div>
+      </div>
+
+      <div class="reviews-track-wrap">
+        <div class="reviews-track" id="reviews-track"></div>
+
+      </div>
+
+      <div class="reviews-footer">
+        <a class="reviews-read-all" href="https://www.trustpilot.com/review/droparabia.com" target="_blank" rel="noopener">
+          Read all reviews on Trustpilot
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
@@ -195,21 +215,15 @@ import Layout from '../layouts/Layout.astro';
         <div class="footer-socials">
           <!-- Instagram -->
           <a href="https://www.instagram.com/droparabia" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siInstagram.path}/></svg>
           </a>
           <!-- Threads -->
           <a href="https://www.threads.net/@droparabia" target="_blank" rel="noopener" class="footer-social-link" aria-label="Threads">
-            <svg viewBox="0 0 448 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M331.5 235.7c2.2 .9 4.2 1.9 6.3 2.8c29.2 14.1 50.6 35.2 61.8 61.4c15.7 36.5 17.2 95.1-30.3 143.6c-36.2 37.2-80.4 53.6-144.6 54.1l-.3 0-.3 0c-81.7-.5-143.9-31.6-182.2-92.4C11.6 395.8 2 361.1 0 320l0-6.8 0-6.8C2 266.9 11.6 232.2 32.1 206c38.3-60.8 100.5-91.9 182.2-92.4l.3 0 .3 0c58.8 .4 106.5 17.5 140.5 50.7c33.3 32.5 47.6 74.4 50.5 107.2c.2 2.4 .3 4.7 .3 7.1l0 2.1-42 0 0-2.1c0-1.5-.1-3-.3-4.5c-2.3-24.6-13-56.5-37.9-80.3c-24.1-23.1-61.5-37.6-111.5-38l-.2 0-.2 0c-67.2 .4-117.7 24.8-147.4 72.4C50.4 243.9 42 272.5 40.4 312l0 1.6 0 1.6C42 354.9 50.4 383.5 67.7 410.5c29.7 47.6 80.1 72 147.4 72.4l.2 0 .2 0c52.4-.4 91.7-14.7 121.7-43.5c36.4-34.5 40.2-76.3 30.6-102.7c-6.4-17.5-20.7-31.4-42-40.8c-1.6 11.5-4.8 22.7-9.6 33.2c-12.5 26.9-33.2 45.8-62.1 56.2c-29.1 10.5-62.5 12-97.2 4.5c-45-9.9-76.6-35.3-88.7-71.2c-7.1-20.8-7.1-43.7 0-64.5c12.1-35.9 43.6-61.3 88.7-71.2c34.7-7.5 68.1-6 97.2 4.5c4.3 1.5 8.4 3.3 12.4 5.3c-6-26.8-19.8-44-40.3-52.7c-19.7-8.4-44.4-8-71.6-1.3c-27.1 6.7-48.8 20.1-62.2 37.8c-3.9 5.1-7 10.5-9.3 16.1l-38.5-14.2c3.7-10 9.2-19.5 16.4-28.2c18.3-23.6 46.5-41.9 81.9-50.7c35-8.6 71.7-9.1 101.8 3.4z"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siThreads.path}/></svg>
           </a>
           <!-- Facebook -->
           <a href="https://www.facebook.com/droparabia" target="_blank" rel="noopener" class="footer-social-link" aria-label="Facebook">
-            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siFacebook.path}/></svg>
           </a>
           <!-- Trustpilot -->
           <a href="https://www.trustpilot.com/review/droparabia.com" target="_blank" rel="noopener" class="footer-social-link footer-tp-link" aria-label="Trustpilot">
@@ -253,7 +267,7 @@ import Layout from '../layouts/Layout.astro';
 
   /* ─── HERO ─── */
   .hero {
-    padding-top: 20px;
+    padding: 72px 0 56px;
     text-align: center;
     min-height: 80vh;
   }
@@ -274,19 +288,20 @@ import Layout from '../layouts/Layout.astro';
     background: none;
     border: none;
     padding: 0;
-    margin-bottom: 14px;
+    margin-bottom: 20px;
     letter-spacing: 0;
     text-transform: none;
   }
 
   h1 {
-    font-size: clamp(1.75rem, 4vw, 2.625rem);
+    font-size: clamp(1.5rem, 3.5vw, 2.25rem);
     font-weight: 800;
     color: var(--gray-900);
     line-height: 1.25;
     letter-spacing: -0.025em;
     max-width: 960px;
-    margin: 0 auto 16px;
+    margin: 0 auto 28px;
+    padding: 0 20px;
   }
 
   .brand-logo-inline {
@@ -347,6 +362,73 @@ import Layout from '../layouts/Layout.astro';
     background: var(--white);
     border-bottom: 1px solid var(--gray-200);
   }
+
+  /* ─── MINI TP BAR (above CTA form) ─── */
+  .tp-mini-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 24px;
+  }
+
+  .tp-mini-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 100px;
+    padding: 7px 16px;
+    transition: background 0.15s;
+  }
+
+  .tp-mini-link:hover { background: var(--gray-100); }
+
+  .tp-mini-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .tp-mini-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    letter-spacing: -0.01em;
+  }
+
+  .tp-mini-stars {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+  }
+
+  .tp-mini-score {
+    font-size: 0.8125rem;
+    color: var(--gray-600);
+  }
+
+  .tp-mini-score strong {
+    color: var(--gray-900);
+    font-weight: 700;
+  }
+
+  .tp-mini-readall {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #007B52;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+
+  .tp-mini-readall:hover { border-color: #007B52; }
 
   /* ─── FORM SECTION ─── */
   .form-section {
@@ -1071,6 +1153,8 @@ import Layout from '../layouts/Layout.astro';
   /* ─── RESPONSIVE ─── */
   /* ─── TABLET (max 768px) ─── */
   @media (max-width: 768px) {
+    .bg { background-size: 260px 260px; }
+    .hero { min-height: unset; padding: 52px 0 40px; }
     .brand-img { height: 64px; }
     .brand-name-black { font-size: 2rem; }
     .brand-logo-inline { gap: 8px; }
@@ -1087,13 +1171,16 @@ import Layout from '../layouts/Layout.astro';
 
   /* ─── MOBILE (max 480px) ─── */
   @media (max-width: 480px) {
-    .brand-img { height: 52px; }
-    .brand-name-black { font-size: 1.625rem; }
+    .bg { background-size: 180px 180px; }
+    .hero { min-height: unset; padding: 74px 0 36px; }
+    .brand-img { height: 76px; }
+    .brand-name-black { font-size: 2.125rem; }
     .brand-logo-inline { gap: 6px; margin-bottom: 6px; }
+    h1 { font-size: 1.5rem; }
 
     .hero-sub {
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       gap: 10px;
       padding: 0 8px;
     }
@@ -1111,7 +1198,13 @@ import Layout from '../layouts/Layout.astro';
     .rs-label { font-size: 0.75rem; }
 
     .carousel-section { padding: 48px 0 56px; }
-    .carousel-heading { margin-bottom: 24px; }
+    .carousel-heading { padding: 0 20px; margin-bottom: 24px; }
+    .testimonials-swiper .swiper-slide { height: auto; }
+    .testimonials-swiper .swiper-slide img { height: auto; object-fit: initial; }
+    .testimonials-swiper .swiper-button-prev,
+    .testimonials-swiper .swiper-button-next { top: auto; bottom: 56px; width: 44px; height: 44px; }
+    .testimonials-swiper .swiper-button-prev svg,
+    .testimonials-swiper .swiper-button-next svg { width: 20px; height: 20px; }
 
     .footer-inner { flex-direction: column; gap: 32px; }
     .footer-brand { max-width: 100%; }
@@ -1142,6 +1235,9 @@ import Layout from '../layouts/Layout.astro';
 
     // Render header stars
     document.getElementById('header-stars').innerHTML = stars(4, 32);
+
+    // Render mini bar stars
+    document.getElementById('tp-mini-stars').innerHTML = stars(4, 16);
 
     const AVATAR_COLORS = ['#2563eb','#7c3aed','#db2777','#059669','#d97706','#dc2626'];
 
