@@ -24,7 +24,6 @@ const {
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <script is:inline type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
   </head>
   <body>
     <slot />
@@ -77,12 +76,13 @@ const {
 
   html {
     scroll-behavior: smooth;
+    background: #e0e0e0;
   }
 
   body {
     font-family: var(--font-body);
     color: var(--gray-900);
-    background: var(--white);
+    background: #e0e0e0 !important;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

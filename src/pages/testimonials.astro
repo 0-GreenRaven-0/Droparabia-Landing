@@ -1,0 +1,888 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { siInstagram, siThreads, siFacebook } from 'simple-icons';
+
+const caseStudies = [
+  {
+    image: "https://ik.imagekit.io/greenraven/MJ/Testimonials/Frame%2013.png?updatedAt=1775319572588",
+    tag: "Case Study #1",
+    name: "Ahmad's Journey",
+    headline: "Hit his first 10k after months of testing and scaling",
+    body: "Because he had a tool that removed the annoying parts of managing his business while he focused on growth.",
+    results: ["First sale on day 9", "$3,200 revenue in month 1", "Zero inventory needed"],
+    imageLeft: true,
+  },
+  {
+    image: "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(4)%20(1).png",
+    tag: "Case Study #2",
+    name: "Sara's Story",
+    headline: "Crossed $2,500 through consistent use of Droparabia",
+    body: "Showed up everyday, kept learning and working hard until hit a new threshold",
+    results: ["Started with zero experience", "Full-time income by month 2", "Now manages 2 stores"],
+    imageLeft: false,
+  },
+  {
+    image: "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(6)%20(1).png",
+    tag: "Case Study #3",
+    name: "Omar's Case Study",
+    headline: "$1,000+ in 2 weeks through the right support",
+    body: "Being a part of community where everyone wants the same thing and having the right support will make you reach your goals faster than figuring things out alone.",
+    results: ["$1,500 profit in month 2", "4.8-star store rating", "Scaled with paid social ads"],
+    imageLeft: true,
+  },
+  {
+    image: "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(9)%20(2).png",
+    tag: "Case Study #4",
+    name: "Lara's Breakthrough",
+    headline: "3 Days into the month using Droparabia",
+    body: "Droparabia isn't designed to make you rich in just one night, it's to give you a headstart by removing the difficult pieces of your business and providing you with full clarity to execute as soon as possible.",
+    results: ["200+ orders per month", "Team of 2 employees", "Grew using reinvested profits only"],
+    imageLeft: false,
+  },
+];
+
+
+const carousels = [
+  {
+    id: "cs-swiper-1",
+    slides: [
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo.png?tr=w-700,q-95,f-webp",
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(1).png?tr=w-700,q-95,f-webp",
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(2)%20(1)%20(1).png?updatedAt=1775389634793",
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(3).png?tr=w-700,q-95,f-webp",
+    ],
+  },
+  {
+    id: "cs-swiper-2",
+    slides: [
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(4)%20(1).png?updatedAt=1775387268896",
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(5).png?tr=w-700,q-95,f-webp",
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(6).png?tr=w-700,q-95,f-webp",
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(7)%20(1)%20(1).png?updatedAt=1775389904221",
+    ],
+  },
+  {
+    id: "cs-swiper-3",
+    slides: [
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(8).png?tr=w-700,q-95,f-webp",
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(9).png?tr=w-700,q-95,f-webp",
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(10).png?tr=w-700,q-95,f-webp",
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(11).png?tr=w-700,q-95,f-webp",
+    ],
+  },
+  {
+    id: "cs-swiper-4",
+    slides: [
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(12).png?tr=w-700,q-95,f-webp",
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(13).png?tr=w-700,q-95,f-webp",
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(14).png?tr=w-700,q-95,f-webp",
+      "https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(15).png?tr=w-700,q-95,f-webp",
+    ],
+  },
+];
+---
+
+<Layout
+  title="Case Studies & Testimonials — Droparabia"
+  description="Real results from Lebanese entrepreneurs who built profitable online businesses with Droparabia. Read their full case studies."
+>
+
+  <!-- HEADER -->
+  <header class="tp-header">
+    <div class="tp-header-inner">
+      <a href="/" class="tp-header-logo">
+        <img src="/Droparabia.png" alt="Droparabia" class="tp-header-logo-img" />
+        <span class="tp-header-logo-name">Droparabia</span>
+      </a>
+      <div class="tp-header-socials">
+        <a href="https://www.instagram.com/droparabia" target="_blank" rel="noopener" class="tp-header-social" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siInstagram.path}/></svg>
+        </a>
+        <a href="https://www.threads.net/@droparabia" target="_blank" rel="noopener" class="tp-header-social" aria-label="Threads">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siThreads.path}/></svg>
+        </a>
+        <a href="https://www.facebook.com/droparabia" target="_blank" rel="noopener" class="tp-header-social" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siFacebook.path}/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE HERO -->
+  <section class="tp-hero">
+    <div class="tp-container">
+      <div class="tp-hero-brand">
+        <img src="/Droparabia.png" alt="Droparabia" class="tp-hero-logo" />
+      </div>
+      <h1 class="tp-h1" style="font-family: var(--font-brand); font-weight: normal;">Over 500 Lebanese are currently using Droparabia</h1>
+    </div>
+  </section>
+
+  <!-- SPECIAL CASE STUDIES -->
+  {caseStudies.map((cs) => (
+    <section class={`cs-block ${cs.imageLeft ? 'img-left' : 'img-right'}`}>
+      <div class="cs-inner tp-container">
+        <div class="cs-img-wrap">
+          <img src={cs.image} alt={cs.name} loading="lazy" class="cs-img" />
+        </div>
+        <div class="cs-content">
+          <h2 class="cs-headline">{cs.headline}</h2>
+          <p class="cs-body">{cs.body}</p>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- CAROUSEL 1 -->
+  <section class="tp-carousel-section">
+    <div class="tp-container">
+      <h3 class="tp-carousel-heading">Here's more proof from Droparabia's users:</h3>
+      <div class="swiper" id={carousels[0].id}>
+        <div class="swiper-wrapper">
+          {carousels[0].slides.map(src => (
+            <div class="swiper-slide"><img src={src} alt="Testimonial" loading="lazy" /></div>
+          ))}
+        </div>
+        <div class="swiper-pagination"></div>
+        <button class="swiper-button-prev" id="prev-1" aria-label="Previous">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+        <button class="swiper-button-next" id="next-1" aria-label="Next">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAROUSEL 2 -->
+  <section class="tp-carousel-section tp-carousel-alt">
+    <div class="tp-container">
+      <h3 class="tp-carousel-heading">Even More Results of Droparabia</h3>
+      <div class="swiper" id={carousels[1].id}>
+        <div class="swiper-wrapper">
+          {carousels[1].slides.map(src => (
+            <div class="swiper-slide"><img src={src} alt="Testimonial" loading="lazy" /></div>
+          ))}
+        </div>
+        <div class="swiper-pagination"></div>
+        <button class="swiper-button-prev" id="prev-2" aria-label="Previous">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+        <button class="swiper-button-next" id="next-2" aria-label="Next">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAROUSEL 3 -->
+  <section class="tp-carousel-section">
+    <div class="tp-container">
+      <h3 class="tp-carousel-heading">More wins each week inside the community</h3>
+      <div class="swiper" id={carousels[2].id}>
+        <div class="swiper-wrapper">
+          {carousels[2].slides.map(src => (
+            <div class="swiper-slide"><img src={src} alt="Testimonial" loading="lazy" /></div>
+          ))}
+        </div>
+        <div class="swiper-pagination"></div>
+        <button class="swiper-button-prev" id="prev-3" aria-label="Previous">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+        <button class="swiper-button-next" id="next-3" aria-label="Next">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAROUSEL 4 -->
+  <section class="tp-carousel-section tp-carousel-alt">
+    <div class="tp-container">
+      <h3 class="tp-carousel-heading">And the Community Keeps Growing</h3>
+      <div class="swiper" id={carousels[3].id}>
+        <div class="swiper-wrapper">
+          {carousels[3].slides.map(src => (
+            <div class="swiper-slide"><img src={src} alt="Testimonial" loading="lazy" /></div>
+          ))}
+        </div>
+        <div class="swiper-pagination"></div>
+        <button class="swiper-button-prev" id="prev-4" aria-label="Previous">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+        <button class="swiper-button-next" id="next-4" aria-label="Next">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-section cta-final">
+    <div class="tp-container">
+      <h2 class="cta-heading cta-heading--large">Get Access to Droparabia today!</h2>
+      <h3 class="cta-sub-heading">And build your own profitable business in less than 30 days!</h3>
+      <p class="cta-sub cta-sub--large">Book a free call with our team and they'll walk you through Droparabia and how you can get started in less than 30 days.</p>
+      <a href="#" class="btn-book-call btn-book-call--large">Book a Free Call</a>
+      <p class="cta-scarcity">Limited spots available — we only take a few calls per week.</p>
+    </div>
+  </section>
+
+  <!-- DISCLAIMER -->
+  <section class="disclaimer-section">
+    <div class="tp-container">
+      <p class="disclaimer-title">Results Disclaimer</p>
+      <p class="disclaimer-text">The case studies, testimonials, and income figures shown on this page are individual results and do not represent typical or guaranteed outcomes. Success in any business depends on many factors, including effort, experience, market conditions, and personal circumstances. Droparabia does not guarantee that you will achieve the same or similar results. All information shared is for educational and informational purposes only. Past performance is not indicative of future results.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo-link">
+          <img src="/Droparabia.png" alt="Droparabia logo" class="footer-logo-img" />
+          <span class="footer-logo-name">Droparabia</span>
+        </a>
+        <p class="footer-tagline">Your all-in-one dropshipping platform for the Arab world.</p>
+      </div>
+      <div class="footer-links">
+        <p class="footer-links-label">Follow us</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/droparabia" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siInstagram.path}/></svg>
+          </a>
+          <a href="https://www.threads.net/@droparabia" target="_blank" rel="noopener" class="footer-social-link" aria-label="Threads">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siThreads.path}/></svg>
+          </a>
+          <a href="https://www.facebook.com/droparabia" target="_blank" rel="noopener" class="footer-social-link" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siFacebook.path}/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Droparabia. All rights reserved.</p>
+    </div>
+  </footer>
+
+</Layout>
+
+<style>
+  /* ─── LAYOUT ─── */
+  .tp-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ─── HEADER ─── */
+  .tp-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #e0e0e0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .tp-header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tp-header-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .tp-header-logo-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  .tp-header-logo-name {
+    font-family: var(--font-brand);
+    font-size: 1.25rem;
+    color: var(--gray-900);
+  }
+
+  .tp-header-socials {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tp-header-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .tp-header-social svg { width: 17px; height: 17px; }
+  .tp-header-social:hover { background: var(--gray-200); color: var(--gray-900); }
+
+  /* ─── PAGE HERO ─── */
+  .tp-hero {
+    padding: 40px 0 36px;
+    text-align: center;
+    background: #e0e0e0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .tp-eyebrow {
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue);
+    background: var(--blue-light);
+    border: 1px solid var(--blue-border);
+    border-radius: 100px;
+    padding: 5px 16px;
+    margin-bottom: 20px;
+  }
+
+  .tp-h1 {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 800;
+    color: var(--gray-900);
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .tp-hero-sub {
+    font-size: clamp(1rem, 2vw, 1.125rem);
+    color: var(--gray-500);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .tp-hero-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 16px;
+  }
+
+  .tp-hero-logo {
+    width: 200px;
+    height: 200px;
+    border-radius: 44px;
+    object-fit: contain;
+  }
+
+
+  /* ─── CASE STUDY BLOCKS ─── */
+  .cs-block {
+    padding: 40px 0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .cs-block:nth-child(even) {
+    background: transparent;
+  }
+
+  .cs-inner {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+
+  .cs-block.img-right .cs-inner {
+    flex-direction: row-reverse;
+  }
+
+  .cs-img-wrap {
+    flex: 0 0 auto;
+    width: 280px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .cs-img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .cs-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cs-headline {
+    font-size: clamp(1.375rem, 3vw, 1.875rem);
+    font-weight: 800;
+    color: var(--gray-900);
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+  }
+
+  .cs-body {
+    font-size: 1rem;
+    color: var(--gray-600);
+    line-height: 1.75;
+  }
+
+  /* ─── CTA SECTIONS ─── */
+  .cta-section {
+    padding: 80px 0;
+    text-align: center;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .cta-section.cta-blue {
+    background: #e0e0e0;
+  }
+
+  .cta-section.cta-final {
+    background: #e0e0e0;
+    border-bottom: none;
+    padding: 100px 0;
+  }
+
+  .cta-sub-heading {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 500;
+    color: var(--gray-600);
+    margin: 0 auto 20px;
+    max-width: 540px;
+  }
+
+  .cta-scarcity {
+    margin-top: 16px;
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .cta-heading {
+    font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+    font-weight: 800;
+    color: var(--gray-900);
+    letter-spacing: -0.025em;
+    margin-bottom: 12px;
+  }
+
+  .cta-heading--large {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 12px;
+  }
+
+  .cta-sub {
+    font-size: 1rem;
+    color: var(--gray-500);
+    max-width: 560px;
+    margin: 0 auto 36px;
+    line-height: 1.65;
+  }
+
+  .cta-sub--large {
+    font-size: 1.125rem;
+    max-width: 520px;
+  }
+
+
+  /* ─── BOOK A CALL BUTTON ─── */
+  .btn-book-call {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 36px;
+    background: var(--blue);
+    color: var(--white);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    box-shadow: var(--shadow-blue);
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  }
+
+  .btn-book-call:hover {
+    background: var(--blue-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 36px rgba(37, 99, 235, 0.28);
+    color: var(--white);
+  }
+
+  .btn-book-call--large {
+    font-size: 1.125rem;
+    padding: 18px 44px;
+  }
+
+
+  /* ─── CAROUSELS ─── */
+  .tp-carousel-section {
+    padding: 64px 0 72px;
+    border-bottom: 1px solid var(--gray-200);
+    overflow-x: clip;
+  }
+
+  .tp-carousel-section .tp-container {
+    padding: 0 40px;
+  }
+
+  .tp-carousel-alt {
+    background: #e0e0e0;
+  }
+
+  .tp-carousel-heading {
+    text-align: center;
+    font-size: clamp(1.25rem, 2.5vw, 1.625rem);
+    font-weight: 800;
+    color: var(--gray-900);
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+    text-decoration: underline;
+    text-decoration-color: var(--blue);
+    text-underline-offset: 6px;
+  }
+
+  .tp-carousel-section .swiper {
+    padding-bottom: 48px;
+    overflow: visible;
+  }
+
+  .tp-carousel-section .swiper-wrapper {
+    overflow: visible;
+  }
+
+  .tp-carousel-section .swiper-slide {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  .tp-carousel-section .swiper-slide img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .tp-carousel-section .swiper-button-prev,
+  .tp-carousel-section .swiper-button-next {
+    width: 48px;
+    height: 48px;
+    background: var(--blue);
+    color: #fff;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.1s;
+    top: calc(50% - 24px);
+  }
+
+  .tp-carousel-section .swiper-button-prev {
+    left: -28px;
+  }
+
+  .tp-carousel-section .swiper-button-next {
+    right: -28px;
+  }
+
+  .tp-carousel-section .swiper-button-prev:hover,
+  .tp-carousel-section .swiper-button-next:hover {
+    background: var(--blue-hover);
+    transform: scale(1.08);
+  }
+
+  .tp-carousel-section .swiper-button-prev::after,
+  .tp-carousel-section .swiper-button-next::after { display: none; }
+
+  .tp-carousel-section .swiper-button-prev svg,
+  .tp-carousel-section .swiper-button-next svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+  }
+
+  .tp-carousel-section .swiper-pagination-bullet {
+    background: var(--gray-300);
+    opacity: 1;
+  }
+
+  .tp-carousel-section .swiper-pagination-bullet-active {
+    background: var(--blue);
+  }
+
+  /* ─── DISCLAIMER ─── */
+  .disclaimer-section {
+    padding: 48px 0;
+    border-top: 1px solid var(--gray-300);
+    text-align: center;
+  }
+
+  .disclaimer-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray-500);
+    margin-bottom: 12px;
+  }
+
+  .disclaimer-text {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    line-height: 1.75;
+    max-width: 740px;
+    margin: 0 auto;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    background: var(--gray-900);
+    padding: 48px 24px 0;
+  }
+
+  .footer-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #2d2d2d;
+  }
+
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 280px;
+  }
+
+  .footer-logo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .footer-logo-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  .footer-logo-name {
+    font-family: var(--font-brand);
+    color: var(--white);
+    font-size: 1.25rem;
+  }
+
+  .footer-tagline {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-links-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray-500);
+    margin: 0;
+  }
+
+  .footer-socials {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer-social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #2d2d2d;
+    color: var(--gray-400);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .footer-social-link svg { width: 18px; height: 18px; }
+  .footer-social-link:hover { background: #3d3d3d; color: var(--white); }
+  .footer-tp-link svg { width: 20px; height: 20px; border-radius: 3px; }
+
+  .footer-bottom {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 20px 0;
+  }
+
+  .footer-bottom p {
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+    margin: 0;
+  }
+
+    /* ─── TESTIMONIAL QUOTES ─── */
+  .testimonials-quotes-section {
+    padding: 80px 0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .testimonials-quotes-heading {
+    text-align: center;
+    font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+    font-weight: 800;
+    color: var(--gray-900);
+    letter-spacing: -0.025em;
+    margin-bottom: 48px;
+  }
+
+  .testimonials-quotes-flex {
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .testimonial-quote-card {
+    flex: 1;
+    text-align: center;
+  }
+
+  .testimonial-quote-text {
+    font-size: 1.0625rem;
+    color: var(--gray-700);
+    line-height: 1.65;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .testimonial-quote-author {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .testimonials-quotes-flex {
+      flex-direction: column;
+      gap: 40px;
+    }
+    .testimonials-quotes-section {
+      padding: 60px 0;
+    }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .cs-inner { gap: 40px; }
+    .cs-img-wrap { flex: 0 0 44%; }
+  }
+
+  @media (max-width: 768px) {
+    .tp-hero { padding: 60px 0 48px; }
+    .cs-block { padding: 40px 0; }
+
+    .cs-inner,
+    .cs-block.img-right .cs-inner {
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .cs-img-wrap { flex: none; width: 100%; }
+
+    .cta-form-card { padding: 28px 24px; }
+    .cta-section { padding: 60px 0; }
+
+
+    .tp-carousel-section .tp-container { padding: 0 28px; }
+    .tp-carousel-section .swiper-button-prev { left: -20px; }
+    .tp-carousel-section .swiper-button-next { right: -20px; }
+    .tp-carousel-section .swiper-button-prev,
+    .tp-carousel-section .swiper-button-next { width: 44px; height: 44px; }
+    .tp-carousel-section .swiper-button-prev svg,
+    .tp-carousel-section .swiper-button-next svg { width: 22px; height: 22px; }
+
+    .footer-inner { flex-direction: column; gap: 32px; }
+    .footer-brand { max-width: 100%; }
+  }
+
+  @media (max-width: 480px) {
+    .tp-h1 { font-size: 1.875rem; }
+    .cta-heading--large { font-size: 2.25rem; }
+    .cta-form-card { padding: 24px 16px; }
+    .tp-carousel-section { padding: 48px 0 56px; }
+    .tp-carousel-heading { padding: 0 16px; }
+  }
+</style>
+
+<script>
+  import Swiper from 'swiper';
+  import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+  import 'swiper/css';
+  import 'swiper/css/navigation';
+  import 'swiper/css/pagination';
+
+  const swiperIds = ['cs-swiper-1', 'cs-swiper-2', 'cs-swiper-3', 'cs-swiper-4'];
+
+  swiperIds.forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    new Swiper(el, {
+      modules: [Navigation, Pagination, Autoplay],
+      slidesPerView: 1,
+      spaceBetween: 24,
+      breakpoints: {
+        640: { slidesPerView: 2, spaceBetween: 20 },
+        1024: { slidesPerView: 3, spaceBetween: 24 },
+      },
+      loop: true,
+      autoplay: { delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true },
+      navigation: {
+        nextEl: el.querySelector('.swiper-button-next') as HTMLElement,
+        prevEl: el.querySelector('.swiper-button-prev') as HTMLElement,
+      },
+      pagination: { el: el.querySelector('.swiper-pagination') as HTMLElement, clickable: true },
+    });
+  });
+</script>
+
