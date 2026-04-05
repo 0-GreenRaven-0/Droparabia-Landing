@@ -87,26 +87,15 @@ const carousels = [
   description="Real results from Lebanese entrepreneurs who built profitable online businesses with Droparabia. Read their full case studies."
 >
 
-  <!-- HEADER -->
-  <header class="tp-header">
-    <div class="tp-header-inner">
-      <a href="/" class="tp-header-logo">
-        <img src="/Droparabia.png" alt="Droparabia" class="tp-header-logo-img" />
-        <span class="tp-header-logo-name">Droparabia</span>
+  <!-- BACK BUTTON -->
+  <div class="back-bar">
+    <div class="tp-container">
+      <a href="/" class="back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        Back
       </a>
-      <div class="tp-header-socials">
-        <a href="https://www.instagram.com/droparabia" target="_blank" rel="noopener" class="tp-header-social" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siInstagram.path}/></svg>
-        </a>
-        <a href="https://www.threads.net/@droparabia" target="_blank" rel="noopener" class="tp-header-social" aria-label="Threads">
-          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siThreads.path}/></svg>
-        </a>
-        <a href="https://www.facebook.com/droparabia" target="_blank" rel="noopener" class="tp-header-social" aria-label="Facebook">
-          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siFacebook.path}/></svg>
-        </a>
-      </div>
     </div>
-  </header>
+  </div>
 
   <!-- PAGE HERO -->
   <section class="tp-hero">
@@ -114,7 +103,7 @@ const carousels = [
       <div class="tp-hero-brand">
         <img src="/Droparabia.png" alt="Droparabia" class="tp-hero-logo" />
       </div>
-      <h1 class="tp-h1" style="font-family: var(--font-brand); font-weight: normal;">Over 500 Lebanese are currently using Droparabia</h1>
+      <h1 class="tp-h1" style="font-family: var(--font-brand); font-weight: normal; font-size: clamp(1.5rem, 3.5vw, 2.25rem);">Over <span style="color: var(--blue); text-decoration: underline; text-decoration-color: var(--blue); text-underline-offset: 5px; text-decoration-thickness: 2px;">+500</span> Lebanese are currently using Droparabia</h1>
     </div>
   </section>
 
@@ -221,18 +210,17 @@ const carousels = [
   <section class="cta-section cta-final">
     <div class="tp-container">
       <h2 class="cta-heading cta-heading--large">Get Access to Droparabia today!</h2>
-      <h3 class="cta-sub-heading">And build your own profitable business in less than 30 days!</h3>
       <p class="cta-sub cta-sub--large">Book a free call with our team and they'll walk you through Droparabia and how you can get started in less than 30 days.</p>
       <a href="#" class="btn-book-call btn-book-call--large">Book a Free Call</a>
-      <p class="cta-scarcity">Limited spots available — we only take a few calls per week.</p>
+      <p class="cta-scarcity">🔴 Only a few spots left this week — once they're gone, you'll have to wait for the next batch.</p>
     </div>
   </section>
 
   <!-- DISCLAIMER -->
   <section class="disclaimer-section">
     <div class="tp-container">
-      <p class="disclaimer-title">Results Disclaimer</p>
-      <p class="disclaimer-text">The case studies, testimonials, and income figures shown on this page are individual results and do not represent typical or guaranteed outcomes. Success in any business depends on many factors, including effort, experience, market conditions, and personal circumstances. Droparabia does not guarantee that you will achieve the same or similar results. All information shared is for educational and informational purposes only. Past performance is not indicative of future results.</p>
+      <p class="disclaimer-title">DISCLAIMER</p>
+      <p class="disclaimer-text">The case studies, testimonials, and income figures shown on this page are individual results and do not represent typical or guaranteed outcomes. Success in any business depends on many factors, including effort, experience, market conditions, and personal circumstances. Droparabia does not guarantee that you will achieve the same or similar results. How much you earn or make through Droparabia is determined by the amount of effort you invest into your own business.</p>
     </div>
   </section>
 
@@ -269,6 +257,39 @@ const carousels = [
 </Layout>
 
 <style>
+  /* ─── BACK BUTTON ─── */
+  .back-bar {
+    padding: 16px 0;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-brand);
+    font-size: 1.5rem;
+    font-weight: normal;
+    color: var(--gray-900);
+    text-decoration: none;
+    transition: color 0.15s, gap 0.15s;
+  }
+
+  .back-btn svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    transition: transform 0.15s;
+  }
+
+  .back-btn:hover {
+    color: var(--blue);
+    gap: 4px;
+  }
+
+  .back-btn:hover svg {
+    transform: translateX(-3px);
+  }
+
   /* ─── LAYOUT ─── */
   .tp-container {
     max-width: 1100px;
@@ -282,7 +303,7 @@ const carousels = [
     top: 0;
     z-index: 100;
     background: #e0e0e0;
-    border-bottom: 1px solid var(--gray-200);
+    border-bottom: none;
   }
 
   .tp-header-inner {
@@ -342,7 +363,6 @@ const carousels = [
     padding: 40px 0 36px;
     text-align: center;
     background: #e0e0e0;
-    border-bottom: 1px solid var(--gray-200);
   }
 
   .tp-eyebrow {
@@ -395,7 +415,6 @@ const carousels = [
   /* ─── CASE STUDY BLOCKS ─── */
   .cs-block {
     padding: 40px 0;
-    border-bottom: 1px solid var(--gray-200);
   }
 
   .cs-block:nth-child(even) {
@@ -451,7 +470,6 @@ const carousels = [
   .cta-section {
     padding: 80px 0;
     text-align: center;
-    border-bottom: 1px solid var(--gray-200);
   }
 
   .cta-section.cta-blue {
@@ -473,11 +491,17 @@ const carousels = [
   }
 
   .cta-scarcity {
-    margin-top: 16px;
+    display: block;
+    width: fit-content;
+    margin: 20px auto 0;
     font-size: 0.875rem;
-    color: var(--gray-500);
-    font-weight: 600;
+    color: #dc2626;
+    font-weight: 700;
     letter-spacing: 0.01em;
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    border-radius: 999px;
+    padding: 6px 16px;
   }
 
   .cta-heading {
@@ -540,7 +564,6 @@ const carousels = [
   /* ─── CAROUSELS ─── */
   .tp-carousel-section {
     padding: 64px 0 72px;
-    border-bottom: 1px solid var(--gray-200);
     overflow-x: clip;
   }
 
@@ -587,6 +610,7 @@ const carousels = [
 
   .tp-carousel-section .swiper-button-prev,
   .tp-carousel-section .swiper-button-next {
+    position: absolute;
     width: 48px;
     height: 48px;
     background: var(--blue);
@@ -599,7 +623,7 @@ const carousels = [
     align-items: center;
     justify-content: center;
     transition: background 0.15s, transform 0.1s;
-    top: calc(50% - 24px);
+    top: calc(50% - 48px);
   }
 
   .tp-carousel-section .swiper-button-prev {
@@ -638,16 +662,15 @@ const carousels = [
   /* ─── DISCLAIMER ─── */
   .disclaimer-section {
     padding: 48px 0;
-    border-top: 1px solid var(--gray-300);
     text-align: center;
   }
 
   .disclaimer-title {
-    font-size: 0.75rem;
+    font-size: 1.2rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--gray-500);
+    color: #dc2626;
     margin-bottom: 12px;
   }
 
@@ -657,6 +680,7 @@ const carousels = [
     line-height: 1.75;
     max-width: 740px;
     margin: 0 auto;
+    text-align: left;
   }
 
   /* ─── FOOTER ─── */
@@ -764,7 +788,6 @@ const carousels = [
     /* ─── TESTIMONIAL QUOTES ─── */
   .testimonials-quotes-section {
     padding: 80px 0;
-    border-bottom: 1px solid var(--gray-200);
   }
 
   .testimonials-quotes-heading {
@@ -828,7 +851,7 @@ const carousels = [
       gap: 24px;
     }
 
-    .cs-img-wrap { flex: none; width: 100%; }
+    .cs-img-wrap { flex: none; width: 100%; max-width: 360px; margin: 0 auto; }
 
     .cta-form-card { padding: 28px 24px; }
     .cta-section { padding: 60px 0; }
@@ -870,13 +893,12 @@ const carousels = [
     new Swiper(el, {
       modules: [Navigation, Pagination, Autoplay],
       slidesPerView: 1,
-      spaceBetween: 24,
+      spaceBetween: 16,
       breakpoints: {
-        640: { slidesPerView: 2, spaceBetween: 20 },
-        1024: { slidesPerView: 3, spaceBetween: 24 },
+        768: { slidesPerView: 3, spaceBetween: 24 },
       },
-      loop: true,
-      autoplay: { delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true },
+      loop: false,
+      autoplay: false,
       navigation: {
         nextEl: el.querySelector('.swiper-button-next') as HTMLElement,
         prevEl: el.querySelector('.swiper-button-prev') as HTMLElement,
