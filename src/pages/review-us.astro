@@ -1,0 +1,127 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Review Us on Trustpilot — Droparabia"
+  description="Had a great experience with Droparabia? Leave us a review on Trustpilot and help others discover what's possible."
+>
+  <Fragment slot="head">
+    <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
+  </Fragment>
+
+  <div class="page">
+
+    <!-- BACK -->
+    <div class="back-bar">
+      <a href="/" class="back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        Back
+      </a>
+    </div>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="container">
+
+        <img src="/Droparabia.png" alt="Droparabia" class="logo" />
+        <h1 class="heading">Share your experience</h1>
+        <p class="sub">Your review helps other Lebanese entrepreneurs discover Droparabia and take their first step. It only takes 30 seconds.</p>
+
+        <!-- Trustpilot widget — inline, no container -->
+        <div class="tp-widget-wrap">
+          <div
+            class="trustpilot-widget"
+            data-locale="en-US"
+            data-template-id="56278e9abfbbba0bdcd568bc"
+            data-businessunit-id="69c93861c322e9187383e6cd"
+            data-style-height="52px"
+            data-style-width="100%"
+            data-token="eb2dc92a-bdcd-4655-b540-ed2d94f7c225"
+          >
+            <a href="https://www.trustpilot.com/review/droparabia.com" target="_blank" rel="noopener">Trustpilot</a>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+</Layout>
+
+<style>
+  .page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .container {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* BACK */
+  .back-bar {
+    padding: 20px 24px;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-brand);
+    font-size: 1.5rem;
+    color: var(--gray-900);
+    text-decoration: none;
+    transition: color 0.15s, gap 0.15s;
+  }
+
+  .back-btn svg { flex-shrink: 0; transition: transform 0.15s; }
+  .back-btn:hover { color: var(--blue); gap: 4px; }
+  .back-btn:hover svg { transform: translateX(-3px); }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 32px 0 80px;
+  }
+
+  .logo {
+    width: 88px;
+    height: 88px;
+    border-radius: 22px;
+    object-fit: contain;
+    margin-bottom: 28px;
+  }
+
+  .heading {
+    font-family: var(--font-brand);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: normal;
+    color: var(--gray-900);
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .sub {
+    font-size: 1.0625rem;
+    color: var(--gray-600);
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  /* WIDGET */
+  .tp-widget-wrap {
+    width: 100%;
+    max-width: 420px;
+  }
+</style>
+
