@@ -1437,6 +1437,17 @@ background-position: top left;
     }
   });
 
+  // Fire video_complete when user reaches 80% of the video
+  let videoCompleteTracked = false;
+  player.on('timeupdate', () => {
+    const dur = player.duration;
+    if (!videoCompleteTracked && dur > 0 && player.currentTime >= dur * 0.8) {
+      videoCompleteTracked = true;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'video_complete' });
+    }
+  });
+
   player.on('ready', () => {
     player.speed = 1.2;
   });
@@ -1504,6 +1515,8 @@ background-position: top left;
     try {
       await fetch(this.action, { method: 'POST', body: new FormData(this), mode: 'no-cors' });
       sessionStorage.setItem('da_subscribed', '1');
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'subscription_success_inline' });
       fetch('https://hooks.zapier.com/hooks/catch/27093296/u7ol6r4/', {
         method: 'POST', mode: 'no-cors',
         body: new URLSearchParams({ phone: smsVal }),
@@ -1539,6 +1552,8 @@ background-position: top left;
       sessionStorage.setItem('da_subscribed', '1');
       sessionStorage.setItem('da_sub_email', emailVal);
       sessionStorage.setItem('da_sub_phone', smsVal);
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'subscription_success_popup' });
       // Notify Zapier (fire-and-forget)
       fetch('https://hooks.zapier.com/hooks/catch/27093296/u7ol6r4/', {
         method: 'POST',
