@@ -47,9 +47,9 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       </div>
 
       <div class="tp-trust-badge">
-        <span class="tp-trust-label">Excellent</span>
-        <span class="tp-trust-stars" aria-label="5 stars">★★★★★</span>
-        <span class="tp-trust-count">500+ reviews on</span>
+        <span class="tp-trust-label">Rated Great</span>
+        <span class="tp-trust-stars" aria-label="4 stars">★★★★☆</span>
+        <span class="tp-trust-count">on</span>
         <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="tp-trust-logo" />
       </div>
 
@@ -725,6 +725,13 @@ background-position: top left;
   }
 
   /* ─── VSL VIDEO ─── */
+  /* Hide video duration/time display */
+  .vsl-wrapper .plyr__time,
+  .vsl-wrapper .plyr__time--duration,
+  .vsl-wrapper .plyr__time--current {
+    display: none !important;
+  }
+
   .vsl-wrapper {
     --plyr-color-main: #2563eb;
     --plyr-control-icon-size: 28px;
@@ -733,6 +740,8 @@ background-position: top left;
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 0 0 4px #2563eb, 0 20px 60px rgba(37,99,235,0.18);
+    aspect-ratio: 16 / 9;
+    background: #000;
   }
 
   /* Trustpilot badge under VSL */
@@ -740,30 +749,32 @@ background-position: top left;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin: -16px auto 32px;
+    gap: 14px;
+    margin: 4px auto 36px;
     flex-wrap: wrap;
+    padding: 0;
+    max-width: fit-content;
   }
 
   .tp-trust-label {
-    font-size: 0.9375rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--gray-900);
   }
 
   .tp-trust-stars {
-    font-size: 1.125rem;
+    font-size: 2.25rem;
     color: #00b67a;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
   }
 
   .tp-trust-count {
-    font-size: 0.9375rem;
+    font-size: 1.375rem;
     color: var(--gray-600);
   }
 
   .tp-trust-logo {
-    height: 22px;
+    height: 40px;
     width: auto;
     display: block;
   }
@@ -772,7 +783,7 @@ background-position: top left;
   .vsl-inline-gate {
     max-width: 480px;
     margin: 0 auto;
-    padding: 32px 24px;
+
   }
 
   .vsl-gate-divider {
@@ -967,7 +978,7 @@ background-position: top left;
 
   /* ─── CAROUSEL ─── */
   .carousel-section {
-    padding: 72px 0 80px;
+    padding: 20px 0 80px;
     background: transparent;
     border-top: none;
   }
@@ -1406,6 +1417,28 @@ background-position: top left;
   const player = new Plyr('#vsl-player', {
     controls: ['play-large', 'play', 'mute', 'volume'],
     resetOnEnd: false,
+    speed: { selected: 1.2, options: [0.75, 1, 1.1, 1.2] },
+  });
+
+  // Auto speed: start at 1.2x, step down every 30s after the 1-min mark
+  // 0:00–1:00 → 1.2x | 1:00–1:30 → 1.1x | 1:30+ → 1.0x
+  let speedStage = 0; // 0 = fast, 1 = mid, 2 = normal
+  player.on('timeupdate', () => {
+    const t = player.currentTime;
+    if (t < 60 && speedStage !== 0) {
+      speedStage = 0;
+      player.speed = 1.2;
+    } else if (t >= 60 && t < 90 && speedStage !== 1) {
+      speedStage = 1;
+      player.speed = 1.1;
+    } else if (t >= 90 && speedStage !== 2) {
+      speedStage = 2;
+      player.speed = 1;
+    }
+  });
+
+  player.on('ready', () => {
+    player.speed = 1.2;
   });
 
   const modal = document.getElementById('vsl-modal') as HTMLElement;
