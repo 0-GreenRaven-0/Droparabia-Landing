@@ -852,7 +852,7 @@ background-position: top left;
   .carousel-container {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 76px;
   }
 
   .testimonials-swiper {
@@ -881,6 +881,9 @@ background-position: top left;
     border: none;
     outline: none;
   }
+
+  .testimonials-swiper .swiper-button-prev { left: -64px; }
+  .testimonials-swiper .swiper-button-next { right: -64px; }
 
   .testimonials-swiper .swiper-button-prev::after,
   .testimonials-swiper .swiper-button-next::after {
@@ -1227,6 +1230,9 @@ background-position: top left;
     .form-card { padding: 24px 20px; }
     .bonuses-heading { font-size: 1rem; }
     .bonus-text { font-size: 0.875rem; }
+    .carousel-container { padding: 0 16px; }
+    .testimonials-swiper .swiper-button-prev,
+    .testimonials-swiper .swiper-button-next { display: none; }
 
     /* Headline — more width */
     h1 { padding: 0 8px; }
@@ -1234,10 +1240,11 @@ background-position: top left;
     .carousel-section { padding: 48px 0 56px; }
     .carousel-heading { padding: 0 20px; margin-bottom: 24px; }
 
+    .carousel-container { padding: 0 52px; }
     .testimonials-swiper .swiper-button-prev,
     .testimonials-swiper .swiper-button-next { width: 36px; height: 36px; }
-    .testimonials-swiper .swiper-button-prev { left: 8px; }
-    .testimonials-swiper .swiper-button-next { right: 8px; }
+    .testimonials-swiper .swiper-button-prev { left: -40px; }
+    .testimonials-swiper .swiper-button-next { right: -40px; }
     .testimonials-swiper .swiper-button-prev svg,
     .testimonials-swiper .swiper-button-next svg { width: 18px; height: 18px; }
 
@@ -1254,7 +1261,7 @@ background-position: top left;
   console.log('[DA] Plyr script running, video el:', document.getElementById('vsl-player'));
 
   const player = new Plyr('#vsl-player', {
-    controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+    controls: ['play-large', 'play', 'mute', 'volume'],
     resetOnEnd: false,
   });
 
