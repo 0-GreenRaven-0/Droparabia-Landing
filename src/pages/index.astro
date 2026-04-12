@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { siInstagram, siThreads, siFacebook } from 'simple-icons';
+import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 ---
 
 <Layout>
@@ -46,7 +46,52 @@ import { siInstagram, siThreads, siFacebook } from 'simple-icons';
         </video>
       </div>
 
+      <div class="tp-trust-badge">
+        <span class="tp-trust-label">Excellent</span>
+        <span class="tp-trust-stars" aria-label="5 stars">★★★★★</span>
+        <span class="tp-trust-count">500+ reviews on</span>
+        <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="tp-trust-logo" />
+      </div>
 
+      <!-- INLINE SUBSCRIBE FORM -->
+      <div class="vsl-inline-gate" id="vsl-inline-gate">
+        <div class="vsl-gate-divider">
+          <span class="vsl-gate-or">
+            Subscribe to watch the Free Guide
+          </span>
+        </div>
+        <div id="vsl-inline-success" class="brevo-alert brevo-alert--success" style="display:none">You're in! Scroll up to watch the video.</div>
+        <form id="vsl-inline-form" class="vsl-inline-form" method="POST" action="https://1c3c2cfb.sibforms.com/serve/MUIFAPxMXGELK2J9d0Xxt3PwFRUjxtJZk3Qry8euC5hSvSAPkpZ5LwbXq06mSFZBI-LU2EsYia4abUYDywf846KcddyPIkRgIFLUpa3_CyPYrdcOpuqUjIFu9NxywX-BK3vSvfZ91Wbu_AqEdPe41syClQfRlwdi0VA6Qv-l0kWohS7W5HfLAD_dBWKErnr8MpmZrbTofjCmMm-oXA==" data-type="subscription">
+          <div class="vsl-inline-fields">
+            <div class="field-line">
+              <span class="field-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <input type="text" name="FIRSTNAME" placeholder="First and Last Name" required autocomplete="name" />
+            </div>
+            <div class="field-line">
+              <span class="field-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </span>
+              <input type="text" name="EMAIL" placeholder="Your Best Email" required autocomplete="email" />
+            </div>
+            <div class="field-line">
+              <span class="field-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.31 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.45 5.45l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </span>
+              <input type="hidden" name="SMS__COUNTRY_CODE" value="+961" />
+              <span class="sms-country-fixed">+961</span>
+              <span class="sms-divider">|</span>
+              <input type="tel" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
+            </div>
+            <button type="submit" class="btn-primary vsl-inline-btn">Watch Free Now</button>
+          </div>
+          <br/>
+          <p class="vsl-form-note">You'll also be added to our <strong style="color:#075e54;">WhatsApp channel</strong> where we share free guides and valuable content!</p>
+          <input type="text" name="email_address_check" value="" style="display:none">
+          <input type="hidden" name="locale" value="en">
+        </form>
+      </div>
 
     </div>
   </section>
@@ -148,16 +193,16 @@ import { siInstagram, siThreads, siFacebook } from 'simple-icons';
         <p class="footer-links-label">Follow us</p>
         <div class="footer-socials">
           <!-- Instagram -->
-          <a href="https://www.instagram.com/mjbusinessofficial?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
+          <a href="https://www.instagram.com/mjbusinessofficial?igsh=Mm5jdmFjMTljbm0x" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
             <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siInstagram.path}/></svg>
           </a>
           <!-- Threads -->
-          <a href="https://www.threads.net/@droparabia" target="_blank" rel="noopener" class="footer-social-link" aria-label="Threads">
+          <a href="https://www.threads.com/@mjbusinessofficial" target="_blank" rel="noopener" class="footer-social-link" aria-label="Threads">
             <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siThreads.path}/></svg>
           </a>
-          <!-- Facebook -->
-          <a href="https://www.facebook.com/droparabia" target="_blank" rel="noopener" class="footer-social-link" aria-label="Facebook">
-            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siFacebook.path}/></svg>
+          <!-- YouTube -->
+          <a href="https://www.youtube.com/@MJ.biznes" target="_blank" rel="noopener" class="footer-social-link" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siYoutube.path}/></svg>
           </a>
         </div>
       </div>
@@ -205,6 +250,7 @@ import { siInstagram, siThreads, siFacebook } from 'simple-icons';
           <span class="sms-divider">|</span>
           <input type="tel" id="VSL_SMS" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
         </div>
+        <br/>
         <p class="vsl-form-note">You'll also be add to our <strong style="color:#075e54;">WhatsApp channel</strong> where we share free guides and valuable content!</p>
         <button type="submit" class="btn-primary">Unlock & Watch Free</button>
         <input type="text" name="email_address_check" value="" style="display:none">
@@ -239,9 +285,8 @@ background-position: top left;
 
   /* ─── HERO ─── */
   .hero {
-    padding: 72px 0 56px;
+    padding: 72px 0 0;
     text-align: center;
-    min-height: 80vh;
   }
 
   .brand-inline {
@@ -266,12 +311,12 @@ background-position: top left;
   }
 
   h1 {
-    font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+    font-size: 2.25rem;
     font-weight: 800;
     color: var(--gray-900);
-    line-height: 1.25;
-    letter-spacing: -0.025em;
-    max-width: 680px;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    max-width: 860px;
     margin: 0 auto 28px;
     padding: 0 20px;
   }
@@ -688,6 +733,104 @@ background-position: top left;
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 0 0 4px #2563eb, 0 20px 60px rgba(37,99,235,0.18);
+  }
+
+  /* Trustpilot badge under VSL */
+  .tp-trust-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: -16px auto 32px;
+    flex-wrap: wrap;
+  }
+
+  .tp-trust-label {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+
+  .tp-trust-stars {
+    font-size: 1.125rem;
+    color: #00b67a;
+    letter-spacing: 1px;
+  }
+
+  .tp-trust-count {
+    font-size: 0.9375rem;
+    color: var(--gray-600);
+  }
+
+  .tp-trust-logo {
+    height: 22px;
+    width: auto;
+    display: block;
+  }
+
+  /* ─── INLINE VSL GATE FORM ─── */
+  .vsl-inline-gate {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  .vsl-gate-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .vsl-gate-divider::before,
+  .vsl-gate-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-300);
+  }
+
+  .vsl-gate-or {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1.375rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    white-space: nowrap;
+  }
+
+  .vsl-gate-or svg {
+    color: var(--blue);
+    flex-shrink: 0;
+  }
+
+  .vsl-inline-form .vsl-inline-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .vsl-inline-btn {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .vsl-form-note {
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .vsl-inline-form .vsl-inline-fields {
+      grid-template-columns: 1fr;
+    }
+    .vsl-inline-btn { width: 100%; }
   }
 
   /* Large rectangular play button */
@@ -1217,7 +1360,7 @@ background-position: top left;
     .brand-img { height: 76px; }
     .brand-name-black { font-size: 2.125rem; }
     .brand-logo-inline { gap: 6px; margin-bottom: 6px; }
-    h1 { font-size: 1.5rem; }
+    h1 { font-size: 1.625rem; max-width: 100%; }
 
     .hero-sub {
       flex-direction: column;
@@ -1311,6 +1454,36 @@ background-position: top left;
   });
   vslPopup.addEventListener('click', (e) => { if (e.target === vslPopup) { vslPopup.classList.remove('is-open'); vslPopup.setAttribute('aria-hidden', 'true'); } });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { vslPopup.classList.remove('is-open'); vslPopup.setAttribute('aria-hidden', 'true'); } });
+
+  // ── Inline form: subscribe & play without modal ──
+  const inlineForm = document.getElementById('vsl-inline-form') as HTMLFormElement;
+  const inlineSuccess = document.getElementById('vsl-inline-success') as HTMLElement;
+
+  inlineForm?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const smsVal = (this.querySelector('[name="SMS"]') as HTMLInputElement)?.value ?? '';
+
+    btn.disabled = true;
+    btn.textContent = 'Subscribing...';
+
+    try {
+      await fetch(this.action, { method: 'POST', body: new FormData(this), mode: 'no-cors' });
+      sessionStorage.setItem('da_subscribed', '1');
+      fetch('https://hooks.zapier.com/hooks/catch/27093296/u7ol6r4/', {
+        method: 'POST', mode: 'no-cors',
+        body: new URLSearchParams({ phone: smsVal }),
+      }).catch(() => {});
+      this.style.display = 'none';
+      inlineSuccess.style.display = 'block';
+      // Scroll to video and play
+      document.getElementById('vsl-player')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => player.play(), 600);
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Watch Free Now';
+    }
+  });
 
   modalForm.addEventListener('submit', async function(e) {
     e.preventDefault();
