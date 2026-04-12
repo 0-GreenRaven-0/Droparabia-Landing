@@ -1474,7 +1474,8 @@ background-position: top left;
   let popupShown = false;
 
   player.on('timeupdate', () => {
-    if (!popupShown && player.currentTime >= 360) {
+    const dur = player.duration;
+    if (!popupShown && dur > 0 && player.currentTime >= dur / 2) {
       popupShown = true;
       vslPopup.classList.add('is-open');
       vslPopup.setAttribute('aria-hidden', 'false');
