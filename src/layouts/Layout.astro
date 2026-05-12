@@ -22,6 +22,9 @@ const {
     <!-- End Google Tag Manager -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <link rel="icon" href="/Droparabia.png" type="image/png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
@@ -98,6 +101,7 @@ const {
   html {
     scroll-behavior: smooth;
     background: #e0e0e0;
+    overflow-x: hidden;
   }
 
   body {
@@ -107,6 +111,7 @@ const {
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   img {

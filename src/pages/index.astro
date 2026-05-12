@@ -13,32 +13,17 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   <!-- HERO -->
   <section class="hero bg">
     <div class="container">
-      <p class="hero-eyebrow">Learn how to use</p>
+
+      <!-- ATTENTION BAR -->
+      <div class="attention-bar">
+        <span class="attention-bar-label">Free Video Tutorial</span>
+        <span class="attention-bar-text">Brought to you by a 6-Figures Dropshipper who helped <strong>+500 Lebanese</strong> build a successful online business</span>
+      </div>
+
       <h1>
-        <span class="brand-logo-inline">
-          <img src="/Droparabia.png" alt="Droparabia logo" class="brand-img" />
-          <span class="brand-name-black">Droparabia</span>
-        </span>
-        <br />
-        The 1st Dropshipping Platform in Lebanon that allowed
-        <span class="accent">+500 Lebanese</span> to start a profitable online business
-        in less than <span class="accent">30 days!</span>
+        How to start a local Dropshipping Business in Lebanon &amp; Earn your first <span class="accent">$3,000</span>
+<span class="h1-sub">Without Owning Any Inventory or Investing thousands of dollars</span>
       </h1>
-      <ul class="hero-sub">
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#2563eb"/><path d="M7 12.5l3.5 3.5 6.5-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          No Huge Upfront Costs
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#2563eb"/><path d="M7 12.5l3.5 3.5 6.5-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          No Searching for hours on Ali Baba
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#2563eb"/><path d="M7 12.5l3.5 3.5 6.5-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          No Warehouses
-        </li>
-      </ul>
-      <br/>
       <!-- VSL Video -->
       <div class="vsl-wrapper">
         <video id="vsl-player" playsinline>
@@ -46,12 +31,6 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         </video>
       </div>
 
-      <div class="tp-trust-badge">
-        <span class="tp-trust-label">Rated Great</span>
-        <span class="tp-trust-stars" aria-label="4 stars">★★★★☆</span>
-        <span class="tp-trust-count">on</span>
-        <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="tp-trust-logo" />
-      </div>
 
       <!-- INLINE SUBSCRIBE FORM -->
       <div class="vsl-inline-gate" id="vsl-inline-gate">
@@ -285,7 +264,7 @@ background-position: top left;
 
   /* ─── HERO ─── */
   .hero {
-    padding: 72px 0 0;
+    padding: 48px 0 0;
     text-align: center;
   }
 
@@ -296,29 +275,72 @@ background-position: top left;
     font-size: 1.15em;
   }
 
-  .hero-eyebrow {
-    display: inline-block;
-    font-family: var(--font-brand);
-    font-size: 1.375rem;
-    font-weight: normal;
-    color: var(--gray-900);
+  /* ─── ATTENTION BAR ─── */
+  /* ─── ATTENTION BAR ─── */
+  .attention-bar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     background: none;
-    border: none;
     padding: 0;
+    text-align: center;
+    flex-wrap: wrap;
     margin-bottom: 20px;
-    letter-spacing: 0;
-    text-transform: none;
+  }
+
+  .attention-bar-label {
+    background: var(--blue);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .attention-bar-text {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    line-height: 1.4;
+  }
+
+  .attention-bar-text strong {
+    color: var(--gray-900);
+    font-weight: 700;
   }
 
   h1 {
+    font-family: var(--font-brand);
     font-size: 2.25rem;
-    font-weight: 800;
+    font-weight: normal;
     color: var(--gray-900);
-    line-height: 1.2;
+    line-height: 1.25;
     letter-spacing: -0.03em;
     max-width: 860px;
     margin: 0 auto 28px;
     padding: 0 20px;
+  }
+
+  .h1-divider {
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: var(--blue);
+    border-radius: 2px;
+    margin: 16px auto 18px;
+  }
+
+  .h1-sub {
+    display: block;
+    font-size: 1.375rem;
+    font-weight: 400;
+    color: var(--gray-600);
+    letter-spacing: -0.01em;
+    line-height: 1.35;
   }
 
   .brand-logo-inline {
@@ -351,9 +373,7 @@ background-position: top left;
   }
 
   .hero-sub {
-    list-style: none;
-    display: flex;
-    align-items: center;
+    display: none;
     justify-content: center;
     gap: 28px;
     flex-wrap: wrap;
@@ -783,7 +803,9 @@ background-position: top left;
   .vsl-inline-gate {
     max-width: 480px;
     margin: 0 auto;
-
+    padding: 0 20px;
+    box-sizing: border-box;
+    width: 100%;
   }
 
   .vsl-gate-divider {
@@ -791,9 +813,7 @@ background-position: top left;
     align-items: center;
     gap: 12px;
     margin-bottom: 24px;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
   }
 
   .vsl-gate-divider::before,
@@ -811,7 +831,8 @@ background-position: top left;
     font-size: 1.375rem;
     font-weight: 800;
     color: var(--gray-900);
-    white-space: nowrap;
+    white-space: normal;
+    text-align: center;
   }
 
   .vsl-gate-or svg {
@@ -981,6 +1002,7 @@ background-position: top left;
     padding: 20px 0 80px;
     background: transparent;
     border-top: none;
+    overflow-x: clip;
   }
 
   .carousel-heading {
@@ -1350,7 +1372,7 @@ background-position: top left;
   /* ─── RESPONSIVE ─── */
   /* ─── TABLET (max 768px) ─── */
   @media (max-width: 768px) {
-    .bg { background-size: 260px 260px; }
+    .bg { background-size: 180px 180px; }
     .hero { min-height: unset; padding: 80px 0 48px; }
     .vsl-wrapper { margin: 0 24px 32px; }
     .brand-img { height: 64px; }
@@ -1366,12 +1388,16 @@ background-position: top left;
 
   /* ─── MOBILE (max 480px) ─── */
   @media (max-width: 480px) {
-    .bg { background-size: 180px 180px; }
+    .bg { background-size: 110px 110px; }
     .hero { min-height: unset; padding: 74px 0 16px; }
     .brand-img { height: 76px; }
     .brand-name-black { font-size: 2.125rem; }
     .brand-logo-inline { gap: 6px; margin-bottom: 6px; }
-    h1 { font-size: 1.625rem; max-width: 100%; }
+    h1 { font-size: 2.125rem; max-width: 100%; }
+    .h1-sub { font-size: 1.4rem; }
+    .attention-bar { gap: 6px; }
+    .attention-bar-label { font-size: 0.6875rem; }
+    .attention-bar-text { font-size: 0.75rem; }
 
     .hero-sub {
       flex-direction: column;
