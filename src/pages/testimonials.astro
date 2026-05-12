@@ -100,37 +100,7 @@ const carousels = [
   <!-- PAGE HERO -->
   <section class="tp-hero">
     <div class="tp-container">
-      <div class="tp-hero-inner">
-
-        <div class="tp-hero-brand-pill">
-          <img src="/Droparabia.png" alt="Droparabia" class="tp-hero-pill-logo" />
-          <span class="tp-hero-pill-name">Droparabia</span>
-        </div>
-
-        <h1 class="tp-h1">
-          Over <span class="tp-h1-accent">+500</span> Lebanese are<br />building with Droparabia
-        </h1>
-
-        <p class="tp-hero-sub">Real case studies. Real numbers. No fluff.</p>
-
-        <div class="tp-hero-metrics">
-          <div class="tp-metric">
-            <span class="tp-metric-val">$3,200+</span>
-            <span class="tp-metric-desc">avg. first month revenue</span>
-          </div>
-          <div class="tp-metric-divider"></div>
-          <div class="tp-metric">
-            <span class="tp-metric-val">Day 9</span>
-            <span class="tp-metric-desc">average first sale</span>
-          </div>
-          <div class="tp-metric-divider"></div>
-          <div class="tp-metric">
-            <span class="tp-metric-val">4.8 ★</span>
-            <span class="tp-metric-desc">community store rating</span>
-          </div>
-        </div>
-
-      </div>
+      <h1 class="tp-h1">We'll let our case studies speak for themselves</h1>
     </div>
   </section>
 
@@ -235,23 +205,20 @@ const carousels = [
 
   <!-- CTA FINAL -->
   <section class="cta-section cta-final">
-    <div class="tp-container">
-      <div class="cta-brand-row">
-        <img src="/Droparabia.png" alt="Droparabia" class="cta-brand-img" />
-        <span class="cta-brand-name">Droparabia</span>
-      </div>
-      <h2 class="cta-heading cta-heading--large">
-        Build your own profitable Dropshipping in less than 30 days!
-      </h2>
-      <p class="cta-sub cta-sub--large">Book a free call with our team so you can get access to Droparabia and get started right away!</p>
-      <ul class="cta-bullets">
-        <li>✓ No experience needed</li>
-        <li>✓ No huge upfront costs</li>
-        <li>✓ Constant support from our team</li>
-      </ul>
-      <a id="cta-book-call-testimonials" href="https://calendly.com/d/cr37-8xm-k5s/45-min-lead-advisory-call" target="_blank" rel="noopener" class="btn-book-call btn-book-call--large">Book a Free Call</a>
-      <p class="cta-scarcity">🔴 Only 10 Users are accepted per week to make sure we're helping everyone.</p>
-    </div>
+    <h2 class="cta-heading cta-heading--large">
+      Ready to build your own business like they did?
+    </h2>
+    <p class="cta-sub cta-sub--large">Book a free call with our team so you can get access to Droparabia and get started right away!</p>
+    <ul class="cta-bullets">
+      <li>✓ No experience needed</li>
+      <li>✓ No huge upfront costs</li>
+      <li class="cta-bullet-green">✓ 90 days money back guarantee</li>
+    </ul>
+    <a id="cta-book-call-testimonials" href="https://calendly.com/d/cr37-8xm-k5s/45-min-lead-advisory-call" target="_blank" rel="noopener" class="btn-book-call btn-book-call--large">
+      <span class="btn-main-text">Let's get you started!</span>
+      <span class="btn-sub-text">Book a Free call to get instant access</span>
+    </a>
+    <p class="cta-scarcity">Only 10 Users are taken each week to make sure we're helping everyone.</p>
   </section>
 
   <!-- DISCLAIMER -->
@@ -398,7 +365,7 @@ const carousels = [
 
   /* ─── PAGE HERO ─── */
   .tp-hero {
-    padding: 48px 0 56px;
+    padding: 32px 0 8px;
     text-align: center;
     background: #e0e0e0;
   }
@@ -440,12 +407,13 @@ const carousels = [
 
   /* Headline */
   .tp-h1 {
+    font-family: var(--font-brand);
     font-size: clamp(2rem, 4.5vw, 3rem);
-    font-weight: 800;
+    font-weight: normal;
     color: var(--gray-900);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.01em;
     line-height: 1.15;
-    margin-bottom: 16px;
+    margin-bottom: 4px;
   }
 
   .tp-h1-accent {
@@ -583,14 +551,15 @@ const carousels = [
 
   .cta-section.cta-final {
     background: #e0e0e0;
-    padding: 80px 24px;
+    padding: 64px 24px;
     text-align: center;
   }
+
 
   .cta-section.cta-final .tp-container {
     background: #ffffff;
     border-radius: 28px;
-    padding: 64px 64px 56px;
+    padding: 32px 32px 28px;
     max-width: 700px;
     position: relative;
     overflow: hidden;
@@ -666,7 +635,7 @@ const carousels = [
     font-size: clamp(1.75rem, 3.5vw, 2.5rem);
     font-weight: normal;
     color: var(--gray-900);
-    max-width: 520px;
+    max-width: none;
     margin: 0 auto 16px;
     letter-spacing: -0.02em;
     line-height: 1.2;
@@ -675,7 +644,7 @@ const carousels = [
 
   .cta-heading--large {
     font-size: clamp(1.5rem, 3vw, 2rem);
-    max-width: 560px;
+    max-width: none;
     margin-left: auto;
     margin-right: auto;
   }
@@ -691,14 +660,14 @@ const carousels = [
   .cta-section.cta-final .cta-sub--large {
     font-size: 1rem;
     color: var(--gray-500);
-    max-width: 460px;
+    max-width: none;
     margin: 0 auto 40px;
     line-height: 1.7;
   }
 
   .cta-sub--large {
     font-size: 1.125rem;
-    max-width: 520px;
+    max-width: none;
   }
 
   .cta-section.cta-final .cta-bullets {
@@ -724,20 +693,17 @@ const carousels = [
   }
 
   .cta-section.cta-final .cta-bullets li {
-    background: var(--blue-light);
-    border: 1px solid var(--blue-border);
-    border-radius: 999px;
-    padding: 8px 20px;
+    background: none;
+    border: none;
+    padding: 4px 0;
     font-size: 0.9375rem;
     font-weight: 600;
     color: var(--blue);
     list-style: none;
-    transition: background 0.2s, border-color 0.2s;
   }
 
-  .cta-section.cta-final .cta-bullets li:hover {
-    background: var(--blue-mid);
-    border-color: var(--blue-border);
+  .cta-section.cta-final .cta-bullets li.cta-bullet-green {
+    color: #166534;
   }
 
   .cta-bullets li {
@@ -761,8 +727,8 @@ const carousels = [
   }
 
   .cta-section.cta-final .cta-scarcity {
-    background: #fef2f2;
-    border: 1px solid #fca5a5;
+    background: none;
+    border: none;
     color: #dc2626;
     font-size: 0.8125rem;
     position: relative;
@@ -770,46 +736,53 @@ const carousels = [
 
   /* ─── BOOK A CALL BUTTON ─── */
   .btn-book-call {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 16px 36px;
-    background: var(--blue);
-    color: var(--white);
-    font-size: 1.0625rem;
-    font-weight: 700;
-    border-radius: var(--radius-sm);
+    display: inline-block;
+    padding: 12px 28px;
+    background: #16a34a;
+    color: #fff;
+    border-radius: 8px;
     text-decoration: none;
-    letter-spacing: 0.02em;
-    box-shadow: var(--shadow-blue);
-    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-    position: relative;
+    box-shadow: 0 8px 32px rgba(22,163,74,0.35);
+    transition: background 0.15s, transform 0.1s;
+    animation: cta-shake 2s ease-in-out infinite;
   }
 
   .btn-book-call:hover {
-    background: var(--blue-hover);
+    background: #15803d;
     transform: translateY(-2px);
-    box-shadow: 0 14px 40px rgba(37,99,235,0.4);
-    color: var(--white);
+    color: #fff;
   }
 
-  .btn-book-call--large {
-    font-size: 1.125rem;
-    padding: 18px 52px;
-    animation: cta-pulse 2.8s ease-in-out infinite;
+  .btn-main-text {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.4;
   }
 
-  @keyframes cta-pulse {
-    0%, 100% { box-shadow: 0 8px 32px rgba(37,99,235,0.3); }
-    50%       { box-shadow: 0 8px 48px rgba(37,99,235,0.6), 0 0 0 6px rgba(37,99,235,0.08); }
+  .btn-sub-text {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    opacity: 0.85;
+    line-height: 1.4;
+  }
+
+  @keyframes cta-shake {
+    0%, 70%, 100% { transform: translateX(0); }
+    72%           { transform: translateX(-4px); }
+    74%           { transform: translateX(4px); }
+    76%           { transform: translateX(-4px); }
+    78%           { transform: translateX(4px); }
+    80%           { transform: translateX(0); }
   }
 
   @media (max-width: 768px) {
-    .cta-section.cta-final .tp-container { padding: 52px 36px 48px; }
+    .cta-section.cta-final .tp-container { padding: 28px 24px 24px; }
   }
 
   @media (max-width: 480px) {
-    .cta-section.cta-final .tp-container { padding: 44px 24px 40px; border-radius: 20px; }
+    .cta-section.cta-final .tp-container { padding: 24px 20px 20px; border-radius: 20px; }
     .cta-section.cta-final .cta-bullets { flex-direction: column; align-items: center; }
   }
 

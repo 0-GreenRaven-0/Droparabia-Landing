@@ -36,7 +36,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       <div class="vsl-inline-gate" id="vsl-inline-gate">
         <div class="vsl-gate-divider">
           <span class="vsl-gate-or">
-            Subscribe to watch the Free Guide
+            Subscribe to watch the Free Tutorial
           </span>
         </div>
         <div id="vsl-inline-success" class="brevo-alert brevo-alert--success" style="display:none">You're in! Scroll up to watch the video.</div>
@@ -82,7 +82,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   <!-- TESTIMONIALS CAROUSEL -->
   <section class="carousel-section">
     <h2 class="carousel-heading">
-      Weekly Wins shared by over <span class="carousel-brand">+500 Users</span></h2>
+      Weekly Wins shared by over <span class="carousel-brand">+500 User</span></h2>
     <div style="text-align:center;margin-bottom:20px;">
       <a href="/testimonials" class="view-all-case-studies">Click to see more case studies &rarr;</a>
     </div>
@@ -109,7 +109,6 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
           <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(17).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
           <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(18).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
         </div>
-        <div class="swiper-pagination"></div>
         <button class="swiper-button-prev" aria-label="Previous">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
         </button>
@@ -1002,7 +1001,6 @@ background-position: top left;
     padding: 20px 0 80px;
     background: transparent;
     border-top: none;
-    overflow-x: clip;
   }
 
   .carousel-heading {
@@ -1410,21 +1408,17 @@ background-position: top left;
     .form-card { padding: 24px 20px; }
     .bonuses-heading { font-size: 1rem; }
     .bonus-text { font-size: 0.875rem; }
-    .carousel-container { padding: 0 16px; }
-    .testimonials-swiper .swiper-button-prev,
-    .testimonials-swiper .swiper-button-next { display: none; }
-
     /* Headline — more width */
     h1 { padding: 0 8px; }
 
     .carousel-section { padding: 48px 0 56px; }
     .carousel-heading { padding: 0 20px; margin-bottom: 24px; }
 
-    .carousel-container { padding: 0 52px; }
+    .carousel-container { padding: 0 44px; }
     .testimonials-swiper .swiper-button-prev,
-    .testimonials-swiper .swiper-button-next { width: 36px; height: 36px; }
-    .testimonials-swiper .swiper-button-prev { left: -40px; }
-    .testimonials-swiper .swiper-button-next { right: -40px; }
+    .testimonials-swiper .swiper-button-next { display: flex; width: 36px; height: 36px; }
+    .testimonials-swiper .swiper-button-prev { left: -38px; }
+    .testimonials-swiper .swiper-button-next { right: -38px; }
     .testimonials-swiper .swiper-button-prev svg,
     .testimonials-swiper .swiper-button-next svg { width: 18px; height: 18px; }
 
@@ -1624,10 +1618,7 @@ background-position: top left;
       nextEl: '.swiper-button-next',
       prevEl: '.swiper-button-prev',
     },
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-    },
+    pagination: false,
   });
 </script>
 
