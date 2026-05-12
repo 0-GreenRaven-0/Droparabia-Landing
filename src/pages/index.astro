@@ -31,6 +31,27 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         </video>
       </div>
 
+      <!-- CTA LOCK (appears below VSL after 44s) -->
+      <div id="vsl-cta-lock" class="vsl-cta-lock" style="display:none">
+        <button id="vsl-cta-lock-close" class="vsl-cta-lock-close" aria-label="Close">&times;</button>
+        <a href="https://calendly.com/d/cr37-8xm-k5s/45-min-lead-advisory-call" target="_blank" rel="noopener" class="vsl-cta-lock-btn">
+          Click Here to Book a Free Call with our team
+        </a>
+        <div class="vsl-cta-tp-badge">
+          <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="vsl-cta-tp-img" />
+          <div class="vsl-cta-tp-rating">
+            <span class="vsl-cta-tp-great">Great!</span>
+            <div class="vsl-cta-tp-stars">
+              <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
+              <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
+              <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
+              <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
+            </div>
+          </div>
+        </div>
+        <p class="vsl-cta-lock-note">Only 10 spots are available each week to make sure we're helping everyone efficiently getting started</p>
+      </div>
+
 
       <!-- INLINE SUBSCRIBE FORM -->
       <div class="vsl-inline-gate" id="vsl-inline-gate">
@@ -140,16 +161,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 
 
   <!-- VSL 6-MIN POPUP -->
-  <div id="vsl-popup" class="vsl-popup-overlay" aria-hidden="true">
-    <div class="vsl-popup-box" role="dialog" aria-modal="true">
-      <button class="vsl-popup-close" id="vsl-popup-close" aria-label="Close">&times;</button>
-      <div class="vsl-popup-emoji">🚀</div>
-      <h2 class="vsl-popup-heading">Ready to launch your own business with Droparabia?</h2>
-      <p class="vsl-popup-sub">Book a free call with our team to give you access to Droparabia and get you started as soon as possible!</p>
-      <a href="https://calendly.com/d/cr37-8xm-k5s/45-min-lead-advisory-call" target="_blank" rel="noopener" class="btn-book-call btn-book-call--large">Book a Free Call</a>
-      <span class="vsl-popup-scarcity">🔴 Only 10 spots available per week</span>
-    </div>
-  </div>
+  <div id="page-dim-overlay" class="page-dim-overlay"></div>
 
   <!-- FOOTER -->
   <footer class="footer">
@@ -1300,92 +1312,133 @@ background-size: 300px 300px;
   }
 
   /* ─── VSL POPUP ─── */
-  .vsl-popup-overlay {
+  /* ─── PAGE DIM OVERLAY ─── */
+  .page-dim-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.72);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    background: rgba(0,0,0,0.78);
+    z-index: 100;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.25s, visibility 0.25s;
+    transition: opacity 0.35s, visibility 0.35s;
   }
 
-  .vsl-popup-overlay.is-open {
+  body.page-dimmed .page-dim-overlay {
     opacity: 1;
     visibility: visible;
   }
 
-  .vsl-popup-box {
-    background: var(--white);
-    border-radius: 20px;
-    padding: 48px 40px 40px;
-    max-width: 480px;
-    width: 100%;
-    text-align: center;
+  body.page-dimmed .vsl-wrapper {
     position: relative;
-    transform: translateY(16px) scale(0.97);
-    transition: transform 0.25s;
-    box-shadow: var(--shadow-lg);
+    z-index: 102;
   }
 
-  .vsl-popup-overlay.is-open .vsl-popup-box {
-    transform: translateY(0) scale(1);
+  /* ─── VSL CTA LOCK ─── */
+  .vsl-cta-lock {
+    position: relative;
+    z-index: 102;
+    background: #fff;
+    border-radius: 14px;
+    padding: 32px 24px 20px;
+    max-width: 620px;
+    margin: 12px auto 0;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    animation: cta-lock-in 0.3s ease both;
   }
 
-  .vsl-popup-close {
+  @keyframes cta-lock-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .vsl-cta-lock-close {
     position: absolute;
-    top: 14px;
-    right: 16px;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
+    top: 10px;
+    right: 12px;
+    background: var(--gray-100);
+    border: 1px solid var(--gray-300);
+    font-size: 1.125rem;
     line-height: 1;
-    color: var(--gray-400);
+    color: var(--gray-700);
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: var(--radius-sm);
+    padding: 3px 8px;
+    border-radius: 6px;
     transition: background 0.15s, color 0.15s;
+    font-weight: 600;
   }
 
-  .vsl-popup-close:hover { background: var(--gray-200); color: var(--gray-900); }
+  .vsl-cta-lock-close:hover { background: var(--gray-200); color: var(--gray-900); }
 
-  .vsl-popup-emoji { font-size: 2.5rem; margin-bottom: 16px; }
+  .vsl-cta-lock-btn {
+    display: block;
+    background: #16a34a;
+    color: #fff;
+    font-size: 1.125rem;
+    font-weight: 700;
+    padding: 14px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 16px rgba(22,163,74,0.3);
+    transition: background 0.15s;
+    animation: cta-shake 2s ease-in-out infinite;
+  }
 
-  .vsl-popup-heading {
-    font-size: clamp(1.375rem, 3vw, 1.75rem);
+  .vsl-cta-lock-btn:hover { background: #15803d; }
+
+  .vsl-cta-tp-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .vsl-cta-tp-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .vsl-cta-tp-great {
+    font-size: 0.9375rem;
     font-weight: 800;
     color: var(--gray-900);
-    letter-spacing: -0.025em;
-    margin-bottom: 12px;
-    line-height: 1.25;
   }
 
-  .vsl-popup-sub {
-    font-size: 1rem;
-    color: var(--gray-600);
-    line-height: 1.65;
-    margin-bottom: 32px;
+  .vsl-cta-tp-stars {
+    display: flex;
+    gap: 2px;
   }
 
-  .vsl-popup-scarcity {
+  .tp-star-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: #00b67a;
+    flex-shrink: 0;
+  }
+
+  .tp-star-box svg {
     display: block;
-    width: fit-content;
-    margin: 16px auto 0;
-    font-size: 0.8125rem;
-    color: #dc2626;
-    font-weight: 700;
-    background: #fef2f2;
-    border: 1px solid #fca5a5;
-    border-radius: 999px;
-    padding: 5px 14px;
+    width: 16px;
+    height: 16px;
   }
 
-  @media (max-width: 480px) {
-    .vsl-popup-box { padding: 40px 24px 32px; }
+  .vsl-cta-tp-img {
+    height: 22px;
+    width: auto;
+    display: block;
+  }
+
+  .vsl-cta-lock-note {
+    font-size: 0.8125rem;
+    color: var(--gray-900);
+    font-weight: 600;
+    line-height: 1.5;
   }
 
   /* ─── RESPONSIVE ─── */
@@ -1403,6 +1456,11 @@ background-size: 300px 300px;
 
     .form-card { padding: 28px 32px; }
 
+  }
+
+  /* ─── TABLET CTA LOCK ─── */
+  @media (max-width: 768px) {
+    .vsl-cta-lock { margin: 8px 24px 0; }
   }
 
   /* ─── MOBILE (max 480px) ─── */
@@ -1445,6 +1503,12 @@ background-size: 300px 300px;
 
     .footer-inner { flex-direction: column; gap: 32px; }
     .footer-brand { max-width: 100%; }
+
+    .vsl-cta-lock { margin: 8px 16px 0; padding: 32px 16px 14px; }
+    .vsl-cta-lock-btn { font-size: 1.0625rem; padding: 11px 14px; }
+    .vsl-cta-tp-badge { flex-direction: column; gap: 6px; }
+    .vsl-cta-tp-img { height: 44px; }
+    .vsl-cta-lock-note { font-size: 0.75rem; }
   }
 </style>
 
@@ -1520,26 +1584,26 @@ background-size: 300px 300px;
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-  // 6-minute popup
-  const vslPopup = document.getElementById('vsl-popup') as HTMLElement;
-  const vslPopupClose = document.getElementById('vsl-popup-close') as HTMLElement;
-  let popupShown = false;
+  // 44-second page dim + CTA lock
+  const ctaLock = document.getElementById('vsl-cta-lock') as HTMLElement;
+  const ctaLockClose = document.getElementById('vsl-cta-lock-close') as HTMLElement;
+  let ctaShown = false;
 
   player.on('timeupdate', () => {
-    const dur = player.duration;
-    if (!popupShown && player.currentTime >= 44) {
-      popupShown = true;
-      vslPopup.classList.add('is-open');
-      vslPopup.setAttribute('aria-hidden', 'false');
+    if (!ctaShown && player.currentTime >= 44) {
+      ctaShown = true;
+      ctaLock.style.display = 'block';
+      document.body.classList.add('page-dimmed');
+      setTimeout(() => {
+        ctaLock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
     }
   });
 
-  vslPopupClose.addEventListener('click', () => {
-    vslPopup.classList.remove('is-open');
-    vslPopup.setAttribute('aria-hidden', 'true');
+  ctaLockClose.addEventListener('click', () => {
+    document.body.classList.remove('page-dimmed');
+    ctaLock.style.display = 'none';
   });
-  vslPopup.addEventListener('click', (e) => { if (e.target === vslPopup) { vslPopup.classList.remove('is-open'); vslPopup.setAttribute('aria-hidden', 'true'); } });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { vslPopup.classList.remove('is-open'); vslPopup.setAttribute('aria-hidden', 'true'); } });
 
   // ── Inline form: subscribe & play without modal ──
   const inlineForm = document.getElementById('vsl-inline-form') as HTMLFormElement;
