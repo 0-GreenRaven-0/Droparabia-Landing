@@ -26,7 +26,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       </h1>
       <!-- VSL Video -->
       <div class="vsl-wrapper">
-        <video id="vsl-player" playsinline>
+        <video id="vsl-player" playsinline preload="none">
           <source src="/vsl.mp4" type="video/mp4" />
         </video>
       </div>
@@ -50,6 +50,13 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
           </div>
         </div>
         <p class="vsl-cta-lock-note">Only 10 spots are available each week to make sure we're helping everyone efficiently getting started</p>
+        <div class="guarantee-block">
+          <img src="/MBG.png" alt="Money Back Guarantee" class="guarantee-img" />
+          <div>
+            <p class="guarantee-headline">90-Day Money Back Guarantee</p>
+            <p class="guarantee-sub">If you don't get any results after you implement everything</p>
+          </div>
+        </div>
       </div>
 
 
@@ -75,6 +82,13 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
             </div>
           </div>
           <p class="vsl-cta-lock-note">Only 10 spots are available each week to make sure we're helping everyone efficiently getting started</p>
+          <div class="guarantee-block">
+            <img src="/MBG.png" alt="Money Back Guarantee" class="guarantee-img" />
+            <div>
+              <p class="guarantee-headline">90-Day Money Back Guarantee</p>
+              <p class="guarantee-sub">If you're not satisfied, we'll give you a full refund</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1477,6 +1491,36 @@ background-size: 300px 300px;
     color: var(--gray-900);
     font-weight: 600;
     line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .guarantee-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 8px;
+    text-align: left;
+  }
+
+  .guarantee-img {
+    width: 100px;
+    flex-shrink: 0;
+  }
+
+  .guarantee-headline {
+    font-family: var(--font-brand);
+    font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+    font-weight: bold;
+    color: var(--gray-900);
+    line-height: 1.2;
+  }
+
+  .guarantee-sub {
+    font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+    color: var(--gray-600);
+    line-height: 1.4;
   }
 
   /* ─── RESPONSIVE ─── */
@@ -1544,8 +1588,14 @@ background-size: 300px 300px;
 
     .vsl-cta-lock { margin: 8px 16px 0; padding: 32px 16px 14px; }
     .vsl-cta-lock-btn { font-size: 1.0625rem; padding: 11px 14px; }
-    .vsl-cta-tp-badge { flex-direction: column; gap: 6px; }
-    .vsl-cta-tp-img { height: 44px; }
+    .vsl-cta-tp-badge { flex-direction: row; gap: 5px; flex-wrap: nowrap; }
+    .vsl-cta-tp-img { height: 20px; }
+    .tp-star-box { width: 20px; height: 20px; }
+    .tp-star-box svg { width: 12px; height: 12px; }
+    .vsl-cta-tp-great { font-size: 0.8rem; }
+    .guarantee-img { width: 80px; }
+    .guarantee-headline { font-size: 0.875rem; }
+    .guarantee-sub { font-size: 0.75rem; }
     .vsl-cta-lock-note { font-size: 0.75rem; }
   }
 </style>
@@ -1672,9 +1722,12 @@ background-size: 300px 300px;
       }).catch(() => {});
       const inlineGate = document.getElementById('vsl-inline-gate') as HTMLElement;
       if (inlineGate) inlineGate.style.display = 'none';
-      // Scroll to video and play
+      // Scroll to video, start loading, play when ready
       document.getElementById('vsl-player')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      setTimeout(() => player.play(), 600);
+      const videoEl = player.media as HTMLVideoElement;
+      videoEl.preload = 'auto';
+      videoEl.load();
+      videoEl.addEventListener('canplay', () => player.play(), { once: true });
     } catch {
       btn.disabled = false;
       btn.textContent = 'Unlock My Free Guide';
@@ -1710,11 +1763,14 @@ background-size: 300px 300px;
         body: new URLSearchParams({ phone: smsVal }),
       }).catch(() => {});
       successEl.style.display = 'block';
-      btn.textContent = 'Starting video...';
-      setTimeout(() => {
+      btn.textContent = 'Loading video...';
+      const videoElModal = player.media as HTMLVideoElement;
+      videoElModal.preload = 'auto';
+      videoElModal.load();
+      videoElModal.addEventListener('canplay', () => {
         closeModal();
         player.play();
-      }, 1200);
+      }, { once: true });
     } catch {
       btn.disabled = false;
       btn.textContent = 'Unlock & Watch Free';
