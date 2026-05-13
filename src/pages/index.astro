@@ -53,6 +53,31 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       </div>
 
 
+      <!-- BOOK A CALL GATE (shown after CTA lock is dismissed) -->
+      <div id="vsl-book-call-gate" class="vsl-book-call-gate" style="display:none">
+        <div class="vsl-gate-divider">
+          <span class="vsl-gate-or">Ready to build your own business?</span>
+        </div>
+        <div class="vsl-book-call-content">
+          <a href="https://calendly.com/d/cr37-8xm-k5s/45-min-lead-advisory-call" target="_blank" rel="noopener" class="vsl-cta-lock-btn">
+            Click Here to Book a Free Call with our team
+          </a>
+          <div class="vsl-cta-tp-badge">
+            <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="vsl-cta-tp-img" />
+            <div class="vsl-cta-tp-rating">
+              <span class="vsl-cta-tp-great">Great!</span>
+              <div class="vsl-cta-tp-stars">
+                <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
+                <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
+                <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
+                <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
+              </div>
+            </div>
+          </div>
+          <p class="vsl-cta-lock-note">Only 10 spots are available each week to make sure we're helping everyone efficiently getting started</p>
+        </div>
+      </div>
+
       <!-- INLINE SUBSCRIBE FORM -->
       <div class="vsl-inline-gate" id="vsl-inline-gate">
         <div class="vsl-gate-divider">
@@ -829,6 +854,19 @@ background-size: 300px 300px;
     width: 100%;
   }
 
+  .vsl-book-call-gate {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .vsl-book-call-content {
+    text-align: center;
+    padding: 8px 0 16px;
+  }
+
   .vsl-gate-divider {
     display: flex;
     align-items: center;
@@ -1603,11 +1641,17 @@ background-size: 300px 300px;
   ctaLockClose.addEventListener('click', () => {
     document.body.classList.remove('page-dimmed');
     ctaLock.style.display = 'none';
+    const inlineGate = document.getElementById('vsl-inline-gate') as HTMLElement;
+    if (inlineGate) inlineGate.style.display = 'none';
+    const bookCallGate = document.getElementById('vsl-book-call-gate') as HTMLElement;
+    bookCallGate.style.display = 'block';
+    setTimeout(() => {
+      bookCallGate.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
   });
 
   // ── Inline form: subscribe & play without modal ──
   const inlineForm = document.getElementById('vsl-inline-form') as HTMLFormElement;
-  const inlineSuccess = document.getElementById('vsl-inline-success') as HTMLElement;
 
   inlineForm?.addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -1626,8 +1670,8 @@ background-size: 300px 300px;
         method: 'POST', mode: 'no-cors',
         body: new URLSearchParams({ phone: smsVal }),
       }).catch(() => {});
-      this.style.display = 'none';
-      inlineSuccess.style.display = 'block';
+      const inlineGate = document.getElementById('vsl-inline-gate') as HTMLElement;
+      if (inlineGate) inlineGate.style.display = 'none';
       // Scroll to video and play
       document.getElementById('vsl-player')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       setTimeout(() => player.play(), 600);
