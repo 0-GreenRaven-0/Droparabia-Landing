@@ -9,7 +9,21 @@
       "WebFetch(domain:www.trustpilot.com)",
       "WebFetch(domain:share.google)",
       "WebFetch(domain:www.google.com)",
-      "Bash(node -e \"const pkg = require\\('./node_modules/swiper/package.json'\\); const exports = pkg.exports; Object.keys\\(exports\\).filter\\(k => k.includes\\('css'\\) || k.includes\\('navigation'\\) || k.includes\\('pagination'\\)\\).forEach\\(k => console.log\\(k\\)\\)\")"
+      "Bash(node -e \"const pkg = require\\('./node_modules/swiper/package.json'\\); const exports = pkg.exports; Object.keys\\(exports\\).filter\\(k => k.includes\\('css'\\) || k.includes\\('navigation'\\) || k.includes\\('pagination'\\)\\).forEach\\(k => console.log\\(k\\)\\)\")",
+      "Bash(ls d:/Projects/droparabia-book/)",
+      "Read(//d/Projects/droparabia-book/**)",
+      "Bash(cp d:/Projects/droparabia-book/src/components/Survey.jsx d:/Projects/droparabia-landing/src/components/Survey.jsx)",
+      "Bash(cp d:/Projects/droparabia-book/src/pages/survey.astro d:/Projects/droparabia-landing/src/pages/survey.astro)",
+      "Bash(cp d:/Projects/droparabia-book/src/pages/choose-schedule.astro d:/Projects/droparabia-landing/src/pages/choose-schedule.astro)",
+      "Bash(cp d:/Projects/droparabia-book/src/pages/get-free-program.astro d:/Projects/droparabia-landing/src/pages/get-free-program.astro)",
+      "Bash(cp d:/Projects/droparabia-book/src/pages/take-survey.astro d:/Projects/droparabia-landing/src/pages/take-survey.astro)",
+      "Bash(node -e \"const p = require\\('./node_modules/plyr/package.json'\\); console.log\\(JSON.stringify\\(p.exports, null, 2\\)\\)\")",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/react/package.json'\\).version\\)\")",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/react-dom/package.json'\\).version\\)\")",
+      "Bash(node -e \"const r = require\\('./node_modules/react/jsx-dev-runtime'\\); console.log\\(typeof r.jsxDEV\\)\")",
+      "Bash(node -e \"const p = require\\('./node_modules/react/package.json'\\); console.log\\(JSON.stringify\\(p.exports['./jsx-dev-runtime'], null, 2\\)\\)\")",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/@astrojs/react/package.json'\\).version\\)\")",
+      "Bash(npm uninstall *)"
     ]
   }
 }
