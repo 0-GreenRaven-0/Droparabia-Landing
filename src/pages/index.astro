@@ -834,6 +834,20 @@ background-size: 300px 300px;
     inset: 0;
   }
 
+  .vsl-wrapper video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .vsl-wrapper .plyr__control--overlaid {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+  }
+
   /* Trustpilot badge under VSL */
   .tp-trust-badge {
     display: flex;
