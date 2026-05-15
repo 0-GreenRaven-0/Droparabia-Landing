@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # vercel output (not used — ensure it's excluded if ever created)
 .vercel
+
+# wrangler local dev cache
+.wrangler
