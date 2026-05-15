@@ -31,7 +31,10 @@
       "PowerShell(git stash)",
       "PowerShell($env:FILTER_BRANCH_SQUELCH_WARNING = \"1\" ; git filter-branch --force --index-filter 'git rm -rf --cached --ignore-unmatch .vercel .wrangler' --prune-empty -- --all)",
       "PowerShell(git checkout -- .claude/settings.local.json)",
-      "PowerShell(git push origin main --force)"
+      "PowerShell(git push origin main --force)",
+      "PowerShell(head -5)",
+      "PowerShell(git rm -r --cached .wrangler)",
+      "PowerShell(git push origin main)"
     ]
   }
 }
