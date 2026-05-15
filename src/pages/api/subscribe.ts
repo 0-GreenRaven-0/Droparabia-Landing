@@ -27,6 +27,10 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ success: false, error: `Unknown or unconfigured list: ${list}` }, 400);
     }
 
+    const nameParts = (name || '').trim().split(/\s+/);
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
     const res = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers: {
@@ -36,7 +40,8 @@ export const POST: APIRoute = async ({ request }) => {
       body: JSON.stringify({
         email,
         attributes: {
-          FIRSTNAME: name || '',
+          FIRSTNAME: firstName,
+          LASTNAME: lastName,
           SMS: phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '',
         },
         listIds: [listId],
