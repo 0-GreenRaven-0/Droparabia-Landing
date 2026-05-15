@@ -23,7 +23,15 @@
       "Bash(node -e \"const r = require\\('./node_modules/react/jsx-dev-runtime'\\); console.log\\(typeof r.jsxDEV\\)\")",
       "Bash(node -e \"const p = require\\('./node_modules/react/package.json'\\); console.log\\(JSON.stringify\\(p.exports['./jsx-dev-runtime'], null, 2\\)\\)\")",
       "Bash(node -e \"console.log\\(require\\('./node_modules/@astrojs/react/package.json'\\).version\\)\")",
-      "Bash(npm uninstall *)"
+      "Bash(npm uninstall *)",
+      "PowerShell(git filter-repo --version 2>&1)",
+      "PowerShell(python --version 2>&1)",
+      "PowerShell(python3 --version 2>&1)",
+      "PowerShell(git filter-branch --force --index-filter 'git rm -rf --cached --ignore-unmatch .vercel .wrangler' --prune-empty -- --all)",
+      "PowerShell(git stash)",
+      "PowerShell($env:FILTER_BRANCH_SQUELCH_WARNING = \"1\" ; git filter-branch --force --index-filter 'git rm -rf --cached --ignore-unmatch .vercel .wrangler' --prune-empty -- --all)",
+      "PowerShell(git checkout -- .claude/settings.local.json)",
+      "PowerShell(git push origin main --force)"
     ]
   }
 }
