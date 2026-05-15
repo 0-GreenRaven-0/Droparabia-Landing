@@ -6,7 +6,7 @@ import cloudflare from '@astrojs/cloudflare';
 export default defineConfig({
   devToolbar: { enabled: false },
   site: 'https://droparabia.com',
-  output: 'server',
+  output: 'static',
   adapter: cloudflare(),
   integrations: [react()],
 });
