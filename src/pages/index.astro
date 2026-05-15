@@ -352,7 +352,7 @@ background-size: 300px 300px;
   }
 
   .attention-bar-text {
-    font-size: 1rem;
+    font-size: 0.8125rem;
     color: var(--gray-900);
     line-height: 1.4;
   }
@@ -822,6 +822,15 @@ background-size: 300px 300px;
     box-shadow: 0 0 0 4px #2563eb, 0 20px 60px rgba(37,99,235,0.18);
     aspect-ratio: 16 / 9;
     background: #000;
+    position: relative;
+  }
+
+  .vsl-wrapper .plyr,
+  .vsl-wrapper .plyr__video-wrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
   }
 
   /* Trustpilot badge under VSL */
@@ -1609,7 +1618,7 @@ background-size: 300px 300px;
   console.log('[DA] Plyr script running, video el:', document.getElementById('vsl-player'));
 
   const player = new Plyr('#vsl-player', {
-    controls: ['play-large', 'play', 'mute', 'volume'],
+    controls: ['play-large', 'mute', 'volume'],
     resetOnEnd: false,
     speed: { selected: 1.2, options: [0.75, 1, 1.1, 1.2] },
   });
@@ -1644,6 +1653,7 @@ background-size: 300px 300px;
 
   player.on('ready', () => {
     player.speed = 1.2;
+    player.media.setAttribute('preload', 'auto');
   });
 
   const modal = document.getElementById('vsl-modal') as HTMLElement;
