@@ -36,6 +36,9 @@
       "PowerShell(git rm -r --cached .wrangler)",
       "PowerShell(git push origin main)",
       "PowerShell(Get-ChildItem dist -Recurse -Depth 2 | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"$PWD\\\\dist\\\\\", \"\"\\) })"
+    ],
+    "additionalDirectories": [
+      "d:\\Projects\\droparabia-book"
     ]
   }
 }
