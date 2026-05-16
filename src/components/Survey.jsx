@@ -151,7 +151,17 @@ export default function Survey() {
     window.dataLayer.push({ event: 'survey_completed', survey_qualified: qualified, user_name: userData.name, user_email: userData.email, user_phone: userData.phone });
 
     createToken(qualified ? 'qualified' : 'unqualified');
-    window.location.href = qualified ? '/choose-schedule' : '/get-free-program';
+    const list = qualified ? 'qualified_no_book' : 'unqualified';
+    const redirect = () => { window.location.href = qualified ? '/choose-schedule' : '/get-free-program'; };
+    if (userData.email) {
+      fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: userData.name || '', email: userData.email, phone: userData.phone || '', list }),
+      }).finally(redirect);
+    } else {
+      redirect();
+    }
   };
 
   return (
