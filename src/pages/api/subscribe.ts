@@ -29,14 +29,16 @@ function getSheetId(list: string): string | null {
 }
 
 function getUnlinkListIds(list: string): number[] {
-  const qualifiedNoBook = Number(import.meta.env.BREVO_LIST_QUALIFIED_NO_BOOK) || 0;
-  const unqualified     = Number(import.meta.env.BREVO_LIST_UNQUALIFIED)       || 0;
-  switch (list) {
-    case 'booked':            return [qualifiedNoBook, unqualified].filter(Boolean);
-    case 'qualified_no_book': return [unqualified].filter(Boolean);
-    case 'unqualified':       return [qualifiedNoBook].filter(Boolean);
-    default:                  return [];
-  }
+  const all: Record<string, number> = {
+    vsl:               Number(import.meta.env.BREVO_LIST_VSL_SUBSCRIBED)      || 0,
+    survey:            Number(import.meta.env.BREVO_LIST_DIDNT_FINISH_SURVEY)  || 0,
+    qualified_no_book: Number(import.meta.env.BREVO_LIST_QUALIFIED_NO_BOOK)    || 0,
+    unqualified:       Number(import.meta.env.BREVO_LIST_UNQUALIFIED)          || 0,
+    booked:            Number(import.meta.env.BREVO_LIST_BOOKED)               || 0,
+  };
+  return Object.entries(all)
+    .filter(([key, id]) => key !== list && id !== 0)
+    .map(([, id]) => id);
 }
 
 function formatPhoneDisplay(raw: string): string {
@@ -109,16 +111,29 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
   return data.access_token;
 }
 
+const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date'];
+
 async function appendToSheet(sheetId: string, row: string[], credsJson: string): Promise<void> {
   const token = await getGoogleAccessToken(credsJson);
-  await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/A:D:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
-    {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ values: [row] }),
-    }
-  );
+  const base  = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
+  const auth  = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+
+  // Check if headers already exist in A1
+  const check = await fetch(`${base}/A1`, { headers: auth });
+  const checkData = await check.json() as { values?: string[][] };
+  if (!checkData.values || checkData.values[0]?.[0] !== 'Name') {
+    await fetch(`${base}/A1:D1?valueInputOption=USER_ENTERED`, {
+      method: 'PUT',
+      headers: auth,
+      body: JSON.stringify({ values: [SHEET_HEADERS] }),
+    });
+  }
+
+  await fetch(`${base}/A:D:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
+    method: 'POST',
+    headers: auth,
+    body: JSON.stringify({ values: [row] }),
+  });
 }
 
 // ── Handler ───────────────────────────────────────────────────────────────────
