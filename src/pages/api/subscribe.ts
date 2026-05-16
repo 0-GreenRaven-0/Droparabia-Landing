@@ -41,6 +41,7 @@ function getUnlinkListIds(list: string): number[] {
     .map(([, id]) => id);
 }
 
+
 function formatPhoneDisplay(raw: string): string {
   let digits = raw.startsWith('+961') ? raw.slice(4) : raw.startsWith('961') ? raw.slice(3) : raw;
   digits = digits.replace(/\D/g, '');
@@ -113,10 +114,47 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
 
 const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date'];
 
-async function appendToSheet(sheetId: string, row: string[], credsJson: string): Promise<void> {
-  const token = await getGoogleAccessToken(credsJson);
-  const base  = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
-  const auth  = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+async function removeEmailFromSheet(spreadsheetId: string, email: string, token: string): Promise<void> {
+  const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+  const res  = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/B:B`, { headers: auth });
+  const data = await res.json() as { values?: string[][] };
+  if (!data.values) return;
+
+  const rowsToDelete: number[] = [];
+  data.values.forEach((row, i) => {
+    if (i === 0) return; // skip header
+    if (row[0]?.toLowerCase() === email.toLowerCase()) rowsToDelete.push(i);
+  });
+  if (rowsToDelete.length === 0) return;
+
+  // Delete bottom-up so indices stay valid
+  const requests = rowsToDelete.reverse().map(rowIndex => ({
+    deleteDimension: {
+      range: { sheetId: 0, dimension: 'ROWS', startIndex: rowIndex, endIndex: rowIndex + 1 },
+    },
+  }));
+
+  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`, {
+    method: 'POST',
+    headers: auth,
+    body: JSON.stringify({ requests }),
+  });
+}
+
+async function removeEmailFromAllSheets(email: string, token: string): Promise<void> {
+  const ids = [
+    import.meta.env.GOOGLE_SHEET_VSL,
+    import.meta.env.GOOGLE_SHEET_SURVEY,
+    import.meta.env.GOOGLE_SHEET_QUALIFIED_NO_BOOK,
+    import.meta.env.GOOGLE_SHEET_UNQUALIFIED,
+    import.meta.env.GOOGLE_SHEET_BOOKED,
+  ].filter(Boolean) as string[];
+  await Promise.all(ids.map(id => removeEmailFromSheet(id, email, token)));
+}
+
+async function appendToSheet(sheetId: string, row: string[], token: string): Promise<void> {
+  const base = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
+  const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
   // Check if headers already exist in A1
   const check = await fetch(`${base}/A1`, { headers: auth });
@@ -172,10 +210,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const res = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': import.meta.env.BREVO_API_KEY,
-      },
+      headers: { 'Content-Type': 'application/json', 'api-key': import.meta.env.BREVO_API_KEY },
       body: JSON.stringify(brevoBody),
     });
 
@@ -185,13 +220,17 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // ── Google Sheets (fire after Brevo succeeds, silent fail) ──
-    const sheetId    = getSheetId(list);
-    const credsJson  = import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    const sheetId   = getSheetId(list);
+    const credsJson = import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
     if (sheetId && credsJson) {
-      const rawPhone    = phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '';
+      const rawPhone     = phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '';
       const displayPhone = rawPhone ? formatPhoneDisplay(rawPhone) : '';
-      const date        = new Date().toLocaleDateString('en-GB'); // DD/MM/YYYY
-      await appendToSheet(sheetId, [name || '', email, displayPhone, date], credsJson).catch(() => {});
+      const date         = new Date().toLocaleDateString('en-GB');
+      await (async () => {
+        const token = await getGoogleAccessToken(credsJson);
+        await removeEmailFromAllSheets(email, token);
+        await appendToSheet(sheetId, [name || '', email, displayPhone, date], token);
+      })().catch(() => {});
     }
 
     return json({ success: true }, 200);
