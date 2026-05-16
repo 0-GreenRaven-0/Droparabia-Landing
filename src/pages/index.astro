@@ -1629,6 +1629,7 @@ background-size: 300px 300px;
   // @ts-ignore
   import Plyr from 'plyr';
   import 'plyr/dist/plyr.css';
+  declare global { interface Window { dataLayer: unknown[] } }
 
   console.log('[DA] Plyr script running, video el:', document.getElementById('vsl-player'));
 

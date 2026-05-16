@@ -28,6 +28,24 @@ function getSheetId(list: string): string | null {
   }
 }
 
+function getUnlinkListIds(list: string): number[] {
+  const qualifiedNoBook = Number(import.meta.env.BREVO_LIST_QUALIFIED_NO_BOOK) || 0;
+  const unqualified     = Number(import.meta.env.BREVO_LIST_UNQUALIFIED)       || 0;
+  switch (list) {
+    case 'booked':            return [qualifiedNoBook, unqualified].filter(Boolean);
+    case 'qualified_no_book': return [unqualified].filter(Boolean);
+    case 'unqualified':       return [qualifiedNoBook].filter(Boolean);
+    default:                  return [];
+  }
+}
+
+function formatPhoneDisplay(raw: string): string {
+  let digits = raw.startsWith('+961') ? raw.slice(4) : raw.startsWith('961') ? raw.slice(3) : raw;
+  digits = digits.replace(/\D/g, '');
+  if (digits.length === 8) return `${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5)}`;
+  return digits;
+}
+
 function base64url(data: string | ArrayBuffer): string {
   let bytes: Uint8Array;
   if (typeof data === 'string') {
@@ -124,22 +142,26 @@ export const POST: APIRoute = async ({ request }) => {
     const lastName  = nameParts.slice(1).join(' ') || '';
 
     // ── Brevo ──
+    const unlinkListIds = getUnlinkListIds(list);
+    const brevoBody: Record<string, unknown> = {
+      email,
+      attributes: {
+        FIRSTNAME: firstName,
+        LASTNAME:  lastName,
+        SMS: phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '',
+      },
+      listIds: [listId],
+      updateEnabled: true,
+    };
+    if (unlinkListIds.length > 0) brevoBody.unlinkListIds = unlinkListIds;
+
     const res = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'api-key': import.meta.env.BREVO_API_KEY,
       },
-      body: JSON.stringify({
-        email,
-        attributes: {
-          FIRSTNAME: firstName,
-          LASTNAME:  lastName,
-          SMS: phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '',
-        },
-        listIds: [listId],
-        updateEnabled: true,
-      }),
+      body: JSON.stringify(brevoBody),
     });
 
     if (res.status !== 201 && res.status !== 204) {
@@ -151,9 +173,10 @@ export const POST: APIRoute = async ({ request }) => {
     const sheetId    = getSheetId(list);
     const credsJson  = import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
     if (sheetId && credsJson) {
-      const timestamp = new Date().toISOString();
-      const fullPhone = phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '';
-      await appendToSheet(sheetId, [timestamp, name || '', email, fullPhone], credsJson).catch(() => {});
+      const rawPhone    = phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '';
+      const displayPhone = rawPhone ? formatPhoneDisplay(rawPhone) : '';
+      const date        = new Date().toLocaleDateString('en-GB'); // DD/MM/YYYY
+      await appendToSheet(sheetId, [name || '', email, displayPhone, date], credsJson).catch(() => {});
     }
 
     return json({ success: true }, 200);
