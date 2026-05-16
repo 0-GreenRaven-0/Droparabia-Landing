@@ -117,20 +117,7 @@
 
     <!-- Confetti + conditional Brevo subscription -->
     <script is:inline>
-async function silentBrevoSubmit(list) {
-        try {
-          var userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-          if (!userData.email) return;
-          await fetch('/api/subscribe', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: userData.name, email: userData.email, phone: userData.phone, list: list }),
-            keepalive: true,
-          });
-        } catch(_) {}
-      }
-
-      document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
         // Confetti
         setTimeout(function() {
           confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
@@ -153,9 +140,27 @@ async function silentBrevoSubmit(list) {
           callBooked = true;
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({ event: 'call_booked' });
-          silentBrevoSubmit('booked').then(function() {
+
+          // Prefer Calendly payload (always available), fall back to sessionStorage
+          var invitee = (e.data.payload && e.data.payload.invitee) || {};
+          var stored  = {};
+          try { stored = JSON.parse(sessionStorage.getItem('userData') || '{}'); } catch(_) {}
+          var name  = invitee.name  || stored.name  || '';
+          var email = invitee.email || stored.email || '';
+          var phone = stored.phone  || '';
+
+          if (email) {
+            fetch('/api/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: name, email: email, phone: phone, list: 'booked' }),
+              keepalive: true,
+            }).finally(function() {
+              window.location.href = 'https://thank-you.droparabia.com';
+            });
+          } else {
             window.location.href = 'https://thank-you.droparabia.com';
-          });
+          }
         }
       });
 
