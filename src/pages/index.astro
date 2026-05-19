@@ -936,7 +936,7 @@ background-size: 300px 300px;
   /* ─── INLINE VSL GATE FORM ─── */
   .form-section {
     background: #e0e0e0;
-    padding: 40px 0 60px;
+    padding: 20px 0 60px;
     text-align: center;
   }
 
@@ -1154,7 +1154,7 @@ background-size: 300px 300px;
 
   /* ─── CAROUSEL ─── */
   .carousel-section {
-    padding: 20px 0 80px;
+    padding: 20px 0 24px;
     background: transparent;
     border-top: none;
   }
@@ -1184,6 +1184,7 @@ background-size: 300px 300px;
 
   .carousel-arrow-svg--left { left: 5%; }
   .carousel-arrow-svg--right { right: 5%; }
+  @media (min-width: 481px) { .carousel-arrow-svg { display: none; } }
 
   .carousel-brand {
     font-family: var(--font-brand);
@@ -1201,7 +1202,7 @@ background-size: 300px 300px;
   }
 
   .testimonials-swiper {
-    padding-bottom: 48px;
+    padding-bottom: 0;
   }
 
   .testimonials-swiper .swiper-slide {
@@ -1679,6 +1680,7 @@ background-size: 300px 300px;
 
     .carousel-section { padding: 16px 0 24px; }
     .carousel-heading { font-size: 1.1rem; }
+    .carousel-arrow-svg { display: none; }
     .form-section { padding: 8px 0 32px; }
     .carousel-heading { padding: 0 20px; margin-bottom: 24px; }
 
@@ -1713,6 +1715,13 @@ background-size: 300px 300px;
   import Plyr from 'plyr';
   import 'plyr/dist/plyr.css';
   declare global { interface Window { dataLayer: unknown[] } }
+
+  function getStoredUtms(): Record<string, string> {
+    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+    const result: Record<string, string> = {};
+    keys.forEach(k => { const v = sessionStorage.getItem(k); if (v) result[k] = v; });
+    return result;
+  }
 
   console.log('[DA] Plyr script running, video el:', document.getElementById('vsl-player'));
 
@@ -1828,7 +1837,7 @@ background-size: 300px 300px;
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal, list: 'vsl' }),
+        body: JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal, list: 'vsl', ...getStoredUtms() }),
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error);
@@ -1866,7 +1875,7 @@ background-size: 300px 300px;
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: firstnameVal, email: emailVal, phone: smsVal, list: 'vsl' }),
+        body: JSON.stringify({ name: firstnameVal, email: emailVal, phone: smsVal, list: 'vsl', ...getStoredUtms() }),
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error);
@@ -1934,11 +1943,14 @@ background-size: 300px 300px;
       var nameVal  = form.querySelector('[name="FIRSTNAME"]') ? form.querySelector('[name="FIRSTNAME"]').value : '';
       var emailVal = form.querySelector('[name="EMAIL"]')     ? form.querySelector('[name="EMAIL"]').value     : '';
       var smsVal   = form.querySelector('[name="SMS"]')       ? form.querySelector('[name="SMS"]').value       : '';
+      var utmKeys  = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+      var utms     = {};
+      utmKeys.forEach(function(k) { var v = sessionStorage.getItem(k); if (v) utms[k] = v; });
 
       fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal, list: 'vsl' }),
+        body: JSON.stringify(Object.assign({ name: nameVal, email: emailVal, phone: smsVal, list: 'vsl' }, utms)),
       })
         .then(function (res) { return res.json(); })
         .then(function (json) {

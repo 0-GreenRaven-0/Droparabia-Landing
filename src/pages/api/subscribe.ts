@@ -112,7 +112,19 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
   return data.access_token;
 }
 
-const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date'];
+const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Ad Creative'];
+
+function buildTrafficSource(source: string, medium: string): string {
+  const s = (source || '').toLowerCase().trim();
+  const m = (medium || '').toLowerCase().trim();
+  if ((s === 'ig' || s === 'instagram') && m === 'paid') return 'Instagram Paid Ad';
+  if ((s === 'fb' || s === 'facebook')  && m === 'paid') return 'Facebook Paid Ad';
+  if ((s === 'ig' || s === 'instagram') && !m)           return 'Instagram Bio / Organic';
+  if (s === 'linkedin' && m === 'referral')              return 'LinkedIn';
+  if (s === 'google'   && m === 'organic')               return 'Google Search';
+  if (!s && !m)                                          return 'Direct Visit';
+  return [s, m].filter(Boolean).join(' / ');
+}
 
 async function removeEmailFromSheet(spreadsheetId: string, email: string, token: string): Promise<void> {
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
@@ -160,14 +172,14 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
   const check = await fetch(`${base}/A1`, { headers: auth });
   const checkData = await check.json() as { values?: string[][] };
   if (!checkData.values || checkData.values[0]?.[0] !== 'Name') {
-    await fetch(`${base}/A1:D1?valueInputOption=USER_ENTERED`, {
+    await fetch(`${base}/A1:G1?valueInputOption=USER_ENTERED`, {
       method: 'PUT',
       headers: auth,
       body: JSON.stringify({ values: [SHEET_HEADERS] }),
     });
   }
 
-  await fetch(`${base}/A:D:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
+  await fetch(`${base}/A:G:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
@@ -179,7 +191,7 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { name, email, phone, list } = body;
+    const { name, email, phone, list, utm_source, utm_medium, utm_campaign, utm_content } = body;
 
     if (!email || !list) {
       return json({ success: false, error: 'Missing email or list' }, 400);
@@ -226,10 +238,13 @@ export const POST: APIRoute = async ({ request }) => {
       const rawPhone     = phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '';
       const displayPhone = rawPhone ? formatPhoneDisplay(rawPhone) : '';
       const date         = new Date().toLocaleDateString('en-GB');
+      const trafficSource  = buildTrafficSource(utm_source || '', utm_medium || '');
+      const campaignName   = utm_campaign || '';
+      const adCreative     = (utm_medium || '').toLowerCase() === 'paid' ? (utm_content || '') : '';
       await (async () => {
         const token = await getGoogleAccessToken(credsJson);
         await removeEmailFromAllSheets(email, token);
-        await appendToSheet(sheetId, [name || '', email, displayPhone, date], token);
+        await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, adCreative], token);
       })().catch(() => {});
     }
 

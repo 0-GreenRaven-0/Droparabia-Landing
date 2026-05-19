@@ -12,6 +12,13 @@ const getSavedUserData = () => {
   catch { return {}; }
 };
 
+const getStoredUtms = () => {
+  const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+  const result = {};
+  keys.forEach(k => { const v = sessionStorage.getItem(k); if (v) result[k] = v; });
+  return result;
+};
+
 const createToken = (name) => {
   const value = Math.random().toString(36).substring(2) + Date.now().toString(36);
   const tokens = getTokens();
@@ -157,7 +164,7 @@ export default function Survey() {
       fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: userData.name || '', email: userData.email, phone: userData.phone || '', list }),
+        body: JSON.stringify({ name: userData.name || '', email: userData.email, phone: userData.phone || '', list, ...getStoredUtms() }),
       }).finally(redirect);
     } else {
       redirect();
