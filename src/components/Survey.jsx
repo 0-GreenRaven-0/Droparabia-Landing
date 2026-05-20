@@ -13,9 +13,10 @@ const getSavedUserData = () => {
 };
 
 const getStoredUtms = () => {
-  const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
   const result = {};
-  keys.forEach(k => { const v = sessionStorage.getItem(k); if (v) result[k] = v; });
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(k => {
+    const v = sessionStorage.getItem(k); if (v) result[k] = v;
+  });
   return result;
 };
 
@@ -164,7 +165,7 @@ export default function Survey() {
       fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: userData.name || '', email: userData.email, phone: userData.phone || '', list, ...getStoredUtms() }),
+        body: JSON.stringify({ name: userData.name || '', email: userData.email, phone: userData.phone || '', list, referrer: sessionStorage.getItem('da_referrer') || '', ...getStoredUtms() }),
       }).finally(redirect);
     } else {
       redirect();

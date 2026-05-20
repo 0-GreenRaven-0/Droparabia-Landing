@@ -112,18 +112,36 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
   return data.access_token;
 }
 
-const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Ad Creative'];
+const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook'];
 
-function buildTrafficSource(source: string, medium: string): string {
+function buildTrafficSource(source: string, medium: string, referrer: string): string {
   const s = (source || '').toLowerCase().trim();
   const m = (medium || '').toLowerCase().trim();
-  if ((s === 'ig' || s === 'instagram') && m === 'paid') return 'Instagram Paid Ad';
-  if ((s === 'fb' || s === 'facebook')  && m === 'paid') return 'Facebook Paid Ad';
-  if ((s === 'ig' || s === 'instagram') && !m)           return 'Instagram Bio / Organic';
-  if (s === 'linkedin' && m === 'referral')              return 'LinkedIn';
-  if (s === 'google'   && m === 'organic')               return 'Google Search';
-  if (!s && !m)                                          return 'Direct Visit';
-  return [s, m].filter(Boolean).join(' / ');
+
+  // UTM-based labels take priority
+  if (s) {
+    if ((s === 'ig' || s === 'instagram') && m === 'paid') return 'Instagram Paid Ad';
+    if ((s === 'fb' || s === 'facebook')  && m === 'paid') return 'Facebook Paid Ad';
+    if ((s === 'ig' || s === 'instagram'))                 return 'Instagram Organic';
+    if (s === 'linkedin' || s === 'lnkd.in')              return 'LinkedIn';
+    if (s === 'google' && m === 'organic')                 return 'Google Search';
+    return [s, m].filter(Boolean).join(' / ');
+  }
+
+  // Referrer fallback
+  if (referrer) {
+    try {
+      const host = new URL(referrer).hostname.replace('www.', '');
+      if (host.includes('instagram.com'))                    return 'Instagram Organic';
+      if (host.includes('linkedin.com') || host.includes('lnkd.in')) return 'LinkedIn';
+      if (host.includes('facebook.com'))                     return 'Facebook Organic';
+      if (host.includes('google.com'))                       return 'Google Search';
+      if (host.includes('youtube.com'))                      return 'YouTube';
+      return host;
+    } catch { return referrer; }
+  }
+
+  return 'Direct Visit';
 }
 
 async function removeEmailFromSheet(spreadsheetId: string, email: string, token: string): Promise<void> {
@@ -168,18 +186,19 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
   const base = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
-  // Check if headers already exist in A1
-  const check = await fetch(`${base}/A1`, { headers: auth });
+  // Write headers if missing or outdated (column count changed)
+  const check = await fetch(`${base}/A1:H1`, { headers: auth });
   const checkData = await check.json() as { values?: string[][] };
-  if (!checkData.values || checkData.values[0]?.[0] !== 'Name') {
-    await fetch(`${base}/A1:G1?valueInputOption=USER_ENTERED`, {
+  const existingHeaders = checkData.values?.[0] ?? [];
+  if (existingHeaders[0] !== 'Name' || existingHeaders.length < SHEET_HEADERS.length) {
+    await fetch(`${base}/A1:H1?valueInputOption=USER_ENTERED`, {
       method: 'PUT',
       headers: auth,
       body: JSON.stringify({ values: [SHEET_HEADERS] }),
     });
   }
 
-  await fetch(`${base}/A:G:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
+  await fetch(`${base}/A:H:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
@@ -191,7 +210,7 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { name, email, phone, list, utm_source, utm_medium, utm_campaign, utm_content } = body;
+    const { name, email, phone, list, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer } = body;
 
     if (!email || !list) {
       return json({ success: false, error: 'Missing email or list' }, 400);
@@ -238,13 +257,15 @@ export const POST: APIRoute = async ({ request }) => {
       const rawPhone     = phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '';
       const displayPhone = rawPhone ? formatPhoneDisplay(rawPhone) : '';
       const date         = new Date().toLocaleDateString('en-GB');
-      const trafficSource  = buildTrafficSource(utm_source || '', utm_medium || '');
-      const campaignName   = utm_campaign || '';
-      const adCreative     = (utm_medium || '').toLowerCase() === 'paid' ? (utm_content || '') : '';
+      const isPaid        = (utm_medium || '').toLowerCase().trim() === 'paid';
+      const trafficSource = buildTrafficSource(utm_source || '', utm_medium || '', referrer || '');
+      const campaignName  = isPaid ? (utm_campaign || '') : '';
+      const creative      = isPaid ? (utm_content  || '') : '';
+      const hook          = isPaid ? (utm_term     || '') : '';
       await (async () => {
         const token = await getGoogleAccessToken(credsJson);
         await removeEmailFromAllSheets(email, token);
-        await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, adCreative], token);
+        await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, creative, hook], token);
       })().catch(() => {});
     }
 

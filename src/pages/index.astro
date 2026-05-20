@@ -1716,10 +1716,13 @@ background-size: 300px 300px;
   import 'plyr/dist/plyr.css';
   declare global { interface Window { dataLayer: unknown[] } }
 
-  function getStoredUtms(): Record<string, string> {
-    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+  function getTrackingData(): Record<string, string> {
     const result: Record<string, string> = {};
-    keys.forEach(k => { const v = sessionStorage.getItem(k); if (v) result[k] = v; });
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(k => {
+      const v = sessionStorage.getItem(k); if (v) result[k] = v;
+    });
+    const ref = sessionStorage.getItem('da_referrer');
+    if (ref) result.referrer = ref;
     return result;
   }
 
@@ -1837,7 +1840,7 @@ background-size: 300px 300px;
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal, list: 'vsl', ...getStoredUtms() }),
+        body: JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal, list: 'vsl', ...getTrackingData() }),
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error);
@@ -1875,7 +1878,7 @@ background-size: 300px 300px;
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: firstnameVal, email: emailVal, phone: smsVal, list: 'vsl', ...getStoredUtms() }),
+        body: JSON.stringify({ name: firstnameVal, email: emailVal, phone: smsVal, list: 'vsl', ...getTrackingData() }),
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error);
@@ -1946,11 +1949,12 @@ background-size: 300px 300px;
       var utmKeys  = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
       var utms     = {};
       utmKeys.forEach(function(k) { var v = sessionStorage.getItem(k); if (v) utms[k] = v; });
+      var ref = sessionStorage.getItem('da_referrer') || '';
 
       fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.assign({ name: nameVal, email: emailVal, phone: smsVal, list: 'vsl' }, utms)),
+        body: JSON.stringify(Object.assign({ name: nameVal, email: emailVal, phone: smsVal, list: 'vsl', referrer: ref }, utms)),
       })
         .then(function (res) { return res.json(); })
         .then(function (json) {
