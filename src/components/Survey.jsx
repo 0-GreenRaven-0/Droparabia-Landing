@@ -32,25 +32,34 @@ const createToken = (name) => {
 const questions = [
   {
     field: 'experience',
-    title: 'Have you attempted dropshipping or e-commerce before?',
+    title: 'Have attempted any kind of online selling before? (Ecommerce, Dropshipping, etc...)',
     options: [
-      { value: 'yes_dropshipping', label: 'Yes, I have tried dropshipping before' },
-      { value: 'yes_ecommerce',    label: 'I have tried e-commerce before' },
-      { value: 'no',               label: 'No, I am completely new to this' },
+      { value: 'no',          label: "No, I'm Completely New" },
+      { value: 'ecommerce',   label: 'I Tried Ecommerce Before' },
+      { value: 'dropship',    label: 'I Tried Dropshipping Before' },
+      { value: 'both',        label: 'I Tried Both' },
     ]
   },
   {
     field: 'budget',
-    title: 'We only work with users who have sufficient startup capital. To start a Local Dropshipping business, costs involve: Software & marketing. Do you have access to a minimum of $600 to get started?',
+    title: 'We Recommend that you have a sufficient capital in order to start your online store (products costs, ads...). Do you have access to at least a budget of $700?',
     options: [
-      { value: 'yes',     label: 'Yes, I have the funds' },
-      { value: 'partial', label: 'I have at least $600' },
+      { value: 'yes',     label: 'Yes, I have the capital' },
+      { value: 'partial', label: 'I have at least $700' },
       { value: 'no',      label: "No, I don't have the funds right now" },
     ]
   },
   {
+    field: 'effort',
+    title: 'To build a successful and high-earning online store, it will require a lot of effort and dedication, are you willing to put in the work? (Even if you fail at first)',
+    options: [
+      { value: 'ready',    label: "I'm Ready to Learn and Work Hard" },
+      { value: 'best',     label: "I'll Do My Best" },
+    ]
+  },
+  {
     field: 'time',
-    title: 'Starting a dropshipping business requires a bit of free time to learn and manage your business, do you have some free time?',
+    title: "You're required to have at least 1 to 2 hours daily to manage your business, do you have the time?",
     options: [
       { value: 'yes',      label: 'Yes, I have free time' },
       { value: 'makeTime', label: 'I can make time for it' },
@@ -58,27 +67,19 @@ const questions = [
     ]
   },
   {
-    field: 'effort',
-    title: "This isn't a get-rich-quick scheme — it requires real work and effort to get the same results as our users. Are you willing to put in the work?",
-    options: [
-      { value: 'willing',  label: 'I am willing to put in the effort' },
-      { value: 'whatever', label: "I'll do whatever is required" },
-    ]
-  },
-  {
     field: 'startTime',
-    title: "If we're a good fit, how soon could you start?",
+    title: "If we're a good fit to help you build your online business, how soon can you start?",
     options: [
       { value: 'today',    label: 'Today' },
-      { value: 'notReady', label: 'Not ready yet' },
+      { value: 'notReady', label: 'Not Ready Yet' },
     ]
   },
   {
     field: 'commitment',
-    title: 'Is there any reason that will make you cancel the meeting other than a tsunami or an earthquake 😅?',
+    title: 'Is there any reason that will make you cancel the meeting? (unless you were swallowed by an earthquake 😅)',
     options: [
-      { value: 'yes1', label: "No, don't worry I will attend for sure" },
-      { value: 'yes2', label: 'I will attend for sure' },
+      { value: 'yes',   label: 'No, I will attend for sure' },
+      { value: 'maybe', label: 'Maybe...' },
     ]
   }
 ];
@@ -86,7 +87,6 @@ const questions = [
 const isQualified = (data) =>
   data.budget !== 'no' &&
   data.time   !== 'no' &&
-  (data.effort === 'willing' || data.effort === 'whatever') &&
   data.startTime !== 'notReady';
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -115,7 +115,7 @@ export default function Survey() {
   }, []);
 
   const [page, setPage]           = useState(0);
-  const [answers, setAnswers]     = useState({ experience: '', budget: '', time: '', effort: '', startTime: '', commitment: '' });
+  const [answers, setAnswers]     = useState({ experience: '', budget: '', effort: '', time: '', startTime: '', commitment: '' });
   const [fieldError, setFieldError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
