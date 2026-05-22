@@ -38,7 +38,9 @@
       "PowerShell(Get-ChildItem dist -Recurse -Depth 2 | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"$PWD\\\\dist\\\\\", \"\"\\) })",
       "Bash(git -C \"d:/Projects/droparabia-landing\" check-ignore -v .env)",
       "Bash(git -C \"d:/Projects/droparabia-landing\" ls-files .env)",
-      "Bash(del \"d:\\\\Projects\\\\droparabia-landing\\\\src\\\\pages\\\\api\\\\init-headers.ts\")"
+      "Bash(del \"d:\\\\Projects\\\\droparabia-landing\\\\src\\\\pages\\\\api\\\\init-headers.ts\")",
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ],
     "additionalDirectories": [
       "d:\\Projects\\droparabia-book"
