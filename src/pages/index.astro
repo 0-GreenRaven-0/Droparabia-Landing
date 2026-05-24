@@ -18,14 +18,14 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       <!-- ATTENTION BAR -->
       <div class="attention-bar">
         <span class="attention-bar-label">Free Step-by-Step Tutorial</span>
-        <span class="attention-bar-text">For Lebanese looking for a budget-friendly business model to start selling online</span>
+        <span class="attention-bar-text">Other Gurus will sell you this Tutorial in a Course, Majd is giving it to you for FREE</span>
       </div>
 
       <h1>
         How to start a <span class="h1-highlight">Successful &amp; <span class="h1-underline">High-Earning</span></span> online store in <span class="h1-highlight">Lebanon</span>
-<span class="h1-sub">Without owning stock or <span style="text-decoration:underline;text-underline-offset:3px;">risking money</span> on non-selling products</span>
+<span class="h1-sub">And potentially earn your first <span style="font-weight:800; font-size:1.15em;">$3,000!</span></span>
       </h1>
-      <p class="hero-subtext">Other gurus are selling you courses, Majd is giving you a FREE proven Strategy tutorial broken down into 4 Phases<span class="subtext-mobile-hide"> — Used by <strong>+500 Lebanese</strong> including himself</span></p>
+      <p class="hero-subtext"><span style="color:#1d4ed8; font-weight:700;">4 Phases</span> <span style="font-weight:700;">Proven Strategy</span> to start selling online <span style="text-decoration:underline; text-underline-offset:3px; font-weight:700;">without owning stock or risking money</span> on non-selling products</p>
       <!-- VSL Video -->
       <div class="vsl-wrapper">
         <video id="vsl-player" playsinline preload="auto">
@@ -103,7 +103,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   <section class="carousel-section">
     <h2 class="carousel-heading">
       <svg class="carousel-arrow-svg carousel-arrow-svg--left" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs></svg>
-      This Worked for +500 Lebanese
+      This Worked for +600 Lebanese
       <svg class="carousel-arrow-svg carousel-arrow-svg--right" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad2)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad2" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs></svg>
     </h2>
     <div style="display:none;">
@@ -266,13 +266,10 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     <div class="vsl-modal-box" role="dialog" aria-modal="true" aria-labelledby="vsl-modal-title">
       <button class="vsl-modal-close" id="vsl-modal-close" aria-label="Close">&times;</button>
       <div class="vsl-modal-head">
-        <div class="vsl-modal-brand">
-          <img src="/Droparabia.png" alt="Droparabia" class="vsl-modal-logo" />
-          <span class="vsl-modal-brand-name">Droparabia</span>
-        </div>
-        <h3 class="vsl-modal-title" id="vsl-modal-title">
-          Subscribe to unlock the tutorial!
+        <h3 class="vsl-modal-title" id="vsl-modal-title" style="font-size:1.15rem;">
+          Subscribe to watch the free Tutorial
         </h3>
+        <p style="color:#DC2626; font-size:0.78rem; font-weight:500; margin-top:0.35rem;">Tutorial Might be taken down soon!</p>
       </div>
       <div id="vsl-error-msg" class="brevo-alert brevo-alert--error">Could not subscribe. Please try again.</div>
       <div id="vsl-success-msg" class="brevo-alert brevo-alert--success">Subscribed! Starting your video...</div>
@@ -463,10 +460,11 @@ background-size: 300px 300px;
 
   .hero-subtext {
     font-size: 0.975rem;
-    font-weight: 400;
+    font-weight: 600;
     color: #000;
     text-align: center;
     margin: 6px auto 0;
+    padding-top: 4px;
     padding-bottom: 16px;
     line-height: 1.6;
     max-width: 620px;
@@ -1191,7 +1189,7 @@ background-size: 300px 300px;
 
   .carousel-arrow-svg--left { left: 5%; }
   .carousel-arrow-svg--right { right: 5%; }
-  @media (min-width: 481px) { .carousel-arrow-svg { display: none; } }
+  @media (min-width: 769px) { .carousel-arrow-svg { display: none; } }
 
   .carousel-brand {
     font-family: var(--font-brand);
@@ -1645,6 +1643,25 @@ background-size: 300px 300px;
   /* ─── TABLET CTA LOCK ─── */
   @media (max-width: 768px) {
     .vsl-cta-lock { margin: 8px 24px 0; }
+  }
+
+  /* ─── TABLET ONLY (481px – 768px) ─── */
+  @media (min-width: 481px) and (max-width: 768px) {
+    .hero { padding-top: 140px; }
+    .vsl-wrapper { margin-left: auto; margin-right: auto; }
+    .container { display: flex; flex-direction: column; }
+    .attention-bar { order: 0; }
+    h1 { order: 1; }
+    .vsl-wrapper { order: 2; }
+    .hero-subtext { order: 3; font-size: 1.2rem !important; padding-top: 12px; }
+    .vsl-cta-lock { order: 4; }
+    .vsl-book-call-gate { order: 5; }
+    .carousel-section { order: 6; padding-top: 40px; }
+    .carousel-heading { padding: 0 64px; margin-bottom: 36px !important; }
+    .carousel-arrow-svg { width: 32px; height: 42px; }
+    .carousel-arrow-svg--left { left: 18%; }
+    .carousel-arrow-svg--right { right: 18%; }
+    .attention-bar-text { font-weight: 700 !important; }
   }
 
   /* ─── MOBILE (max 480px) ─── */
