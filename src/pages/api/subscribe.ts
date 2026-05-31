@@ -112,7 +112,7 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
   return data.access_token;
 }
 
-const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook'];
+const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook', 'Form Clicked'];
 
 function buildTrafficSource(source: string, medium: string, referrer: string): string {
   const s = (source || '').toLowerCase().trim();
@@ -187,18 +187,18 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
   // Write headers if missing or outdated (column count changed)
-  const check = await fetch(`${base}/A1:H1`, { headers: auth });
+  const check = await fetch(`${base}/A1:I1`, { headers: auth });
   const checkData = await check.json() as { values?: string[][] };
   const existingHeaders = checkData.values?.[0] ?? [];
   if (existingHeaders[0] !== 'Name' || existingHeaders.length < SHEET_HEADERS.length) {
-    await fetch(`${base}/A1:H1?valueInputOption=USER_ENTERED`, {
+    await fetch(`${base}/A1:I1?valueInputOption=USER_ENTERED`, {
       method: 'PUT',
       headers: auth,
       body: JSON.stringify({ values: [SHEET_HEADERS] }),
     });
   }
 
-  await fetch(`${base}/A:H:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
+  await fetch(`${base}/A:I:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
@@ -210,7 +210,7 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { name, email, phone, list, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer } = body;
+    const { name, email, phone, list, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, cta_popup } = body;
 
     if (!email || !list) {
       return json({ success: false, error: 'Missing email or list' }, 400);
@@ -265,7 +265,7 @@ export const POST: APIRoute = async ({ request }) => {
       await (async () => {
         const token = await getGoogleAccessToken(credsJson);
         await removeEmailFromAllSheets(email, token);
-        await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, creative, hook], token);
+        await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, creative, hook, cta_popup || ''], token);
       })().catch(() => {});
     }
 

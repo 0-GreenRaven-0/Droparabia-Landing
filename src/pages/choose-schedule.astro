@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch('/api/subscribe', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(Object.assign({ name: name, email: email, phone: phone, list: 'booked', referrer: ref }, utms)),
+              body: JSON.stringify(Object.assign({ name: name, email: email, phone: phone, list: 'booked', referrer: ref, cta_popup: sessionStorage.getItem('da_cta_popup') || '' }, utms)),
               keepalive: true,
             }).finally(function() {
               window.location.href = 'https://thank-you.droparabia.com';

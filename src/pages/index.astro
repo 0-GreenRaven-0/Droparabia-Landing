@@ -34,63 +34,93 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       </div>
 
       <!-- CTA LOCK (appears below VSL after 44s) -->
+      <!-- ═══════════════════════════════════════════════════
+           POPUP 1  (triggers at 44s)
+           INLINE GATE 1  (shown when Popup 1 is dismissed)
+           ═══════════════════════════════════════════════════ -->
       <div id="vsl-cta-lock" class="vsl-cta-lock" style="display:none">
         <button id="vsl-cta-lock-close" class="vsl-cta-lock-close" aria-label="Close">&times;</button>
-        <a id="cta-book-call-popup" href="/survey" class="vsl-cta-lock-btn">
-          Click Here to Book a Free Call with our team
-        </a>
+        <h2>You don't have to figure it all by yourself!</h2>
+        <a id="cta-book-call-popup" href="/survey" class="vsl-cta-lock-btn">Click Here to Join the Community!<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
+        <p class="john-body">Access the same proven system and community support that helped John make his first $11,000 during the war!</p>
+        <img src="https://ik.imagekit.io/greenraven/MJ/Popups/popup%201.png" class="john-re" />
+      </div>
+
+      <div id="vsl-book-call-gate" class="vsl-book-call-gate" style="display:none">
+        <div class="vsl-book-call-content">
+          <h2 class="popup-gate-heading">You don't have to figure it all by yourself!</h2>
+          <a id="cta-book-call-gate" href="/survey" class="vsl-cta-lock-btn">Click Here to Join the Community!<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
+          <p class="john-body">Access the same proven system and community support that helped John make his first $11,000 during the war!</p>
+          <img src="https://ik.imagekit.io/greenraven/MJ/Popups/popup%201.png" class="john-re" style="margin-top:12px;" />
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════
+           POPUP 2  (triggers at 3:32)
+           INLINE GATE 2  (shown when Popup 2 is dismissed)
+           ═══════════════════════════════════════════════════ -->
+      <div id="vsl-popup-2" class="vsl-cta-lock" style="display:none; flex-direction:column; gap:16px;">
+        <button id="vsl-popup-2-close" class="vsl-cta-lock-close" aria-label="Close">&times;</button>
+        <div class="popup-brand-row">
+          <img src="/Droparabia.png" alt="Droparabia" class="popup-brand-logo" />
+          <span class="popup-brand-name">Droparabia</span>
+        </div>
+        <p class="popup-platform-tag">The platform that allowed <strong>+600 Lebanese</strong> build their own high-earning stores <strong>without touching inventories</strong></p>
+        <a href="/survey" class="vsl-cta-lock-btn">
+          Start your business with Droparabia!<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
+   
         <div class="vsl-cta-tp-badge">
           <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="vsl-cta-tp-img" />
-          <div class="vsl-cta-tp-rating">
-            <span class="vsl-cta-tp-great">Great!</span>
-            <div class="vsl-cta-tp-stars">
-              <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
-              <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
-              <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
-              <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
-            </div>
-          </div>
-        </div>
-        <p class="vsl-cta-lock-note">Only 10 spots are available each week to make sure we're helping everyone efficiently getting started</p>
-        <div class="guarantee-block">
-          <img src="/MBG.png" alt="Money Back Guarantee" class="guarantee-img" />
-          <div>
-            <p class="guarantee-headline">90-Day Money Back Guarantee</p>
-            <p class="guarantee-sub">If you don't get any results after you implement everything</p>
+          <div class="vsl-cta-tp-stars">
+            <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
+            <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
+            <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
+            <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
+            <svg viewBox="0 0 24 24" class="tp-star"><path fill="#999" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
           </div>
         </div>
       </div>
 
-
-      <!-- BOOK A CALL GATE (shown after CTA lock is dismissed) -->
-      <div id="vsl-book-call-gate" class="vsl-book-call-gate" style="display:none">
-        <div class="vsl-gate-divider">
-          <span class="vsl-gate-or">Ready to build your own business?</span>
-        </div>
+      <div id="vsl-inline-gate-2" class="vsl-book-call-gate" style="display:none">
         <div class="vsl-book-call-content">
-          <a id="cta-book-call-gate" href="/survey" class="vsl-cta-lock-btn">
-            Click Here to Book a Free Call with our team
-          </a>
+          <div class="popup-brand-row">
+            <img src="/Droparabia.png" alt="Droparabia" class="popup-brand-logo" />
+            <span class="popup-brand-name">Droparabia</span>
+          </div>
+          <p class="popup-platform-tag">The platform that allowed <strong>+600 Lebanese</strong> build their own high-earning stores <strong>without touching inventories</strong></p>
+          <a href="/survey" class="vsl-cta-lock-btn">Interested in starting a high-earning business?<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
+          <p class="popup-users-count">+600 Active Lebanese seller</p>
           <div class="vsl-cta-tp-badge">
             <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="vsl-cta-tp-img" />
-            <div class="vsl-cta-tp-rating">
-              <span class="vsl-cta-tp-great">Great!</span>
-              <div class="vsl-cta-tp-stars">
-                <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
-                <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
-                <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
-                <span class="tp-star-box"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg></span>
-              </div>
+            <div class="vsl-cta-tp-stars">
+              <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
+              <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
+              <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
+              <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
+              <svg viewBox="0 0 24 24" class="tp-star"><path fill="#999" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
             </div>
           </div>
-          <p class="vsl-cta-lock-note">Only 10 spots are available each week to make sure we're helping everyone efficiently getting started</p>
-          <div class="guarantee-block">
-            <img src="/MBG.png" alt="Money Back Guarantee" class="guarantee-img" />
-            <div>
-              <p class="guarantee-headline">90-Day Money Back Guarantee</p>
-              <p class="guarantee-sub">If you're not satisfied, we'll give you a full refund</p>
-            </div>
-          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════
+           POPUP 3  (triggers at 8:06 / video end)
+           INLINE GATE 3  (shown when Popup 3 is dismissed)
+           ═══════════════════════════════════════════════════ -->
+      <div id="vsl-popup-3" class="vsl-cta-lock" style="display:none">
+        <button id="vsl-popup-3-close" class="vsl-cta-lock-close" aria-label="Close">&times;</button>
+        <h2>Are you ready to start your own high-earning store from home?</h2>
+        <p class="popup-body">And you can get started without experience and without spending a single dollar on inventory</p>
+
+        <a href="/survey" class="vsl-cta-lock-btn">I'm ready to start building my business!<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
+      </div>
+
+      <div id="vsl-inline-gate-3" class="vsl-book-call-gate" style="display:none">
+        <div class="vsl-book-call-content">
+          <h2 class="popup-gate-heading">Are you ready to start your own high-earning store from home?</h2>
+          <p class="popup-body">And you can get started without experience and without spending a single dollar on inventory</p>
+  
+          <a href="/survey" class="vsl-cta-lock-btn">I'm ready to start building my business!<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
         </div>
       </div>
 
@@ -157,7 +187,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         Subscribe to watch the Free Tutorial
       </span>
     </div>
-    <div id="vsl-inline-success" class="brevo-alert brevo-alert--success" style="display:none">You're in! Scroll up to watch the video.</div>
+    <div id="vsl-inline-success" class="brevo-alert brevo-alert--success" style="display:block">You're in! Scroll up to watch the video.</div>
     <form id="vsl-inline-form" class="vsl-inline-form" method="POST" action="/api/subscribe" data-type="subscription">
       <div class="vsl-inline-fields">
         <div class="field-line">
@@ -1491,7 +1521,7 @@ background-size: 300px 300px;
     z-index: 102;
     background: #fff;
     border-radius: 14px;
-    padding: 32px 24px 20px;
+    padding: 44px 24px 20px;
     max-width: 620px;
     margin: 12px auto 0;
     text-align: center;
@@ -1528,6 +1558,7 @@ background-size: 300px 300px;
     color: #fff;
     font-size: 1.125rem;
     font-weight: 700;
+    line-height: 1.2;
     padding: 14px 24px;
     border-radius: 8px;
     text-decoration: none;
@@ -1541,9 +1572,10 @@ background-size: 300px 300px;
 
   .vsl-cta-tp-badge {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 12px;
     margin-bottom: 12px;
   }
 
@@ -1561,7 +1593,15 @@ background-size: 300px 300px;
 
   .vsl-cta-tp-stars {
     display: flex;
-    gap: 2px;
+    gap: 4px;
+  }
+
+  .tp-star {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    fill: #00b67a;
+    flex-shrink: 0;
   }
 
   .tp-star-box {
@@ -1581,7 +1621,7 @@ background-size: 300px 300px;
   }
 
   .vsl-cta-tp-img {
-    height: 22px;
+    height: 44px;
     width: auto;
     display: block;
   }
@@ -1623,6 +1663,119 @@ background-size: 300px 300px;
     line-height: 1.4;
   }
 
+  .popup-heading {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .popup-body {
+    font-size: 0.9375rem;
+    color: var(--gray-700);
+    font-weight: 500;
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+
+  .popup-brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .popup-brand-logo {
+    height: 68px;
+    width: auto;
+  }
+
+  .popup-brand-name {
+    font-family: 'IBrand', sans-serif;
+    font-size: 2.25rem;
+    font-weight: 400;
+    color: var(--gray-900);
+  }
+
+  .popup-platform-tag {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    font-weight: 600;
+  }
+
+  .popup-users-count {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 10px;
+  }
+
+  .popup-brand-highlight {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1d4ed8;
+    margin: 6px 0 10px;
+  }
+
+  .popup-cta-text {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+
+  .btn-subtext {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    opacity: 0.75;
+    margin-top: 3px;
+  }
+  .popup-subtext {
+    font-size: 0.8125rem;
+    color: var(--gray-600);
+    font-weight: 500;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* My own css */
+  .popup-gate-heading {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 14px;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .vsl-cta-lock h2 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 14px;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .john-body {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+
+  .john-re {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
+    margin-top: 14px;
+  }
+  /* ---------- */
+
   /* ─── RESPONSIVE ─── */
   /* ─── TABLET (max 768px) ─── */
   @media (max-width: 768px) {
@@ -1652,16 +1805,25 @@ background-size: 300px 300px;
     .container { display: flex; flex-direction: column; }
     .attention-bar { order: 0; }
     h1 { order: 1; }
-    .vsl-wrapper { order: 2; }
-    .hero-subtext { order: 3; font-size: 1.2rem !important; padding-top: 12px; }
-    .vsl-cta-lock { order: 4; }
+    .hero-subtext { order: 2; font-size: 1.2rem !important; padding-top: 12px; }
+    .vsl-wrapper { order: 3; }
+    .vsl-cta-lock { order: 4; margin: 8px 20px 0; padding: 40px 20px 16px; }
+    #vsl-popup-2 { order: 4; }
+    #vsl-popup-3 { order: 4; }
     .vsl-book-call-gate { order: 5; }
+    #vsl-inline-gate-2 { order: 5; }
+    #vsl-inline-gate-3 { order: 5; }
     .carousel-section { order: 6; padding-top: 40px; }
     .carousel-heading { padding: 0 64px; margin-bottom: 36px !important; }
     .carousel-arrow-svg { width: 32px; height: 42px; }
     .carousel-arrow-svg--left { left: 18%; }
     .carousel-arrow-svg--right { right: 18%; }
     .attention-bar-text { font-weight: 700 !important; }
+    .popup-brand-logo { height: 56px; }
+    .popup-brand-name { font-size: 1.9rem; }
+    .popup-platform-tag { font-size: 0.8rem; }
+    .vsl-cta-lock-btn { font-size: 1rem; padding: 12px 18px; }
+    .john-re { max-width: 420px; margin-left: auto; margin-right: auto; }
   }
 
   /* ─── MOBILE (max 480px) ─── */
@@ -1671,10 +1833,14 @@ background-size: 300px 300px;
     .container { display: flex; flex-direction: column; }
     .attention-bar { order: 0; }
     h1 { order: 1; }
-    .vsl-wrapper { order: 2; }
-    .hero-subtext { order: 3; }
+    .hero-subtext { order: 2; }
+    .vsl-wrapper { order: 3; }
     .vsl-cta-lock { order: 4; }
+    #vsl-popup-2 { order: 4; }
+    #vsl-popup-3 { order: 4; }
     .vsl-book-call-gate { order: 5; }
+    #vsl-inline-gate-2 { order: 5; }
+    #vsl-inline-gate-3 { order: 5; }
     .carousel-section { order: 6; }
     .brand-img { height: 76px; }
     .brand-name-black { font-size: 2.125rem; }
@@ -1686,7 +1852,7 @@ background-size: 300px 300px;
     .attention-bar-text { font-size: 0.75rem; width: 85%; font-weight: 600 !important; }
     .hero-subtext { font-size: 0.8rem; padding-bottom: 6px; }
     .subtext-mobile-hide { display: none; }
-    .vsl-wrapper { margin-bottom: 6px !important; }
+    .vsl-wrapper { margin-bottom: 0 !important; }
 
     .hero-sub {
       flex-direction: column;
@@ -1718,17 +1884,28 @@ background-size: 300px 300px;
     .footer-inner { flex-direction: column; gap: 32px; }
     .footer-brand { max-width: 100%; }
 
-    .vsl-cta-lock { margin: 8px 16px 0; padding: 32px 16px 14px; }
-    .vsl-cta-lock-btn { font-size: 1.0625rem; padding: 11px 14px; }
-    .vsl-cta-tp-badge { flex-direction: row; gap: 5px; flex-wrap: nowrap; }
-    .vsl-cta-tp-img { height: 20px; }
-    .tp-star-box { width: 20px; height: 20px; }
-    .tp-star-box svg { width: 12px; height: 12px; }
-    .vsl-cta-tp-great { font-size: 0.8rem; }
-    .guarantee-img { width: 80px; }
-    .guarantee-headline { font-size: 0.875rem; }
-    .guarantee-sub { font-size: 0.75rem; }
-    .vsl-cta-lock-note { font-size: 0.75rem; }
+    .vsl-cta-lock { margin: 16px 16px 0; padding: 36px 14px 12px; border-radius: 10px; }
+    .vsl-cta-lock h2 { display: block; }
+    .vsl-cta-lock-btn { font-size: 0.9rem; padding: 9px 12px; margin-bottom: 8px; }
+    .vsl-cta-tp-badge { flex-direction: column; gap: 4px; margin-bottom: 8px; }
+    .tp-star { width: 22px; height: 22px; }
+    .vsl-cta-tp-img { height: 28px; }
+    .tp-star-box { width: 18px; height: 18px; }
+    .tp-star-box svg { width: 10px; height: 10px; }
+    .vsl-cta-tp-great { font-size: 0.75rem; }
+    .vsl-cta-lock-note { font-size: 0.72rem; }
+    .popup-body { font-size: 0.8rem; line-height: 1.45; margin-bottom: 8px; }
+    .popup-brand-name { font-size: 1.8rem; }
+    .popup-brand-logo { height: 50px; }
+    .popup-platform-tag { font-size: 0.75rem; margin-bottom: 1px; }
+    .popup-users-count { font-size: 0.85rem; margin-bottom: 6px; }
+    .popup-brand-highlight { font-size: 1rem; margin: 4px 0 6px; }
+    .popup-cta-text { font-size: 0.85rem; margin-bottom: 8px; }
+    .popup-subtext { font-size: 0.72rem; margin-top: 6px; }
+    .john-body { font-size: 0.8rem; margin-bottom: 8px; }
+    .popup-gate-heading { font-size: 0.95rem; margin-bottom: 8px; }
+    .vsl-book-call-gate { padding: 0 10px; }
+    .vsl-book-call-content { padding: 6px 0 10px; }
   }
 </style>
 
@@ -1790,6 +1967,11 @@ background-size: 300px 300px;
     player.media.setAttribute('preload', 'auto');
   });
 
+  if (sessionStorage.getItem('da_subscribed')) {
+    document.getElementById('vsl-inline-gate')?.remove();
+    document.querySelector('.hero-subtext')?.remove();
+  }
+
   const modal = document.getElementById('vsl-modal') as HTMLElement;
   const modalClose = document.getElementById('vsl-modal-close') as HTMLElement;
   const modalForm = document.getElementById('vsl-modal-form') as HTMLFormElement;
@@ -1817,19 +1999,68 @@ background-size: 300px 300px;
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-  // 44-second page dim + CTA lock
+  // Track which popup CTA triggered the booking
+  document.querySelectorAll('#vsl-cta-lock a, #vsl-book-call-gate a').forEach(el => {
+    el.addEventListener('click', () => sessionStorage.setItem('da_cta_popup', '1st'));
+  });
+  document.querySelectorAll('#vsl-popup-2 a.vsl-cta-lock-btn, #vsl-inline-gate-2 a.vsl-cta-lock-btn').forEach(el => {
+    el.addEventListener('click', () => sessionStorage.setItem('da_cta_popup', '2nd'));
+  });
+  document.querySelectorAll('#vsl-popup-3 a.vsl-cta-lock-btn, #vsl-inline-gate-3 a.vsl-cta-lock-btn').forEach(el => {
+    el.addEventListener('click', () => sessionStorage.setItem('da_cta_popup', '3rd'));
+  });
+
+  // Popup refs
   const ctaLock = document.getElementById('vsl-cta-lock') as HTMLElement;
   const ctaLockClose = document.getElementById('vsl-cta-lock-close') as HTMLElement;
+  const popup2 = document.getElementById('vsl-popup-2') as HTMLElement;
+  const popup2Close = document.getElementById('vsl-popup-2-close') as HTMLElement;
+  const popup3 = document.getElementById('vsl-popup-3') as HTMLElement;
+  const popup3Close = document.getElementById('vsl-popup-3-close') as HTMLElement;
+
+  // Inline gate refs
+  const inlineGate1 = document.getElementById('vsl-book-call-gate') as HTMLElement;
+  const inlineGate2 = document.getElementById('vsl-inline-gate-2') as HTMLElement;
+  const inlineGate3 = document.getElementById('vsl-inline-gate-3') as HTMLElement;
+
+  function hideAllInlineGates() {
+    [inlineGate1, inlineGate2, inlineGate3].forEach(g => { if (g) g.style.display = 'none'; });
+  }
+
   let ctaShown = false;
+  let popup2Shown = false;
+  let videoEndTriggered = false;
 
   player.on('timeupdate', () => {
-    if (!ctaShown && player.currentTime >= 44) {
+    const t = player.currentTime;
+
+  const vslWrapper = document.querySelector('.vsl-wrapper') as HTMLElement;
+  const scrollToVSL = () => vslWrapper?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    if (!ctaShown && t >= 44) {
       ctaShown = true;
       ctaLock.style.display = 'block';
       document.body.classList.add('page-dimmed');
-      setTimeout(() => {
-        ctaLock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+      setTimeout(scrollToVSL, 100);
+    }
+
+    if (!popup2Shown && t >= 212) {
+      popup2Shown = true;
+      ctaLock.style.display = 'none';
+      popup2.style.display = 'flex';
+      document.body.classList.add('page-dimmed');
+      setTimeout(scrollToVSL, 100);
+    }
+
+    if (!videoEndTriggered && t >= 486) {
+      videoEndTriggered = true;
+      ctaLock.style.display = 'none';
+      popup2.style.display = 'none';
+      player.pause();
+      player.currentTime = 486;
+      popup3.style.display = 'block';
+      document.body.classList.add('page-dimmed');
+      setTimeout(scrollToVSL, 100);
     }
   });
 
@@ -1838,11 +2069,25 @@ background-size: 300px 300px;
     ctaLock.style.display = 'none';
     const inlineGate = document.getElementById('vsl-inline-gate') as HTMLElement;
     if (inlineGate) inlineGate.style.display = 'none';
-    const bookCallGate = document.getElementById('vsl-book-call-gate') as HTMLElement;
-    bookCallGate.style.display = 'block';
-    setTimeout(() => {
-      bookCallGate.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
+    hideAllInlineGates();
+    inlineGate1.style.display = 'block';
+    setTimeout(scrollToVSL, 100);
+  });
+
+  popup2Close.addEventListener('click', () => {
+    document.body.classList.remove('page-dimmed');
+    popup2.style.display = 'none';
+    hideAllInlineGates();
+    inlineGate2.style.display = 'block';
+    setTimeout(scrollToVSL, 100);
+  });
+
+  popup3Close.addEventListener('click', () => {
+    document.body.classList.remove('page-dimmed');
+    popup3.style.display = 'none';
+    hideAllInlineGates();
+    inlineGate3.style.display = 'block';
+    setTimeout(scrollToVSL, 100);
   });
 
 
@@ -1872,9 +2117,9 @@ background-size: 300px 300px;
       sessionStorage.setItem('userData', JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal }));
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: 'subscription_success_inline' });
-      const inlineGate = document.getElementById('vsl-inline-gate') as HTMLElement;
-      if (inlineGate) inlineGate.style.display = 'none';
-      document.getElementById('vsl-player')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      document.getElementById('vsl-inline-gate')?.remove();
+      document.querySelector('.hero-subtext')?.remove();
+      scrollToVSL();
       player.play();
     } catch {
       btn.disabled = false;
@@ -1912,6 +2157,7 @@ background-size: 300px 300px;
       window.dataLayer.push({ event: 'subscription_success_popup' });
       successEl.style.display = 'block';
       btn.textContent = 'Starting video...';
+      document.querySelector('.hero-subtext')?.remove();
       closeModal();
       player.play();
     } catch {
