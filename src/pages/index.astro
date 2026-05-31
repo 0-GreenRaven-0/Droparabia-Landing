@@ -42,7 +42,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         <button id="vsl-cta-lock-close" class="vsl-cta-lock-close" aria-label="Close">&times;</button>
         <h2>You don't have to figure it all by yourself!</h2>
         <a id="cta-book-call-popup" href="/survey" class="vsl-cta-lock-btn">Click Here to Join the Community!<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
-        <p class="john-body">Access the same proven system and community support that helped John make his first $11,000 during the war!</p>
+        <p class="john-body">Access the same <strong>Proven System</strong> and community support that helped <strong>John</strong> make <strong>his first $11,000!</strong> during the war!</p>
         <img src="https://ik.imagekit.io/greenraven/MJ/Popups/popup%201.png" class="john-re" />
       </div>
 
@@ -50,7 +50,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         <div class="vsl-book-call-content">
           <h2 class="popup-gate-heading">You don't have to figure it all by yourself!</h2>
           <a id="cta-book-call-gate" href="/survey" class="vsl-cta-lock-btn">Click Here to Join the Community!<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
-          <p class="john-body">Access the same proven system and community support that helped John make his first $11,000 during the war!</p>
+          <p class="john-body">Access the same <strong>Proven System</strong> and community support that helped <strong>John</strong> make <strong>his first $11,000!</strong> during the war!</p>
           <img src="https://ik.imagekit.io/greenraven/MJ/Popups/popup%201.png" class="john-re" style="margin-top:12px;" />
         </div>
       </div>
@@ -184,10 +184,10 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     <div class="vsl-inline-gate" id="vsl-inline-gate">
     <div class="vsl-gate-divider">
       <span class="vsl-gate-or">
-        Subscribe to watch the Free Tutorial
+        Subscribe to watch the Free Tutorial!
       </span>
     </div>
-    <div id="vsl-inline-success" class="brevo-alert brevo-alert--success" style="display:block">You're in! Scroll up to watch the video.</div>
+    <div id="vsl-inline-success" class="brevo-alert brevo-alert--success" style="display:none">You're in! Scroll up to watch the video.</div>
     <form id="vsl-inline-form" class="vsl-inline-form" method="POST" action="/api/subscribe" data-type="subscription">
       <div class="vsl-inline-fields">
         <div class="field-line">
@@ -212,6 +212,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
           <input type="tel" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
         </div>
         <button type="submit" class="btn-primary vsl-inline-btn">Unlock My Free Guide</button>
+        <p style="font-size:0.7rem; color:#94a3b8; text-align:center; margin-top:8px; line-height:1.4;">By subscribing, you agree to receive future marketing messages and offers</p>
       </div>
       <input type="text" name="email_address_check" value="" style="display:none">
       <input type="hidden" name="locale" value="en">
@@ -296,8 +297,8 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     <div class="vsl-modal-box" role="dialog" aria-modal="true" aria-labelledby="vsl-modal-title">
       <button class="vsl-modal-close" id="vsl-modal-close" aria-label="Close">&times;</button>
       <div class="vsl-modal-head">
-        <h3 class="vsl-modal-title" id="vsl-modal-title" style="font-size:1.15rem;">
-          Subscribe to watch the free Tutorial
+        <h3 class="vsl-modal-title" id="vsl-modal-title" style="font-size:1.75rem; font-weight:900;">
+          Subscribe to watch the free Tutorial!
         </h3>
         <p style="color:#DC2626; font-size:0.78rem; font-weight:500; margin-top:0.35rem;">Tutorial Might be taken down soon!</p>
       </div>
@@ -325,9 +326,8 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
           <span class="sms-divider">|</span>
           <input type="tel" id="VSL_SMS" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
         </div>
-        <br/>
-
         <button type="submit" class="btn-primary">Unlock & Watch Free</button>
+        <p style="font-size:0.7rem; color:#94a3b8; text-align:center; margin-top:8px; line-height:1.4;">By subscribing, you agree to receive future marketing messages and offers</p>
         <input type="text" name="email_address_check" value="" style="display:none">
         <input type="hidden" name="locale" value="en">
       </form>
@@ -1016,8 +1016,8 @@ background-size: 300px 300px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 1.375rem;
-    font-weight: 800;
+    font-size: 1.75rem;
+    font-weight: 900;
     color: var(--gray-900);
     white-space: normal;
     text-align: center;
