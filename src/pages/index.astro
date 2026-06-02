@@ -17,18 +17,23 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 
       <!-- ATTENTION BAR -->
       <div class="attention-bar">
-        <span class="attention-bar-label">Free Step-by-Step Tutorial</span>
-        <span class="attention-bar-text">Other Gurus will sell you this Tutorial in a Course, Majd is giving it to you for FREE</span>
+        <span class="attention-bar-label" style="display:flex;align-items:center;gap:8px;font-family:'IBrand',sans-serif;"><span style="font-size:0.75rem;">brought to you by</span> <img src="/Droparabia.png" alt="Droparabia" style="height:44px;vertical-align:middle;" /> <span style="font-size:1.6rem;">Droparabia</span></span>
+        <span class="attention-bar-text">Free step-by-step tutorial for Lebanese who wants to start their ecommerce business</span>
       </div>
 
       <h1>
-        How to start a <span class="h1-highlight">Successful &amp; <span class="h1-underline">High-Earning</span></span> online store in <span class="h1-highlight">Lebanon</span>
-<span class="h1-sub">And potentially earn your first <span style="font-weight:800; font-size:1.15em;">$3,000!</span></span>
+        Launch a <span class="h1-highlight">Successful &amp; <span class="h1-underline">High-Earning</span></span> online store in <span class="h1-highlight">Lebanon</span> in 4 steps!
       </h1>
-      <p class="hero-subtext"><span style="color:#1d4ed8; font-weight:700;">4 Phases</span> <span style="font-weight:700;">Proven Strategy</span> to start selling online <span style="text-decoration:underline; text-underline-offset:3px; font-weight:700;">without owning stock or risking money</span> on non-selling products</p>
+      <p class="hero-subtext">Without <span style="text-decoration:underline;text-decoration-color:#2563eb;text-underline-offset:4px;text-decoration-thickness:2.5px;">owning inventory</span> or <span style="text-decoration:underline;text-decoration-color:#2563eb;text-underline-offset:4px;text-decoration-thickness:2.5px;">wasting money</span> choosing the wrong products!</p>
       <!-- VSL Video -->
       <div class="vsl-wrapper">
-        <video id="vsl-player" playsinline preload="auto">
+        <div id="vsl-pre-init" style="position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;border-radius:16px;overflow:hidden;">
+          <img src="/Group%205.png" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" alt="" />
+          <div style="position:relative;z-index:1;width:120px;height:64px;background:#2563eb;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,99,235,0.4);">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <video id="vsl-player" playsinline preload="auto" poster="/Group%205.png">
           <source src="/vsl.mp4" type="video/mp4" />
         </video>
       </div>
@@ -387,12 +392,12 @@ background-size: 300px 300px;
   }
 
   .attention-bar-label {
-    background: var(--blue);
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    background: transparent;
+    color: #0f172a;
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
     padding: 6px 14px;
     border-radius: 4px;
     white-space: nowrap;
@@ -1848,9 +1853,9 @@ background-size: 300px 300px;
     h1 { font-size: 1.9rem; max-width: 100%; }
     .h1-sub { font-size: 1rem; margin-top: 4px; padding-bottom: 16px; }
     .attention-bar { gap: 6px; }
-    .attention-bar-label { font-size: 0.8rem !important; font-weight: 600 !important; padding: 6px 14px !important; }
+    .attention-bar-label { font-size: 0.9rem !important; font-weight: 400 !important; padding: 6px 14px !important; }
     .attention-bar-text { font-size: 0.75rem; width: 85%; font-weight: 600 !important; }
-    .hero-subtext { font-size: 0.8rem; padding-bottom: 6px; }
+    .hero-subtext { font-size: 0.8rem; padding-bottom: 6px; padding-left: 20px; padding-right: 20px; }
     .subtext-mobile-hide { display: none; }
     .vsl-wrapper { margin-bottom: 0 !important; }
 
@@ -1932,6 +1937,10 @@ background-size: 300px 300px;
     controls: ['play-large', 'play', 'mute', 'volume'],
     resetOnEnd: false,
     speed: { selected: 1.2, options: [0.75, 1, 1.1, 1.2] },
+  });
+
+  player.on('ready', () => {
+    document.getElementById('vsl-pre-init')?.remove();
   });
 
   // Auto speed: start at 1.2x, step down every 30s after the 1-min mark
