@@ -216,6 +216,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
           <span class="sms-divider">|</span>
           <input type="tel" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
         </div>
+        <p id="vsl-inline-phone-err" style="display:none;font-size:0.78rem;color:#dc2626;margin-top:-4px;margin-bottom:4px;">Please enter a valid Lebanese number (e.g. 70 123 456)</p>
         <button type="submit" class="btn-primary vsl-inline-btn">Unlock My Free Guide</button>
         <p style="font-size:0.7rem; color:#94a3b8; text-align:center; margin-top:8px; line-height:1.4;">By subscribing, you agree to receive future marketing messages and offers</p>
       </div>
@@ -2100,6 +2101,14 @@ background-size: 300px 300px;
   });
 
 
+  function isValidLebanesePhone(raw: string): boolean {
+    let d = raw.replace(/[\s\-()+.]/g, '');
+    if (d.startsWith('00961')) d = d.slice(5);
+    else if (d.startsWith('961') && d.length >= 10) d = d.slice(3);
+    if (d.startsWith('0')) d = d.slice(1);
+    return /^\d{7,8}$/.test(d);
+  }
+
   // ── Inline form: subscribe & play without modal ──
   const inlineForm = document.getElementById('vsl-inline-form') as HTMLFormElement;
 
@@ -2109,6 +2118,13 @@ background-size: 300px 300px;
     const nameVal  = (this.querySelector('[name="FIRSTNAME"]') as HTMLInputElement)?.value ?? '';
     const emailVal = (this.querySelector('[name="EMAIL"]') as HTMLInputElement)?.value ?? '';
     const smsVal   = (this.querySelector('[name="SMS"]') as HTMLInputElement)?.value ?? '';
+    const phoneErrEl = document.getElementById('vsl-inline-phone-err') as HTMLElement;
+
+    if (!isValidLebanesePhone(smsVal)) {
+      if (phoneErrEl) phoneErrEl.style.display = 'block';
+      return;
+    }
+    if (phoneErrEl) phoneErrEl.style.display = 'none';
 
     btn.disabled = true;
     btn.textContent = 'Subscribing...';
@@ -2145,6 +2161,12 @@ background-size: 300px 300px;
     const firstnameVal = (this.querySelector('[name="FIRSTNAME"]') as HTMLInputElement)?.value ?? '';
     const emailVal = (this.querySelector('[name="EMAIL"]') as HTMLInputElement)?.value ?? '';
     const smsVal = (this.querySelector('[name="SMS"]') as HTMLInputElement)?.value ?? '';
+
+    if (!isValidLebanesePhone(smsVal)) {
+      errorEl.style.display = 'block';
+      errorEl.textContent = 'Please enter a valid Lebanese number (e.g. 70 123 456)';
+      return;
+    }
 
     btn.disabled = true;
     btn.textContent = 'Subscribing...';
@@ -2214,16 +2236,31 @@ background-size: 300px 300px;
     var btn = form.querySelector('button[type="submit"]');
     var btnText = btn.textContent;
 
+    function isValidLebanesePhone(raw) {
+      var d = raw.replace(/[\s\-()+.]/g, '');
+      if (d.startsWith('00961')) d = d.slice(5);
+      else if (d.startsWith('961') && d.length >= 10) d = d.slice(3);
+      if (d.startsWith('0')) d = d.slice(1);
+      return /^\d{7,8}$/.test(d);
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      btn.disabled = true;
-      btn.textContent = 'Submitting...';
       successEl.style.display = 'none';
       errorEl.style.display = 'none';
 
       var nameVal  = form.querySelector('[name="FIRSTNAME"]') ? form.querySelector('[name="FIRSTNAME"]').value : '';
       var emailVal = form.querySelector('[name="EMAIL"]')     ? form.querySelector('[name="EMAIL"]').value     : '';
       var smsVal   = form.querySelector('[name="SMS"]')       ? form.querySelector('[name="SMS"]').value       : '';
+
+      if (!isValidLebanesePhone(smsVal)) {
+        errorEl.style.display = 'block';
+        errorEl.textContent = 'Please enter a valid Lebanese number (e.g. 70 123 456)';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
       var utmKeys  = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
       var utms     = {};
       utmKeys.forEach(function(k) { var v = sessionStorage.getItem(k); if (v) utms[k] = v; });
