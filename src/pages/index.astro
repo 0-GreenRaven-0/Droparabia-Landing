@@ -18,13 +18,13 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       <!-- ATTENTION BAR -->
       <div class="attention-bar">
         <span class="attention-bar-label" style="display:flex;align-items:center;gap:8px;font-family:'IBrand',sans-serif;"><span style="font-size:0.75rem;">brought to you by</span> <img src="/Droparabia.png" alt="Droparabia" style="height:44px;vertical-align:middle;" /> <span style="font-size:1.6rem;">Droparabia</span></span>
-        <span class="attention-bar-text">Free step-by-step tutorial for Lebanese who wants to start their ecommerce business</span>
+        <span class="attention-bar-text">For Lebanese who wants to start their own successful online store without huge upfront costs</span>
       </div>
 
       <h1>
         Launch a <span class="h1-highlight">Successful &amp; <span class="h1-underline">High-Earning</span></span> online store in <span class="h1-highlight">Lebanon</span> in 4 steps!
       </h1>
-      <p class="hero-subtext">Without <span style="text-decoration:underline;text-decoration-color:#2563eb;text-underline-offset:4px;text-decoration-thickness:2.5px;">owning inventory</span> or <span style="text-decoration:underline;text-decoration-color:#2563eb;text-underline-offset:4px;text-decoration-thickness:2.5px;">wasting money</span> choosing the wrong products!</p>
+      <p class="hero-subtext">You'll learn exactly how to start selling online in Lebanon &amp; potentially make your first <span style="text-decoration:underline;text-decoration-color:#2563eb;text-underline-offset:4px;text-decoration-thickness:1.5px;font-weight:800;">$3,000!</span><br/><br/> without <span style="text-decoration:underline;text-decoration-color:#2563eb;text-underline-offset:4px;text-decoration-thickness:1.5px;font-weight:800;">investing in inventory</span> or <span style="text-decoration:underline;text-decoration-color:#2563eb;text-underline-offset:4px;text-decoration-thickness:1.5px;font-weight:800;">wasting money</span> on the wrong product!</p>
       <!-- VSL Video -->
       <div class="vsl-wrapper">
         <div id="vsl-pre-init" style="position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;border-radius:16px;overflow:hidden;">
@@ -218,7 +218,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         </div>
         <p id="vsl-inline-phone-err" style="display:none;font-size:0.78rem;color:#dc2626;margin-top:-4px;margin-bottom:4px;">Please enter a valid Lebanese number (e.g. 70 123 456)</p>
         <button type="submit" class="btn-primary vsl-inline-btn">Unlock My Free Guide</button>
-        <p style="font-size:0.7rem; color:#94a3b8; text-align:center; margin-top:8px; line-height:1.4;">By subscribing, you agree to receive future marketing messages and offers</p>
+        <p style="font-size:0.7rem; color:#94a3b8; text-align:center; margin-top:8px; line-height:1.4;">By subscribing, you agree to receive invitation to future events and offers from Droparabia</p>
       </div>
       <input type="text" name="email_address_check" value="" style="display:none">
       <input type="hidden" name="locale" value="en">
@@ -303,10 +303,10 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     <div class="vsl-modal-box" role="dialog" aria-modal="true" aria-labelledby="vsl-modal-title">
       <button class="vsl-modal-close" id="vsl-modal-close" aria-label="Close">&times;</button>
       <div class="vsl-modal-head">
-        <h3 class="vsl-modal-title" id="vsl-modal-title" style="font-size:1.75rem; font-weight:900;">
-          Subscribe to watch the free Tutorial!
+        <h3 class="vsl-modal-title" id="vsl-modal-title" style="font-size:1.2rem; font-weight:900;">
+          One small step needed!<br><span style="font-size:1rem; font-weight:700;">Subscribe to unlock this tutorial for FREE!</span>
         </h3>
-        <p style="color:#DC2626; font-size:0.78rem; font-weight:500; margin-top:0.35rem;">Tutorial Might be taken down soon!</p>
+        <p style="color:#DC2626; font-size:0.78rem; font-weight:500; margin-top:0.35rem;">This tutorial Might be taken down soon!</p>
       </div>
       <div id="vsl-error-msg" class="brevo-alert brevo-alert--error">Could not subscribe. Please try again.</div>
       <div id="vsl-success-msg" class="brevo-alert brevo-alert--success">Subscribed! Starting your video...</div>
@@ -332,8 +332,8 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
           <span class="sms-divider">|</span>
           <input type="tel" id="VSL_SMS" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
         </div>
-        <button type="submit" class="btn-primary">Unlock & Watch Free</button>
-        <p style="font-size:0.7rem; color:#94a3b8; text-align:center; margin-top:8px; line-height:1.4;">By subscribing, you agree to receive future marketing messages and offers</p>
+        <button type="submit" class="btn-primary">Unlock the FREE tutorial!</button>
+        <p style="font-size:0.7rem; color:#94a3b8; text-align:center; margin-top:8px; line-height:1.4;">By subscribing, you agree to receive invitation to future events and offers from Droparabia</p>
         <input type="text" name="email_address_check" value="" style="display:none">
         <input type="hidden" name="locale" value="en">
       </form>
@@ -501,7 +501,7 @@ background-size: 300px 300px;
     text-align: center;
     margin: 6px auto 0;
     padding-top: 4px;
-    padding-bottom: 16px;
+    padding-bottom: 17px;
     line-height: 1.6;
     max-width: 620px;
     width: 100%;
@@ -2193,7 +2193,7 @@ background-size: 300px 300px;
       player.play();
     } catch {
       btn.disabled = false;
-      btn.textContent = 'Unlock & Watch Free';
+      btn.textContent = 'Unlock the FREE tutorial!';
       errorEl.style.display = 'block';
     }
   });
