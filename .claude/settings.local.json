@@ -41,10 +41,13 @@
       "Bash(del \"d:\\\\Projects\\\\droparabia-landing\\\\src\\\\pages\\\\api\\\\init-headers.ts\")",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Read(//d/Projects/dropararabia-landing/src/pages/**)"
+      "Read(//d/Projects/dropararabia-landing/src/pages/**)",
+      "Bash(git show *)",
+      "Bash(git push *)"
     ],
     "additionalDirectories": [
-      "d:\\Projects\\droparabia-book"
+      "d:\\Projects\\droparabia-book",
+      "\\tmp"
     ]
   }
 }
