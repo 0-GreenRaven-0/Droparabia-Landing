@@ -42,9 +42,17 @@ function getUnlinkListIds(list: string): number[] {
 }
 
 
-function formatPhoneDisplay(raw: string): string {
-  let digits = raw.startsWith('+961') ? raw.slice(4) : raw.startsWith('961') ? raw.slice(3) : raw;
-  digits = digits.replace(/\D/g, '');
+// Strips formatting/country-code prefixes down to the bare national number,
+// matching the client-side isValidLebanesePhone logic.
+function normalizePhone(raw: string): string {
+  let d = (raw || '').replace(/[\s\-()+.]/g, '');
+  if (d.startsWith('00961')) d = d.slice(5);
+  else if (d.startsWith('961') && d.length >= 10) d = d.slice(3);
+  if (d.startsWith('0')) d = d.slice(1);
+  return d;
+}
+
+function formatPhoneDisplay(digits: string): string {
   if (digits.length === 8) return `${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5)}`;
   return digits;
 }
@@ -224,6 +232,7 @@ export const POST: APIRoute = async ({ request }) => {
     const nameParts = (name || '').trim().split(/\s+/);
     const firstName = nameParts[0] || '';
     const lastName  = nameParts.slice(1).join(' ') || '';
+    const normalizedPhone = normalizePhone(phone || '');
 
     // ── Brevo ──
     const unlinkListIds = getUnlinkListIds(list);
@@ -232,7 +241,7 @@ export const POST: APIRoute = async ({ request }) => {
       attributes: {
         FIRSTNAME: firstName,
         LASTNAME:  lastName,
-        SMS: phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '',
+        SMS: normalizedPhone ? '+961' + normalizedPhone : '',
       },
       listIds: [listId],
       updateEnabled: true,
@@ -254,8 +263,7 @@ export const POST: APIRoute = async ({ request }) => {
     const sheetId   = getSheetId(list);
     const credsJson = import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
     if (sheetId && credsJson) {
-      const rawPhone     = phone ? (phone.startsWith('+') ? phone : '+961' + phone) : '';
-      const displayPhone = rawPhone ? formatPhoneDisplay(rawPhone) : '';
+      const displayPhone = normalizedPhone ? formatPhoneDisplay(normalizedPhone) : '';
       const date         = new Date().toLocaleDateString('en-GB');
       const isPaid        = (utm_medium || '').toLowerCase().trim() === 'paid';
       const trafficSource = buildTrafficSource(utm_source || '', utm_medium || '', referrer || '');

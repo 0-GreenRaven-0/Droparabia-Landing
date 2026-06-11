@@ -188,8 +188,18 @@
           window.dataLayer.push({ event: 'survey_started' });
         } catch(_) {}
 
+        // If they already gave their info to watch the VSL, skip the contact question
+        try {
+          var existingUserData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+          if (existingUserData.name && existingUserData.email && existingUserData.phone) {
+            answers.contact = true;
+            page = 1;
+          }
+        } catch(_) {}
+
         document.getElementById('survey-loader').style.display = 'none';
         document.getElementById('survey-content').style.display = 'flex';
+        updateUI();
       })();
 
       // Option selection
