@@ -43,7 +43,16 @@
       "Bash(git commit *)",
       "Read(//d/Projects/dropararabia-landing/src/pages/**)",
       "Bash(git show *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(grep -n \"h1-simple-underline {\\\\|^  /\\\\* ─── BONUS SECTION ───\\\\|^<style>\\\\|brand-logo-inline {\" \"d:/Projects/droparabia-landing/src/pages/index.astro\")",
+      "Bash(grep -n \"/\\\\* ─── BONUS SECTION ───\\\\|badge-mbg-text span {\" \"d:/Projects/droparabia-landing/src/pages/index.astro\")",
+      "Bash(awk 'NR==27,NR==85' \"d:/Projects/droparabia-landing/src/pages/index.astro\")",
+      "PowerShell(Add-Type -AssemblyName System.Drawing; foreach\\($f in '1.png','2.png'\\){ $img = [System.Drawing.Image]::FromFile\\(\\(Resolve-Path \"d:/Projects/droparabia-landing/public/$f\"\\)\\); Write-Output \"$f : $\\($img.Width\\) x $\\($img.Height\\)\"; $img.Dispose\\(\\) })",
+      "Read(//d/Projects/droparabia-thank-you/**)",
+      "Bash(powershell -Command \"\\(Get-Content -Raw src/pages/index.astro\\) -replace 'id=\\\\\"cta-hero\\\\\"','id=\\\\\"cta1\\\\\"' -replace 'id=\\\\\"cta-how-it-works\\\\\"','id=\\\\\"cta2\\\\\"' -replace 'id=\\\\\"cta-bonuses\\\\\"','id=\\\\\"cta3\\\\\"' -replace 'id=\\\\\"cta-popup-btn\\\\\"','id=\\\\\"cta-popup\\\\\"' | Set-Content -NoNewline src/pages/index.astro\")",
+      "Read(//d/Projects/**)",
+      "Bash(git log *)",
+      "Bash(powershell -Command \"\\(Get-Content -Raw src/pages/index.astro\\) -replace 'tr=w-700,q-95,f-webp','tr=w-1400,q-100,f-webp' | Set-Content -NoNewline src/pages/index.astro\")"
     ],
     "additionalDirectories": [
       "d:\\Projects\\droparabia-book",

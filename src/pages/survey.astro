@@ -28,6 +28,9 @@
       .survey-page-count { color: #94A3B8; font-size: 0.9rem; margin-bottom: 1rem; }
       .survey-question { font-size: 1rem; font-weight: 600; color: #374151; margin-bottom: 1rem; line-height: 1.65; }
       .survey-options { display: flex; flex-direction: column; gap: 0.5rem; }
+      .survey-inputs { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 0.5rem; }
+      .survey-input { padding: 0.75rem 1rem; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #fff; font-size: 0.95rem; font-family: 'Inter', sans-serif; color: #374151; outline: none; transition: border-color 0.15s; width: 100%; }
+      .survey-input:focus { border-color: #2563EB; }
       .survey-option { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.9rem; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #fff; cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.15s; font-weight: 500; color: #374151; font-size: 0.875rem; width: 100%; text-align: left; }
       .survey-option:hover { border-color: #93C5FD; background: #EFF6FF; transform: translateX(3px); }
       .survey-option.selected { border-color: #2563EB; background: #EFF6FF; box-shadow: 0 2px 8px rgba(37,99,235,0.12); }
@@ -67,46 +70,57 @@
             <img src="/Droparabia.png" alt="Droparabia" style="height:72px;" />
             <span style="font-family:'IBrand', sans-serif; font-size:3rem; font-weight:400; color:#0f172a;">Droparabia</span>
           </div>
-          <h1 class="survey-title">Before we book you a call, we need to make sure we are the right fit to help you</h1>
+          <h1 class="survey-title">Answer few questions to find out if Droparabia is the right fit for you</h1>
         </div>
 
         <div class="survey-progress-track">
-          <div class="survey-progress-bar" id="progress-bar" style="width:16.6%"></div>
+          <div class="survey-progress-bar" id="progress-bar" style="width:14.28%"></div>
         </div>
-        <p class="survey-page-count" id="page-count">Question 1 of 6</p>
+        <p class="survey-page-count" id="page-count">Question 1 of 7</p>
 
         <!-- Q1 -->
-        <div class="survey-page active" data-field="stopped">
+        <div class="survey-page active" data-field="contact">
+          <h2 class="survey-question">Please enter your:</h2>
+          <div class="survey-inputs">
+            <input type="text" class="survey-input" id="input-name" placeholder="First and Last Name" autocomplete="name" />
+            <input type="email" class="survey-input" id="input-email" placeholder="Email Address" autocomplete="email" />
+            <input type="tel" class="survey-input" id="input-phone" placeholder="Phone Number (e.g. 70 123 456)" autocomplete="tel" />
+          </div>
+          <div class="survey-error" id="err-0">Please fill in your name, a valid email and a valid phone number</div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="survey-page" data-field="stopped" style="display:none">
           <h2 class="survey-question">What stopped you from starting your own ecommerce or any kind of online store before?</h2>
           <div class="survey-options">
             <button class="survey-option" data-value="knowledge">Lack of knowledge/guidance</button>
             <button class="survey-option" data-value="fear">Fear of Risking my budget</button>
             <button class="survey-option" data-value="never">Never thought about it before</button>
           </div>
-          <div class="survey-error" id="err-0">Please select an option to continue</div>
-        </div>
-
-        <!-- Q2 -->
-        <div class="survey-page" data-field="commitment" style="display:none">
-          <h2 class="survey-question">This isn't a generic sales call, it's a strategy session to get you started as soon as possible.<br><br>Any chance you might cancel or not attend the meeting?</h2>
-          <div class="survey-options">
-            <button class="survey-option" data-value="yes">No, I will attend for sure</button>
-            <button class="survey-option" data-value="maybe">Maybe...</button>
-          </div>
           <div class="survey-error" id="err-1">Please select an option to continue</div>
         </div>
 
         <!-- Q3 -->
+        <div class="survey-page" data-field="commitment" style="display:none">
+          <h2 class="survey-question">This isn't a generic sales call, it's to determine if Droparabia is the right fit to help you start your business.<br><br>Any chance you might cancel or not attend the meeting?</h2>
+          <div class="survey-options">
+            <button class="survey-option" data-value="yes">No, I will attend for sure</button>
+            <button class="survey-option" data-value="maybe">Maybe...</button>
+          </div>
+          <div class="survey-error" id="err-2">Please select an option to continue</div>
+        </div>
+
+        <!-- Q4 -->
         <div class="survey-page" data-field="effort" style="display:none">
           <h2 class="survey-question">This isn't a "get rich quick" scheme, it will require a lot of effort and dedication to build a successful online business,<br><br>Are you willing to put in the work? (Even if you fail at first)</h2>
           <div class="survey-options">
             <button class="survey-option" data-value="ready">I'm Ready to Learn and Work Hard</button>
             <button class="survey-option" data-value="best">I'll Do My Best</button>
           </div>
-          <div class="survey-error" id="err-2">Please select an option to continue</div>
+          <div class="survey-error" id="err-3">Please select an option to continue</div>
         </div>
 
-        <!-- Q4 -->
+        <!-- Q5 -->
         <div class="survey-page" data-field="budget" style="display:none">
           <h2 class="survey-question">We Recommend that you have a sufficient capital in order to start your online store (Software, marketing, packaging...)<br><br>Do you have access to at least a budget of $600~$700?</h2>
           <div class="survey-options">
@@ -114,20 +128,20 @@
             <button class="survey-option" data-value="partial">I have at least $600</button>
             <button class="survey-option" data-value="no">No, I don't have the funds right now</button>
           </div>
-          <div class="survey-error" id="err-3">Please select an option to continue</div>
+          <div class="survey-error" id="err-4">Please select an option to continue</div>
         </div>
 
-        <!-- Q5 -->
+        <!-- Q6 -->
         <div class="survey-page" data-field="decisionMaker" style="display:none">
           <h2 class="survey-question">Are you the decision maker when it comes to starting your business?</h2>
           <div class="survey-options">
             <button class="survey-option" data-value="yes">Yes, I'm the decision maker</button>
             <button class="survey-option" data-value="partner">No, I have a partner involved</button>
           </div>
-          <div class="survey-error" id="err-4">Please select an option to continue</div>
+          <div class="survey-error" id="err-5">Please select an option to continue</div>
         </div>
 
-        <!-- Q6 -->
+        <!-- Q7 -->
         <div class="survey-page" data-field="startTime" style="display:none">
           <h2 class="survey-question">If we're a good fit to help you build your online business, how soon can you start?</h2>
           <div class="survey-options">
@@ -136,7 +150,7 @@
             <button class="survey-option" data-value="month">Within 30 days</button>
             <button class="survey-option" data-value="notReady">Not Ready Yet</button>
           </div>
-          <div class="survey-error" id="err-5">Please select an option to continue</div>
+          <div class="survey-error" id="err-6">Please select an option to continue</div>
         </div>
 
         <div class="survey-nav">
@@ -149,26 +163,29 @@
 
     <script is:inline>
       var page = 0;
-      var total = 6;
+      var total = 7;
       var answers = {};
 
-      // Await Brevo subscribe then reveal survey
-      (async function() {
+      function isValidLebanesePhone(raw) {
+        var d = raw.replace(/[\s\-()+.]/g, '');
+        if (d.startsWith('00961')) d = d.slice(5);
+        else if (d.startsWith('961') && d.length >= 10) d = d.slice(3);
+        if (d.startsWith('0')) d = d.slice(1);
+        return /^\d{7,8}$/.test(d);
+      }
+
+      function isValidEmail(raw) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw);
+      }
+
+      // Mark survey as started and reveal it
+      (function() {
         try {
           var tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
           tokens.takeSurvey = Math.random().toString(36).substring(2) + Date.now().toString(36);
           sessionStorage.setItem('userTokens', JSON.stringify(tokens));
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({ event: 'survey_started' });
-
-          var userData = JSON.parse(sessionStorage.getItem('userData') || 'null');
-          if (userData && userData.email) {
-            await fetch('/api/subscribe', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ name: userData.name, email: userData.email, phone: userData.phone, list: 'survey', cta_popup: sessionStorage.getItem('da_cta_popup') || '' }),
-            });
-          }
         } catch(_) {}
 
         document.getElementById('survey-loader').style.display = 'none';
@@ -204,6 +221,38 @@
       function nextPage() {
         var pages = document.querySelectorAll('.survey-page');
         var field = pages[page].dataset.field;
+
+        if (field === 'contact') {
+          var nameVal  = document.getElementById('input-name').value.trim();
+          var emailVal = document.getElementById('input-email').value.trim();
+          var phoneVal = document.getElementById('input-phone').value.trim();
+
+          if (!nameVal || !isValidEmail(emailVal) || !isValidLebanesePhone(phoneVal)) {
+            document.getElementById('err-0').style.display = 'block';
+            return;
+          }
+          document.getElementById('err-0').style.display = 'none';
+
+          sessionStorage.setItem('userData', JSON.stringify({ name: nameVal, email: emailVal, phone: phoneVal }));
+          sessionStorage.setItem('da_subscribed', '1');
+          answers.contact = true;
+
+          var utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+          var utms = {};
+          utmKeys.forEach(function(k) { var v = sessionStorage.getItem(k); if (v) utms[k] = v; });
+          var ref = sessionStorage.getItem('da_referrer') || '';
+
+          fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Object.assign({ name: nameVal, email: emailVal, phone: phoneVal, list: 'survey', referrer: ref, cta_popup: sessionStorage.getItem('da_cta_popup') || '' }, utms)),
+          }).catch(function(){});
+
+          page++;
+          updateUI();
+          return;
+        }
+
         if (!answers[field]) {
           document.getElementById('err-' + page).style.display = 'block';
           return;

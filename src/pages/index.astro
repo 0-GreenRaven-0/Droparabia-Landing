@@ -4,151 +4,70 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 ---
 
 <Layout>
-  <link slot="head" rel="preload" as="video" href="/vsl.mp4" type="video/mp4" />
 
-  <!-- HEADER -->
-  <header class="site-header">
+  <!-- NEW HERO -->
+  <section class="hero-new bg">
+    <div class="tp-container">
 
-  </header>
-
-  <!-- HERO -->
-  <section class="hero bg">
-    <div class="container">
-
-      <!-- ATTENTION BAR -->
-      <div class="attention-bar">
-        <span class="attention-bar-label">Free Exclusive Tutorial</span>
-        <span class="attention-bar-text">For Lebanese who want to start a profitable online business from scratch even with <strong>no experience</strong>
+      <!-- HERO BRAND -->
+      <div class="hero-brand-bar">
+        <div class="hero-brand-row">
+          <img src="/Droparabia.png" alt="Droparabia" class="hero-brand-img" />
+          <span class="hero-brand-name">Droparabia</span>
+        </div>
+        <p class="hero-brand-tagline">Lebanon's 1st Dropshipping Platform!</p>
       </div>
 
-      <h1>
-        Learn how to launch a <span class="h1-highlight">Successful &amp; <span class="h1-underline">high-earning</span></span> online store In <span class="h1-highlight">Lebanon</span> in just <span class="h1-simple-underline">4 steps</span>!
-<span class="h1-sub">Without a huge capital or owning & managing Inventory</span>
-      </h1>
-      <!-- VSL Video -->
-      <div class="vsl-wrapper">
-        <div id="vsl-pre-init" style="position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;border-radius:16px;overflow:hidden;">
-          <img src="/Group%205.png" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" alt="" />
-          <div style="position:relative;z-index:1;width:120px;height:64px;background:#2563eb;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,99,235,0.4);">
-            <svg viewBox="0 0 24 24" width="32" height="32" fill="white"><path d="M8 5v14l11-7z"/></svg>
+      <h1 class="hero-new-headline">Launch a <span class="h1-highlight">successful &amp; <span class="h1-underline">high-earning</span></span> online store in less than <span class="h1-simple-underline">30 days</span>!</h1>
+
+      <p class="hero-new-sub">Used by <strong>+600 Lebanese</strong> to sell online <strong>without a huge capital</strong> or owning and managing Inventory</p>
+
+      <div class="cta-block">
+        <a href="/survey" class="cta-btn" id="cta1">
+          <span class="cta-btn-main">Start selling with Droparabia!</span>
+          <span class="cta-btn-sub">Book a FREE call to get instant access</span>
+        </a>
+        <div class="tp-row">
+          <div class="auth-stat">
+            <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="tp-logo" />
+            <span class="tp-stars-row">
+              <span class="tp-star">★</span>
+              <span class="tp-star">★</span>
+              <span class="tp-star">★</span>
+              <span class="tp-star">★</span>
+              <span class="tp-star tp-star-empty">★</span>
+            </span>
           </div>
-        </div>
-        <video id="vsl-player" playsinline preload="auto" poster="/Group%205.png">
-          <source src="/vsl.mp4" type="video/mp4" />
-        </video>
-      </div>
-
-      <div class="vsl-availability-notice">
-        <p class="vsl-availability-main">Tutorial available for limited time!</p>
-        <p class="vsl-availability-sub">Be sure to watch before it's taken down</p>
-      </div>
-
-      <!-- CTA LOCK (appears below VSL after 44s) -->
-      <!-- ═══════════════════════════════════════════════════
-           POPUP 1  (triggers at 44s)
-           INLINE GATE 1  (shown when Popup 1 is dismissed)
-           ═══════════════════════════════════════════════════ -->
-      <div id="vsl-cta-lock" class="vsl-cta-lock" style="display:none">
-        <button id="vsl-cta-lock-close" class="vsl-cta-lock-close" aria-label="Close">&times;</button>
-        <h2>You don't have to figure it all by yourself!</h2>
-        <a id="cta-book-call-popup" href="/survey" class="vsl-cta-lock-btn">Click Here to Join the Community!<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
-        <p class="john-body">Access the same <strong>Proven System</strong> and community support that helped <strong>John</strong> make <strong>his first $11,000!</strong> during the war!</p>
-        <img src="https://ik.imagekit.io/greenraven/MJ/Popups/popup%201.png" class="john-re" />
-      </div>
-
-      <div id="vsl-book-call-gate" class="vsl-book-call-gate" style="display:none">
-        <div class="vsl-book-call-content">
-          <h2 class="popup-gate-heading">You don't have to figure it all by yourself!</h2>
-          <a id="cta-book-call-gate" href="/survey" class="vsl-cta-lock-btn">Click Here to Join the Community!<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
-          <p class="john-body">Access the same <strong>Proven System</strong> and community support that helped <strong>John</strong> make <strong>his first $11,000!</strong> during the war!</p>
-          <img src="https://ik.imagekit.io/greenraven/MJ/Popups/popup%201.png" class="john-re" style="margin-top:12px;" />
-        </div>
-      </div>
-
-      <!-- ═══════════════════════════════════════════════════
-           POPUP 2  (triggers at 3:32)
-           INLINE GATE 2  (shown when Popup 2 is dismissed)
-           ═══════════════════════════════════════════════════ -->
-      <div id="vsl-popup-2" class="vsl-cta-lock" style="display:none; flex-direction:column; gap:16px;">
-        <button id="vsl-popup-2-close" class="vsl-cta-lock-close" aria-label="Close">&times;</button>
-        <div class="popup-brand-row">
-          <img src="/Droparabia.png" alt="Droparabia" class="popup-brand-logo" />
-          <span class="popup-brand-name">Droparabia</span>
-        </div>
-        <p class="popup-platform-tag">The platform that allowed <strong>+600 Lebanese</strong> build their own high-earning stores <strong>without touching inventories</strong></p>
-        <a href="/survey" class="vsl-cta-lock-btn">
-          Start your business with Droparabia!<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
-   
-        <div class="vsl-cta-tp-badge">
-          <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="vsl-cta-tp-img" />
-          <div class="vsl-cta-tp-stars">
-            <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-            <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-            <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-            <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-            <svg viewBox="0 0 24 24" class="tp-star"><path fill="#999" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
+          <span class="tp-divider"></span>
+          <div class="auth-stat auth-stat-row">
+            <img src="/MBG.png" alt="Money Back Guarantee" class="badge-mbg-img" />
+            <span class="badge-mbg-text">90 Days Money Back Guarantee<br/><span>If you don't get any results after using our system</span></span>
           </div>
         </div>
       </div>
-
-      <div id="vsl-inline-gate-2" class="vsl-book-call-gate" style="display:none">
-        <div class="vsl-book-call-content">
-          <div class="popup-brand-row">
-            <img src="/Droparabia.png" alt="Droparabia" class="popup-brand-logo" />
-            <span class="popup-brand-name">Droparabia</span>
-          </div>
-          <p class="popup-platform-tag">The platform that allowed <strong>+600 Lebanese</strong> build their own high-earning stores <strong>without touching inventories</strong></p>
-          <a href="/survey" class="vsl-cta-lock-btn">Interested in starting a high-earning business?<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
-          <p class="popup-users-count">+600 Active Lebanese seller</p>
-          <div class="vsl-cta-tp-badge">
-            <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="vsl-cta-tp-img" />
-            <div class="vsl-cta-tp-stars">
-              <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-              <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-              <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-              <svg viewBox="0 0 24 24" class="tp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-              <svg viewBox="0 0 24 24" class="tp-star"><path fill="#999" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ═══════════════════════════════════════════════════
-           POPUP 3  (triggers at 8:06 / video end)
-           INLINE GATE 3  (shown when Popup 3 is dismissed)
-           ═══════════════════════════════════════════════════ -->
-      <div id="vsl-popup-3" class="vsl-cta-lock" style="display:none">
-        <button id="vsl-popup-3-close" class="vsl-cta-lock-close" aria-label="Close">&times;</button>
-        <h2>Are you ready to start your own high-earning store from home?</h2>
-        <p class="popup-body">And you can get started without experience and without spending a single dollar on inventory</p>
-
-        <a href="/survey" class="vsl-cta-lock-btn">I'm ready to start building my business!<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
-      </div>
-
-      <div id="vsl-inline-gate-3" class="vsl-book-call-gate" style="display:none">
-        <div class="vsl-book-call-content">
-          <h2 class="popup-gate-heading">Are you ready to start your own high-earning store from home?</h2>
-          <p class="popup-body">And you can get started without experience and without spending a single dollar on inventory</p>
-  
-          <a href="/survey" class="vsl-cta-lock-btn">I'm ready to start building my business!<span class="btn-subtext">Book a FREE strategy call with our Team</span></a>
-        </div>
-      </div>
-
 
     </div>
   </section>
 
-
-  <!-- TESTIMONIALS CAROUSEL -->
-  <section class="carousel-section">
-    <h2 class="carousel-heading">
-      <svg class="carousel-arrow-svg carousel-arrow-svg--left" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs></svg>
-      <span style="font-size:0.85em;">See how it worked for</span> <br/><span style="font-size:1.3em;">+600 Lebanese!</span>
-      <svg class="carousel-arrow-svg carousel-arrow-svg--right" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad2)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad2" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs></svg>
-    </h2>
-    <div style="display:none;">
-      <a href="/testimonials" class="view-all-case-studies">Click to see more case studies &rarr;</a>
+  <!-- WHO IS THIS FOR -->
+  <section class="who-section">
+    <div class="tp-container">
+      <p class="who-intro">This is for every Lebanese who is...</p>
+      <ul class="who-list">
+        <li>A 9 to 5 worker who want to start an online business to increase their monthly income</li>
+        <li>A university student who'd like to start his own hustle</li>
+        <li>A mother who'd love to run a business of her own from home</li>
+        <li>Or simply anyone who want to start dropshipping and later scale to full e-com store</li>
+      </ul>
+      <p class="who-outro">Does that sound like you?</p>
     </div>
+  </section>
+
+  <!-- SOCIAL PROOF -->
+  <section class="carousel-section carousel-section--before-about">
+    <h2 class="carousel-heading">
+      These people started just like you! <span class="carousel-heading-emoji">👇</span>
+    </h2>
     <div class="carousel-container">
       <button class="swiper-button-prev" aria-label="Previous">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
@@ -158,103 +77,202 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       </button>
       <div class="swiper testimonials-swiper">
         <div class="swiper-wrapper">
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/4.png" alt="Case Study" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/5.png" alt="Case Study" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/2.png" alt="Case Study" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/6.png" alt="Case Study" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/1.png" alt="Case Study" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/2.png" alt="Case Study" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/3.png" alt="Case Study" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo.png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(1).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(2)%20(1)%20(1).png" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(3).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(4)%20(1).png" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(5).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(6).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(7)%20(1)%20(1).png" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(8).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(9)%20(2).png?updatedAt=1775387951020" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(10).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(11).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(12).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(13).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(14).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(15).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(16).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(17).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
-          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(18).png?tr=w-700,q-95,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/4.png?tr=w-1400,q-100,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/5.png?tr=w-1400,q-100,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/2.png?tr=w-1400,q-100,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/6.png?tr=w-1400,q-100,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/1.png?tr=w-1400,q-100,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/2.png?tr=w-1400,q-100,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/3.png?tr=w-1400,q-100,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo.png?tr=w-1400,q-100,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(1).png?tr=w-1400,q-100,f-webp" alt="Testimonial" loading="lazy" /></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- INLINE SUBSCRIBE FORM -->
-  <section class="form-section">
-    <div class="vsl-inline-gate" id="vsl-inline-gate">
-    <div class="vsl-gate-divider">
-      <span class="vsl-gate-or">
-        Subscribe to watch before it's taken down!
-      </span>
-    </div>
-    <div id="vsl-inline-success" class="brevo-alert brevo-alert--success" style="display:none">You're in! Scroll up to watch the video.</div>
-    <form id="vsl-inline-form" class="vsl-inline-form" method="POST" action="/api/subscribe" data-type="subscription">
-      <div class="vsl-inline-fields">
-        <div class="field-line">
-          <span class="field-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </span>
-          <input type="text" name="FIRSTNAME" placeholder="First and Last Name" required autocomplete="name" />
-        </div>
-        <div class="field-line">
-          <span class="field-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          </span>
-          <input type="text" name="EMAIL" placeholder="Your Best Email" required autocomplete="email" />
-        </div>
-        <div class="field-line">
-          <span class="field-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.31 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.45 5.45l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          </span>
-          <input type="hidden" name="SMS__COUNTRY_CODE" value="+961" />
-          <span class="sms-country-fixed">+961</span>
-          <span class="sms-divider">|</span>
-          <input type="tel" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
-        </div>
-        <p id="vsl-inline-phone-err" style="display:none;font-size:0.78rem;color:#dc2626;margin-top:-4px;margin-bottom:4px;">Please enter a valid Lebanese number (e.g. 70 123 456)</p>
-        <button type="submit" class="btn-primary vsl-inline-btn">Start watching!</button>
-        <p style="font-size:0.7rem; color:#94a3b8; text-align:center; margin-top:8px; line-height:1.4;">By subscribing, you agree to receive invitation to future events and offers from Droparabia</p>
-      </div>
-      <input type="text" name="email_address_check" value="" style="display:none">
-      <input type="hidden" name="locale" value="en">
-    </form>
-    </div>
-  </section>
-
-  <!--   <section class="cta-section cta-final">
+  <!-- ABOUT -->
+  <section class="about-section">
     <div class="tp-container">
-      <div class="cta-brand-row">
-        <img src="/Droparabia.png" alt="Droparabia" class="cta-brand-img" />
-        <span class="cta-brand-name">Droparabia</span>
+ 
+      <p class="about-subhead">Here's how It works:</p>
+      <ol class="about-steps">
+        <li>
+          <div class="about-step-content">
+            <span>Droparabia finds you winning products that has demand in the Lebanese market</span>
+            <img src="/1.png" alt="" class="about-step-img" />
+          </div>
+        </li>
+        <li>
+          <div class="about-step-content">
+            <span>You add the product you want to sell to your own website with a click</span>
+            <img src="/2.png" alt="" class="about-step-img" />
+          </div>
+        </li>
+        <li><span>Droparabia handles packaging and order delivery when a customer orders from you</span></li>
+        
+        <li><span>You only pay per product sold and collect the profit through Whish account</span></li>
+      </ol>
+      <p class="about-closing">While you focus only on marketing and advertising</p>
+
+      <div class="cta-block">
+        <a href="/survey" class="cta-btn" id="cta2">
+          <span class="cta-btn-main">Start selling with Droparabia!</span>
+          <span class="cta-btn-sub">Book a FREE call to get instant access</span>
+        </a>
+        <div class="tp-row">
+          <div class="auth-stat">
+            <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="tp-logo" />
+            <span class="tp-stars-row">
+              <span class="tp-star">★</span>
+              <span class="tp-star">★</span>
+              <span class="tp-star">★</span>
+              <span class="tp-star">★</span>
+              <span class="tp-star tp-star-empty">★</span>
+            </span>
+          </div>
+          <span class="tp-divider"></span>
+          <div class="auth-stat auth-stat-row">
+            <img src="/MBG.png" alt="Money Back Guarantee" class="badge-mbg-img" />
+            <span class="badge-mbg-text">90 Days Money Back Guarantee<br/><span>If you don't get any results after using our system</span></span>
+          </div>
+        </div>
       </div>
-      <h2 class="cta-heading cta-heading--large">
-        Get access to Droparabia and build your dropshipping or Ecommerce store in less than 30 day
-      </h2>
-      <p class="cta-sub cta-sub--large">Book a free call with our team so you can get access to Droparabia and get started right away!</p>
-      <ul class="cta-bullets">
-        <li>✓ No experience needed</li>
-        <li>✓ No huge upfront costs</li>
-        <li>✓ 24/7 support from our team</li>
-      </ul>
-      <a href="https://calendly.com/d/cr37-8xm-k5s/45-min-lead-advisory-call" target="_blank" rel="noopener" class="btn-book-call btn-book-call--large">Book a Free Call</a>
-      <p class="cta-scarcity">🔴 Only 10 Users are accepted per week to make sure we're helping everyone.</p>
     </div>
-  </section> -->
+  </section>
 
+  <!-- SOCIAL PROOF 2 -->
+  <section class="carousel-section carousel-section--after-about">
+    <h2 class="carousel-heading">
+      <svg class="carousel-arrow-svg carousel-arrow-svg--left" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad5)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad5" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs></svg>
+      <span style="font-size:0.85em;">This is exactly what they used!</span>
+      <svg class="carousel-arrow-svg carousel-arrow-svg--right" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad6)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad6" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs></svg>
+    </h2>
+    <div class="carousel-container">
+      <button class="swiper-button-prev" aria-label="Previous">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </button>
+      <button class="swiper-button-next" aria-label="Next">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+      <div class="swiper testimonials-swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(11).png?tr=w-1400,q-100,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(12).png?tr=w-1400,q-100,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(13).png?tr=w-1400,q-100,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(14).png?tr=w-1400,q-100,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(15).png?tr=w-1400,q-100,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(16).png?tr=w-1400,q-100,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(17).png?tr=w-1400,q-100,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(18).png?tr=w-1400,q-100,f-webp" alt="Testimonial" loading="lazy" /></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- BONUS SECTION -->
+  <section class="bonuses-section">
+    <div class="tp-container">
+      <p class="bonuses-inner-headline">Plus you get these <strong>Bonuses:</strong></p>
+      <ul class="bonuses-list">
+        <li><span>+20 Hours of FREE Courses &amp; Recorded Tutorials inside our community</span></li>
+        <li><span>Support from our Team of Experts + Our own AI assistant built in Droparabia</span></li>
+        <li><span>2 Weekly Coaching Calls to provide you feedback and track your progress</span></li>
+        <li class="bonuses-list-plus"><span><span class="bonuses-plus-label">PLUS:</span> If a product you want to sell is not available on Droparabia, we will <span class="bonuses-highlight">find &amp; source it for you</span> without extra fees!</span></li>
+      </ul>
 
-  <!-- VSL 6-MIN POPUP -->
-  <div id="page-dim-overlay" class="page-dim-overlay"></div>
+      <div class="cta-block">
+        <a href="/survey" class="cta-btn" id="cta3">
+          <span class="cta-btn-main">Start selling with Droparabia!</span>
+          <span class="cta-btn-sub">Book a FREE call to get instant access</span>
+        </a>
+        <div class="tp-row">
+          <div class="auth-stat">
+            <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="tp-logo" />
+            <span class="tp-stars-row">
+              <span class="tp-star">★</span>
+              <span class="tp-star">★</span>
+              <span class="tp-star">★</span>
+              <span class="tp-star">★</span>
+              <span class="tp-star tp-star-empty">★</span>
+            </span>
+          </div>
+          <span class="tp-divider"></span>
+          <div class="auth-stat auth-stat-row">
+            <img src="/MBG.png" alt="Money Back Guarantee" class="badge-mbg-img" />
+            <span class="badge-mbg-text">90 Days Money Back Guarantee<br/><span>If you don't get any results after using our system</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ 
+
+  <!-- FAQ -->
+  <section class="faq-section">
+    <div class="tp-container">
+      <h2 class="faq-heading">Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Do I need a big investment to start dropshipping?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="faq-body">
+            <p>Droparabia's main purpose allows you to start your dropshipping or ecommerce business with a tiny budget of $500 minimum without wasting your money on bulk inventories that might not sell, renting warehouses or paying for shipment and import fees.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>Does dropshipping actually work in Lebanon?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="faq-body">
+            <p>When lots of people on the internet were saying that "Dropshipping is dead" or "doesn't work in any arab country", they meant the old dropshipping model where you have to gamble with your money on products hoping they might sell while paying huge fees.</p>
+            <p>With Droparabia however, the game has changed. Now all you need is a small budget to run your ads campaign and droparabia will take care of sourcing hundreds of different products for you and handle order fulfillment while you focus on scaling your business and making the decisions</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>Dropshipping can be competitive, how do I succeed?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="faq-body">
+            <p>Every single business model has competition, in order to succeed, you need to stand out as a whole unique brand, which very soon Droparabia will be able to help with that through its laser machine that allows you to rebrand the products you sell.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>Isn't it better to just start traditional e-commerce?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="faq-body">
+            <p>A traditional e-commerce business requires at least $3000 to get started, not to mention searching for hours on ali baba, buying a shipment of products you're not certain if they'll sell or not, renting warehouses, paying fees... and you haven't even started selling yet. That's not the case with Droparabia, it does the research and product sourcing for you, you pay for each product you sell and keep the profit without managing any inventory all that with a small budget of $500.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>How much money can I make with Droparabia?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="faq-body">
+            <p>It all depends on how much time and effort you're willing to invest into your own business (even if you fail at first). You're getting the same tools, guides and support as our +500 lebanese users. Some are making 1k per month, some $700 in 2 weeks. How much you give to your business is how much you get.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>How long will it take to get started with my dropshipping business?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="faq-body">
+            <p>Droparabia is designed to get you started in less than 30 days without all the headaches of researching and learning everything from scratch with a plug-and-play infrastructure to get your business launched as soon as possible.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>I don't have any technical skills or marketing experience, can I succeed?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="faq-body">
+            <p>That's exactly why we have a 5-day support team of advisors, MajdGBT our own AI assistant and lots of free courses and recorded tutorials for!</p>
+            <p>We will build the website for you, teach you how to run ads and scale them, what tools to use to create your logo, how to use AI for content creation... Most of our users have barely any technical skills let alone marketing experience and still manage to make the best use out of droparabia!</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>What if I don't get results?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="faq-body">
+            <p>That's why we have a 90 days Money-Back-Guarantee, Droparabia's main purpose is to make this whole process as low risk as possible for everyone. If you use Droparabia correctly and follow our instructions and still didn't make a single sale in 90 days, you will get a full refund (after providing proof of your commitment to the platform and implementing instructions)</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary>Why should I start a dropshipping business under Lebanon's gruesome war?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="faq-body">
+            <p>Droparabia's logistic network is located in a safe area away from the danger zone, meaning it's always taking orders and fulfilling them. Plus Droparabia doesn't only source from a trusted supplier outside of Lebanon but from local suppliers as well to make sure you always have something to sell.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
 
   <!-- FOOTER -->
   <footer class="footer">
@@ -303,49 +321,29 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     </div>
   </footer>
 
-  <!-- VSL Subscription Modal -->
-  <div id="vsl-modal" class="vsl-modal-overlay" aria-hidden="true">
-    <div class="vsl-modal-box" role="dialog" aria-modal="true" aria-labelledby="vsl-modal-title">
-      <button class="vsl-modal-close" id="vsl-modal-close" aria-label="Close">&times;</button>
-      <div class="vsl-modal-head">
-        <h3 class="vsl-modal-title" id="vsl-modal-title" style="font-size:1.2rem; font-weight:900;">
-          One small step needed!<br><span style="font-size:1rem; font-weight:700;">Subscribe to unlock this Tutorial for FREE!</span>
-        </h3>
-        <p class="vsl-modal-warning" style="color:#DC2626; font-size:0.78rem; font-weight:500; margin-top:0.35rem;">This Tutorial Might be taken down soon!</p>
+  <!-- FREE WEBSITE POPUP -->
+  <div class="cta-popup-overlay" id="cta-popup-overlay">
+    <div class="cta-popup-box">
+      <button class="cta-popup-close" id="cta-popup-close" aria-label="Close">&times;</button>
+      <p class="cta-popup-title">Get a FREE Website!</p>
+      <img src="/free website.png" alt="Free Website" class="cta-popup-img" />
+      <p class="cta-popup-heading">Join Droparabia this week to get a <strong>FREE, ready-to-use website</strong> to start selling as soon as possible!</p>
+      <div class="cta-block">
+        <a href="/survey" class="cta-btn" id="cta-popup">
+          <span class="cta-btn-main">Start selling with Droparabia!</span>
+          <span class="cta-btn-sub">Book a FREE call to get instant access</span>
+        </a>
       </div>
-      <div id="vsl-error-msg" class="brevo-alert brevo-alert--error">Could not subscribe. Please try again.</div>
-      <div id="vsl-success-msg" class="brevo-alert brevo-alert--success">Subscribed! Starting your video...</div>
-      <form id="vsl-modal-form" class="lead-form" method="POST" action="/api/subscribe" data-type="subscription">
-        <div class="field-line">
-          <span class="field-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </span>
-          <input type="text" id="VSL_FIRSTNAME" name="FIRSTNAME" placeholder="First and Last Name" required autocomplete="name" />
-        </div>
-        <div class="field-line">
-          <span class="field-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          </span>
-          <input type="text" id="VSL_EMAIL" name="EMAIL" placeholder="Your Best Email" required autocomplete="email" />
-        </div>
-        <div class="field-line">
-          <span class="field-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.31 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.45 5.45l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          </span>
-          <input type="hidden" name="SMS__COUNTRY_CODE" value="+961" />
-          <span class="sms-country-fixed">+961</span>
-          <span class="sms-divider">|</span>
-          <input type="tel" id="VSL_SMS" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
-        </div>
-        <button type="submit" class="btn-primary">Start Watching!</button>
-        <p style="font-size:0.7rem; color:#94a3b8; text-align:center; margin-top:8px; line-height:1.4;">By subscribing, you agree to receive invitation to future events and offers from Droparabia</p>
-        <input type="text" name="email_address_check" value="" style="display:none">
-        <input type="hidden" name="locale" value="en">
-      </form>
+
+      <div class="auth-stat auth-stat-row badge-mbg cta-popup-badge">
+        <img src="/MBG.png" alt="Money Back Guarantee" class="badge-mbg-img" />
+        <span class="badge-mbg-text">90 Days Money Back Guarantee<br/><span>If you don't get any results after using our system</span></span>
+      </div>
     </div>
   </div>
 
 </Layout>
+
 
 <style>
 
@@ -362,12 +360,88 @@ background-size: 300px 300px;
   .header-inner {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px 24px;
   }
 
   .logo {
     font-family: var(--font-brand);
     font-size: 1.75rem;
     color: var(--blue);
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .header-logo-img {
+    height: 32px;
+    width: auto;
+  }
+
+  .header-logo-name {
+    font-family: var(--font-brand);
+    font-size: 1.5rem;
+    color: var(--gray-900);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .header-lang {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    padding: 0;
+  }
+
+  .header-lang svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .header-results {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    text-decoration: none;
+  }
+
+  .header-lang:hover,
+  .header-results:hover {
+    color: var(--blue);
+  }
+
+  /* ─── NEW HERO ─── */
+  .hero-new {
+    padding: 12px 0 48px;
+    text-align: center;
+    border-radius: 0 0 50% 50% / 0 0 60px 60px;
+  }
+
+  .hero-new-sub {
+    font-size: 1.1rem;
+    font-weight: 400;
+    font-family: var(--font-body);
+    color: #000;
+    line-height: 1.5;
+    margin-bottom: 24px;
   }
 
   /* ─── HERO ─── */
@@ -383,47 +457,47 @@ background-size: 300px 300px;
     font-size: 1.15em;
   }
 
-  /* ─── ATTENTION BAR ─── */
-  /* ─── ATTENTION BAR ─── */
-  .attention-bar {
+  /* ─── HERO BRAND ─── */
+  .hero-brand-bar {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    background: none;
-    padding: 0;
-    text-align: center;
     margin-bottom: 20px;
   }
 
-  .attention-bar-label {
-    background: var(--blue);
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 4px;
-    white-space: nowrap;
-    flex-shrink: 0;
+  .hero-brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
   }
 
-  .attention-bar-text {
-    font-size: 1rem;
-    color: var(--gray-900);
-    line-height: 1.4;
+  .hero-brand-img {
+    width: 48px;
+    height: 64px;
+    border-radius: 12px;
+    object-fit: contain;
   }
 
-  .attention-bar-text strong {
+  .hero-brand-name {
+    font-family: var(--font-brand);
+    font-size: 2.75rem;
     color: var(--gray-900);
-    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-brand-tagline {
+    font-family: var(--font-brand);
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--gray-900);
   }
 
   h1 {
     font-family: var(--font-body);
-    font-size: 3.25rem;
+    font-size: 2.85rem;
     font-weight: 700;
     color: var(--gray-900);
     line-height: 1.25;
@@ -1269,9 +1343,32 @@ background-size: 300px 300px;
 
   /* ─── CAROUSEL ─── */
   .carousel-section {
-    padding: 20px 0 24px;
-    background: transparent;
+    position: relative;
+    padding: 80px 0 24px;
+    background: #e0e0e0;
     border-top: none;
+    overflow: hidden;
+  }
+
+  .carousel-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: var(--white);
+    border-radius: 0 0 50% 50% / 0 0 60px 60px;
+  }
+
+  .carousel-section--before-about {
+    z-index: 3;
+    border-radius: 0 0 50% 50% / 0 0 60px 60px;
+    margin-bottom: -60px;
+  }
+
+  .carousel-section--after-about::before {
+    display: none;
   }
 
   .carousel-heading {
@@ -1300,6 +1397,12 @@ background-size: 300px 300px;
   .carousel-arrow-svg--left { left: 5%; }
   .carousel-arrow-svg--right { right: 5%; }
   @media (min-width: 769px) { .carousel-arrow-svg { display: none; } }
+
+  .carousel-heading-emoji {
+    font-size: 1.6em;
+    vertical-align: middle;
+    display: inline-block;
+  }
 
   .carousel-brand {
     font-family: var(--font-brand);
@@ -1650,60 +1753,49 @@ background-size: 300px 300px;
 
   .vsl-cta-lock-btn:hover { background: #15803d; }
 
-  .vsl-cta-tp-badge {
+  .tp-row {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 16px;
     margin-bottom: 12px;
+    flex-wrap: wrap;
   }
 
-  .vsl-cta-tp-rating {
+  .auth-stat {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 2px;
   }
 
-  .vsl-cta-tp-great {
-    font-size: 0.9375rem;
-    font-weight: 800;
-    color: var(--gray-900);
+  .auth-stat-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
   }
 
-  .vsl-cta-tp-stars {
+  .tp-logo {
+    height: 28px;
+    width: auto;
+    display: block;
+  }
+
+  .tp-stars-row {
     display: flex;
-    gap: 4px;
+    align-items: flex-end;
+    gap: 2px;
   }
 
   .tp-star {
-    display: inline-block;
-    width: 28px;
-    height: 28px;
-    fill: #00b67a;
-    flex-shrink: 0;
+    color: #00b67a;
+    font-size: 1.35rem;
+    line-height: 1;
   }
 
-  .tp-star-box {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    background: #00b67a;
-    flex-shrink: 0;
-  }
-
-  .tp-star-box svg {
-    display: block;
-    width: 16px;
-    height: 16px;
-  }
-
-  .vsl-cta-tp-img {
-    height: 44px;
-    width: auto;
-    display: block;
+  .tp-star-empty {
+    color: #9ca3af;
   }
 
   .vsl-cta-lock-note {
@@ -1741,6 +1833,539 @@ background-size: 300px 300px;
     font-size: clamp(0.9rem, 1.3vw, 1.05rem);
     color: var(--gray-600);
     line-height: 1.4;
+  }
+
+  /* ─── BONUS SECTION ─── */
+  .bonuses-section {
+    padding: 48px 0 64px;
+    text-align: center;
+  }
+
+  .bonuses-inner-headline {
+    font-family: var(--font-brand);
+    font-weight: 300;
+    font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+    color: var(--gray-900);
+    margin-bottom: 24px;
+  }
+
+  .bonuses-inner-headline strong {
+    font-weight: 600;
+  }
+
+  .bonuses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    list-style: none;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto 40px;
+    text-align: left;
+  }
+
+  .bonuses-list li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-weight: 600;
+    color: var(--gray-900);
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    line-height: 1.5;
+  }
+
+  .bonuses-list li::before {
+    content: '✓';
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #fff;
+    font-weight: 700;
+    background: var(--blue);
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+
+  .bonuses-list-plus::before {
+    background: #16a34a;
+  }
+
+  .bonuses-plus-label {
+    font-family: var(--font-brand);
+    font-size: 1.2em;
+    font-weight: 700;
+  }
+
+  .bonuses-highlight {
+    color: var(--blue);
+    font-weight: 700;
+  }
+
+  /* ─── CTA BLOCK ─── */
+  .cta-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .cta-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    width: 100%;
+    padding: 16px 24px;
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 2px 16px rgba(22,163,74,0.35);
+    transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+    animation: cta-wiggle 2.5s ease-in-out infinite;
+    backface-visibility: hidden;
+    will-change: transform;
+  }
+
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+    transform: skewX(-20deg);
+    transition: left 0.45s ease-in-out;
+    pointer-events: none;
+  }
+
+  .cta-btn:hover::before { left: 130%; }
+
+  .cta-btn:hover {
+    animation-play-state: paused;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15), 0 6px 32px rgba(22,163,74,0.5);
+  }
+
+  .cta-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .cta-btn-main {
+    font-weight: 700;
+    color: #fff;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    pointer-events: none;
+  }
+
+  .cta-btn-sub {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+    pointer-events: none;
+    text-align: center;
+  }
+
+  @keyframes cta-wiggle {
+    0%, 80%, 100% { transform: translateY(0) rotate(0deg); }
+    83%  { transform: translateX(-4px) rotate(-1.5deg); }
+    86%  { transform: translateX(4px)  rotate(1.5deg);  }
+    89%  { transform: translateX(-3px) rotate(-1deg);   }
+    92%  { transform: translateX(3px)  rotate(1deg);    }
+    95%  { transform: translateX(-2px) rotate(-0.5deg); }
+    98%  { transform: translateX(1px)  rotate(0.3deg);  }
+  }
+
+  .tp-divider {
+    align-self: stretch;
+    width: 1px;
+    min-height: 32px;
+    background: var(--gray-300);
+  }
+
+  .badge-mbg {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .badge-mbg-img {
+    width: 3.75rem;
+    height: 3.75rem;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .badge-mbg-text {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    line-height: 1.4;
+    text-align: left;
+    max-width: 16rem;
+  }
+
+  .badge-mbg-text span {
+    font-weight: 400;
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+  }
+
+  /* ─── WHO IS THIS FOR ─── */
+  .who-section {
+    padding: 48px 0;
+    text-align: center;
+  }
+
+  .who-intro {
+    font-family: var(--font-brand);
+    font-weight: 300;
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    color: var(--gray-900);
+    margin-bottom: 24px;
+  }
+
+  .who-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 32px;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+  }
+
+  .who-list li {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .who-list li::before {
+    content: "✓";
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .who-outro {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  /* ─── ABOUT ─── */
+  .about-section {
+    position: relative;
+    z-index: 2;
+    padding: 96px 0 48px;
+    text-align: center;
+    background: linear-gradient(180deg, #0b1538 0%, #1e3a8a 55%, #2563eb 100%);
+    border-radius: 0 0 50% 50% / 0 0 60px 60px;
+    margin-bottom: -60px;
+  }
+
+  .about-heading {
+    font-family: var(--font-brand);
+    font-weight: 300;
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    color: var(--gray-900);
+    margin-bottom: 20px;
+  }
+
+  .about-body {
+    font-size: 1.1rem;
+    color: var(--gray-700);
+    max-width: 700px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+  }
+
+  .about-subhead {
+    font-family: var(--font-brand);
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .about-steps {
+    counter-reset: about-step;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    list-style: none;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto 40px;
+    text-align: left;
+  }
+
+  .about-steps li {
+    counter-increment: about-step;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    font-weight: 600;
+    color: var(--white);
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    line-height: 1.5;
+  }
+
+  .about-step-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .about-step-img {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    border-radius: 8px;
+  }
+
+  .about-steps li::before {
+    content: counter(about-step);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--blue);
+    font-weight: 700;
+    background: var(--white);
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+
+  .about-closing {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--white);
+    max-width: 700px;
+    margin: 32px auto;
+    line-height: 1.5;
+  }
+
+  .about-section .badge-mbg-text {
+    color: var(--white);
+  }
+
+  .about-section .badge-mbg-text span {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .about-section .tp-divider {
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  /* ─── FAQ ─── */
+  .faq-section {
+    padding: 48px 0 64px;
+  }
+
+  .faq-heading {
+    font-family: var(--font-brand);
+    font-weight: 300;
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    color: var(--gray-900);
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .faq-item {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .faq-item[open] {
+    border-color: #93c5fd;
+  }
+
+  .faq-item summary {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 24px;
+    font-weight: 700;
+    color: var(--gray-900);
+    line-height: 1.4;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-arrow {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    color: var(--gray-500);
+    transition: transform 0.25s ease;
+  }
+
+  .faq-item[open] .faq-arrow {
+    transform: rotate(180deg);
+  }
+
+  .faq-body {
+    padding: 0 24px 18px;
+    border-top: 1px solid var(--gray-200);
+    margin-top: 0;
+    padding-top: 14px;
+    animation: faq-fade-in 0.25s ease forwards;
+  }
+
+  .faq-body p {
+    margin: 0;
+    color: var(--gray-500);
+    line-height: 1.6;
+  }
+
+  .faq-body p + p {
+    margin-top: 12px;
+  }
+
+  @keyframes faq-fade-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── FREE WEBSITE POPUP ─── */
+  .cta-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .cta-popup-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .cta-popup-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px 28px 28px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    transform: scale(0.92);
+    transition: transform 0.3s ease;
+  }
+
+  .cta-popup-overlay.is-open .cta-popup-box {
+    transform: scale(1);
+  }
+
+  .cta-popup-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--gray-100);
+    color: var(--gray-500);
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cta-popup-close:hover {
+    background: var(--gray-200);
+    color: var(--gray-900);
+  }
+
+  .cta-popup-badge {
+    justify-content: center;
+    margin-top: 18px;
+  }
+
+  .cta-popup-title {
+    font-family: var(--font-brand);
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--gray-900);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .cta-popup-img {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 20px;
+    border-radius: 12px;
+  }
+
+  .cta-popup-heading {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--gray-900);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .cta-popup-heading strong {
+    font-weight: 400;
+    color: var(--blue);
   }
 
   .popup-heading {
@@ -1883,7 +2508,6 @@ background-size: 300px 300px;
     .hero { padding-top: 48px; }
     .vsl-wrapper { margin-left: auto; margin-right: auto; margin-bottom: 8px; }
     .container { display: flex; flex-direction: column; }
-    .attention-bar { order: 0; }
     h1 { order: 1; }
     .hero-subtext { order: 2; font-size: 1.2rem !important; padding-top: 12px; }
     .vsl-wrapper { order: 3; margin-bottom: 8px; }
@@ -1895,11 +2519,11 @@ background-size: 300px 300px;
     #vsl-inline-gate-2 { order: 5; }
     #vsl-inline-gate-3 { order: 5; }
     .carousel-section { order: 6; padding-top: 40px; }
+    .carousel-section--before-about { padding-top: 64px; }
     .carousel-heading { padding: 0 64px; margin-bottom: 36px !important; }
     .carousel-arrow-svg { width: 32px; height: 42px; }
     .carousel-arrow-svg--left { left: 18%; }
     .carousel-arrow-svg--right { right: 18%; }
-    .attention-bar-text { font-weight: 700 !important; }
     .popup-brand-logo { height: 56px; }
     .popup-brand-name { font-size: 1.9rem; }
     .popup-platform-tag { font-size: 0.8rem; }
@@ -1912,7 +2536,6 @@ background-size: 300px 300px;
     .bg { background-image: none; }
     .hero { min-height: unset; padding: 12px 0 16px; }
     .container { display: flex; flex-direction: column; }
-    .attention-bar { order: 0; }
     h1 { order: 1; }
     .hero-subtext { order: 2; }
     .vsl-wrapper { order: 3; }
@@ -1927,13 +2550,14 @@ background-size: 300px 300px;
     .brand-img { height: 76px; }
     .brand-name-black { font-size: 2.125rem; }
     .brand-logo-inline { gap: 6px; margin-bottom: 6px; }
-    h1 { font-size: 1.65rem; max-width: 100%; }
+    h1 { font-size: 2rem; max-width: 100%; }
     .h1-sub { font-size: 1.05rem; font-weight: 400; line-height: 1.5; margin-top: 6px; padding-bottom: 16px; }
     .hero-bullets { margin-bottom: 20px; }
     .hero-bullets li { font-size: 0.9rem; }
-    .attention-bar { gap: 6px; }
-    .attention-bar-label { font-size: 0.7rem !important; padding: 3px 8px !important; }
-    .attention-bar-text { font-size: 0.75rem; width: 85%; font-weight: 600 !important; }
+    .hero-brand-bar { gap: 4px; }
+    .hero-brand-img { width: 48px; height: 48px; }
+    .hero-brand-name { font-size: 2rem; }
+    .hero-brand-tagline { font-size: 1rem; }
     .hero-subtext { font-size: 0.8rem; padding-bottom: 6px; padding-left: 20px; padding-right: 20px; }
     .subtext-mobile-hide { display: none; }
     .vsl-wrapper { margin-bottom: 0 !important; }
@@ -1949,10 +2573,28 @@ background-size: 300px 300px;
     .form-card { padding: 24px 20px; }
     .bonuses-heading { font-size: 1rem; }
     .bonus-text { font-size: 0.875rem; }
-    /* Headline — more width */
-    h1 { padding: 0 8px; }
 
-    .carousel-section { padding: 6px 0 24px; }
+    .bonuses-section { padding: 32px 0 40px; }
+    .bonuses-list { gap: 18px; padding: 0; }
+    .bonuses-list li { font-size: 0.95rem; gap: 12px; }
+    .cta-btn { width: 94%; padding: 12px 16px; border-radius: 0.75rem; }
+    .cta-btn-main { font-size: 0.95rem; }
+    .cta-btn-sub { font-size: 0.72rem; }
+    .tp-row { flex-wrap: nowrap; gap: 8px; }
+    .tp-divider { margin: 0 4px; min-height: 1.4rem; }
+    .tp-logo { height: 20px; }
+    .tp-star { font-size: 1rem; }
+    .tp-stars-row { gap: 0; }
+    .auth-stat-row { gap: 0.4rem; }
+    .badge-mbg-img { width: 2.2rem; height: 2.2rem; }
+    .badge-mbg-text { font-size: 0.65rem; max-width: 11rem; line-height: 1.3; }
+    .badge-mbg-text span { font-size: 0.6rem; }
+    /* Headline — more width */
+    h1 { padding: 0 4px; font-size: 1.85rem; }
+
+    .carousel-section { padding: 64px 0 24px; }
+    .carousel-section::before { height: 56px; }
+    .carousel-section--before-about { border-radius: 0 0 50% 50% / 0 0 40px 40px; margin-bottom: -40px; }
     .carousel-heading { font-size: 1.1rem; }
     .form-section { padding: 8px 0 32px; }
     .carousel-heading { padding: 0 48px; margin-bottom: 24px; }
@@ -1973,12 +2615,6 @@ background-size: 300px 300px;
     .vsl-cta-lock { margin: 16px 16px 0; padding: 36px 14px 12px; border-radius: 10px; }
     .vsl-cta-lock h2 { display: block; }
     .vsl-cta-lock-btn { font-size: 0.9rem; padding: 9px 12px; margin-bottom: 8px; }
-    .vsl-cta-tp-badge { flex-direction: column; gap: 4px; margin-bottom: 8px; }
-    .tp-star { width: 22px; height: 22px; }
-    .vsl-cta-tp-img { height: 28px; }
-    .tp-star-box { width: 18px; height: 18px; }
-    .tp-star-box svg { width: 10px; height: 10px; }
-    .vsl-cta-tp-great { font-size: 0.75rem; }
     .vsl-cta-lock-note { font-size: 0.72rem; }
     .popup-body { font-size: 0.8rem; line-height: 1.45; margin-bottom: 8px; }
     .popup-brand-name { font-size: 1.8rem; }
@@ -1992,292 +2628,46 @@ background-size: 300px 300px;
     .popup-gate-heading { font-size: 0.95rem; margin-bottom: 8px; }
     .vsl-book-call-gate { padding: 0 10px; }
     .vsl-book-call-content { padding: 6px 0 10px; }
+
+    /* ─── FREE WEBSITE POPUP ─── */
+    .cta-popup-box { padding: 28px 20px 24px; }
+    .cta-popup-title { font-size: 1.3rem; margin-bottom: 10px; }
+    .cta-popup-img { max-width: 270px; margin-bottom: 16px; }
+    .cta-popup-heading { font-size: 1.1rem; margin-bottom: 16px; }
+
+    /* ─── HEADER ─── */
+    .header-inner { padding: 12px 16px; }
+    .header-logo-name { font-size: 1.2rem; }
+    .header-logo-img { height: 26px; }
+    .header-actions { gap: 14px; }
+    .header-lang span,
+    .header-results { font-size: 0.8rem; }
+
+    /* ─── NEW HERO ─── */
+    .hero-new { padding: 16px 0 32px; }
+    .hero-new-sub { font-size: 0.8rem; margin-bottom: 24px; }
+
+    /* ─── WHO IS THIS FOR ─── */
+    .who-section { padding: 32px 0; }
+    .who-list { padding: 0; gap: 24px; }
+    .who-list li { font-size: 0.95rem; }
+    .who-outro { font-size: 1rem; padding: 0 16px; }
+
+    /* ─── ABOUT ─── */
+    .about-section { padding: 72px 0 32px; border-radius: 0 0 50% 50% / 0 0 40px 40px; margin-bottom: -40px; }
+    .about-body { font-size: 1rem; padding: 0 16px; }
+    .about-steps { width: 100%; gap: 18px; padding: 0; }
+    .about-steps li { font-size: 0.95rem; gap: 12px; }
+    .about-closing { font-size: 1rem; padding: 0 16px; margin: 24px auto; }
+
+    /* ─── FAQ ─── */
+    .faq-section { padding: 32px 0 40px; }
+    .faq-list { padding: 0 16px; }
+    .faq-item summary { font-size: 0.95rem; padding: 16px 18px; }
+    .faq-body { padding: 0 18px 16px; padding-top: 12px; }
+    .faq-body p { font-size: 0.9rem; }
   }
 </style>
-
-
-<script>
-  // @ts-ignore
-  import Plyr from 'plyr';
-  import 'plyr/dist/plyr.css';
-  declare global { interface Window { dataLayer: unknown[] } }
-
-  function getTrackingData(): Record<string, string> {
-    const result: Record<string, string> = {};
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(k => {
-      const v = sessionStorage.getItem(k); if (v) result[k] = v;
-    });
-    const ref = sessionStorage.getItem('da_referrer');
-    if (ref) result.referrer = ref;
-    return result;
-  }
-
-  console.log('[DA] Plyr script running, video el:', document.getElementById('vsl-player'));
-
-  const player = new Plyr('#vsl-player', {
-    controls: ['play-large', 'play', 'mute', 'volume'],
-    resetOnEnd: false,
-    speed: { selected: 1.2, options: [0.75, 1, 1.1, 1.2] },
-  });
-
-  player.on('ready', () => {
-    document.getElementById('vsl-pre-init')?.remove();
-  });
-
-  // Auto speed: start at 1.2x, step down every 30s after the 1-min mark
-  // 0:00–1:00 → 1.2x | 1:00–1:30 → 1.1x | 1:30+ → 1.0x
-  let speedStage = 0; // 0 = fast, 1 = mid, 2 = normal
-  player.on('timeupdate', () => {
-    const t = player.currentTime;
-    if (t < 60 && speedStage !== 0) {
-      speedStage = 0;
-      player.speed = 1.2;
-    } else if (t >= 60 && t < 90 && speedStage !== 1) {
-      speedStage = 1;
-      player.speed = 1.1;
-    } else if (t >= 90 && speedStage !== 2) {
-      speedStage = 2;
-      player.speed = 1;
-    }
-  });
-
-  // Fire video_complete when user reaches 80% of the video
-  let videoCompleteTracked = false;
-  player.on('timeupdate', () => {
-    const dur = player.duration;
-    if (!videoCompleteTracked && dur > 0 && player.currentTime >= dur * 0.8) {
-      videoCompleteTracked = true;
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'video_complete' });
-    }
-  });
-
-  player.on('ready', () => {
-    player.speed = 1.2;
-    player.media.setAttribute('preload', 'auto');
-  });
-
-  if (sessionStorage.getItem('da_subscribed')) {
-    document.getElementById('vsl-inline-gate')?.remove();
-    document.querySelector('.hero-subtext')?.remove();
-  }
-
-  const modal = document.getElementById('vsl-modal') as HTMLElement;
-  const modalClose = document.getElementById('vsl-modal-close') as HTMLElement;
-  const modalForm = document.getElementById('vsl-modal-form') as HTMLFormElement;
-
-  function openModal() {
-    modal.classList.add('is-open');
-    modal.setAttribute('aria-hidden', 'false');
-  }
-
-  function closeModal() {
-    modal.classList.remove('is-open');
-    modal.setAttribute('aria-hidden', 'true');
-  }
-
-  // Gate playback behind subscription
-  player.on('play', () => {
-    console.log('[DA] Play triggered, subscribed:', sessionStorage.getItem('da_subscribed'));
-    if (!sessionStorage.getItem('da_subscribed')) {
-      player.pause();
-      openModal();
-    }
-  });
-
-  modalClose.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-
-  // Track which popup CTA triggered the booking
-  document.querySelectorAll('#vsl-cta-lock a, #vsl-book-call-gate a').forEach(el => {
-    el.addEventListener('click', () => sessionStorage.setItem('da_cta_popup', '1st'));
-  });
-  document.querySelectorAll('#vsl-popup-2 a.vsl-cta-lock-btn, #vsl-inline-gate-2 a.vsl-cta-lock-btn').forEach(el => {
-    el.addEventListener('click', () => sessionStorage.setItem('da_cta_popup', '2nd'));
-  });
-  document.querySelectorAll('#vsl-popup-3 a.vsl-cta-lock-btn, #vsl-inline-gate-3 a.vsl-cta-lock-btn').forEach(el => {
-    el.addEventListener('click', () => sessionStorage.setItem('da_cta_popup', '3rd'));
-  });
-
-  // Popup refs
-  const ctaLock = document.getElementById('vsl-cta-lock') as HTMLElement;
-  const ctaLockClose = document.getElementById('vsl-cta-lock-close') as HTMLElement;
-  const popup2 = document.getElementById('vsl-popup-2') as HTMLElement;
-  const popup2Close = document.getElementById('vsl-popup-2-close') as HTMLElement;
-  const popup3 = document.getElementById('vsl-popup-3') as HTMLElement;
-  const popup3Close = document.getElementById('vsl-popup-3-close') as HTMLElement;
-
-  // Inline gate refs
-  const inlineGate1 = document.getElementById('vsl-book-call-gate') as HTMLElement;
-  const inlineGate2 = document.getElementById('vsl-inline-gate-2') as HTMLElement;
-  const inlineGate3 = document.getElementById('vsl-inline-gate-3') as HTMLElement;
-
-  function hideAllInlineGates() {
-    [inlineGate1, inlineGate2, inlineGate3].forEach(g => { if (g) g.style.display = 'none'; });
-  }
-
-  let ctaShown = false;
-  let popup2Shown = false;
-  let videoEndTriggered = false;
-
-  player.on('timeupdate', () => {
-    const t = player.currentTime;
-
-  const vslWrapper = document.querySelector('.vsl-wrapper') as HTMLElement;
-  const scrollToVSL = () => vslWrapper?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    if (!ctaShown && t >= 44) {
-      ctaShown = true;
-      ctaLock.style.display = 'block';
-      document.body.classList.add('page-dimmed');
-      setTimeout(scrollToVSL, 100);
-    }
-
-    if (!popup2Shown && t >= 212) {
-      popup2Shown = true;
-      ctaLock.style.display = 'none';
-      popup2.style.display = 'flex';
-      document.body.classList.add('page-dimmed');
-      setTimeout(scrollToVSL, 100);
-    }
-
-    if (!videoEndTriggered && t >= 486) {
-      videoEndTriggered = true;
-      ctaLock.style.display = 'none';
-      popup2.style.display = 'none';
-      player.pause();
-      player.currentTime = 486;
-      popup3.style.display = 'block';
-      document.body.classList.add('page-dimmed');
-      setTimeout(scrollToVSL, 100);
-    }
-  });
-
-  ctaLockClose.addEventListener('click', () => {
-    document.body.classList.remove('page-dimmed');
-    ctaLock.style.display = 'none';
-    const inlineGate = document.getElementById('vsl-inline-gate') as HTMLElement;
-    if (inlineGate) inlineGate.style.display = 'none';
-    hideAllInlineGates();
-    inlineGate1.style.display = 'block';
-    setTimeout(scrollToVSL, 100);
-  });
-
-  popup2Close.addEventListener('click', () => {
-    document.body.classList.remove('page-dimmed');
-    popup2.style.display = 'none';
-    hideAllInlineGates();
-    inlineGate2.style.display = 'block';
-    setTimeout(scrollToVSL, 100);
-  });
-
-  popup3Close.addEventListener('click', () => {
-    document.body.classList.remove('page-dimmed');
-    popup3.style.display = 'none';
-    hideAllInlineGates();
-    inlineGate3.style.display = 'block';
-    setTimeout(scrollToVSL, 100);
-  });
-
-
-  function isValidLebanesePhone(raw: string): boolean {
-    let d = raw.replace(/[\s\-()+.]/g, '');
-    if (d.startsWith('00961')) d = d.slice(5);
-    else if (d.startsWith('961') && d.length >= 10) d = d.slice(3);
-    if (d.startsWith('0')) d = d.slice(1);
-    return /^\d{7,8}$/.test(d);
-  }
-
-  // ── Inline form: subscribe & play without modal ──
-  const inlineForm = document.getElementById('vsl-inline-form') as HTMLFormElement;
-
-  inlineForm?.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const btn = this.querySelector('button[type="submit"]') as HTMLButtonElement;
-    const nameVal  = (this.querySelector('[name="FIRSTNAME"]') as HTMLInputElement)?.value ?? '';
-    const emailVal = (this.querySelector('[name="EMAIL"]') as HTMLInputElement)?.value ?? '';
-    const smsVal   = (this.querySelector('[name="SMS"]') as HTMLInputElement)?.value ?? '';
-    const phoneErrEl = document.getElementById('vsl-inline-phone-err') as HTMLElement;
-
-    if (!isValidLebanesePhone(smsVal)) {
-      if (phoneErrEl) phoneErrEl.style.display = 'block';
-      return;
-    }
-    if (phoneErrEl) phoneErrEl.style.display = 'none';
-
-    btn.disabled = true;
-    btn.textContent = 'Subscribing...';
-
-    try {
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal, list: 'vsl', ...getTrackingData() }),
-      });
-      const json = await res.json();
-      if (!json.success) throw new Error(json.error);
-
-      sessionStorage.setItem('da_subscribed', '1');
-      sessionStorage.setItem('userData', JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal }));
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'subscription_success_inline' });
-      document.getElementById('vsl-inline-gate')?.remove();
-      document.querySelector('.hero-subtext')?.remove();
-      scrollToVSL();
-      player.play();
-    } catch {
-      btn.disabled = false;
-      btn.textContent = 'Unlock My Free Guide';
-    }
-  });
-
-  modalForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    console.log('[DA] Form submitted');
-    const btn = this.querySelector('button[type="submit"]') as HTMLButtonElement;
-    const successEl = document.getElementById('vsl-success-msg') as HTMLElement;
-    const errorEl = document.getElementById('vsl-error-msg') as HTMLElement;
-    const firstnameVal = (this.querySelector('[name="FIRSTNAME"]') as HTMLInputElement)?.value ?? '';
-    const emailVal = (this.querySelector('[name="EMAIL"]') as HTMLInputElement)?.value ?? '';
-    const smsVal = (this.querySelector('[name="SMS"]') as HTMLInputElement)?.value ?? '';
-
-    if (!isValidLebanesePhone(smsVal)) {
-      errorEl.style.display = 'block';
-      errorEl.textContent = 'Please enter a valid Lebanese number (e.g. 70 123 456)';
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Subscribing...';
-    successEl.style.display = 'none';
-    errorEl.style.display = 'none';
-
-    try {
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: firstnameVal, email: emailVal, phone: smsVal, list: 'vsl', ...getTrackingData() }),
-      });
-      const json = await res.json();
-      if (!json.success) throw new Error(json.error);
-
-      sessionStorage.setItem('da_subscribed', '1');
-      sessionStorage.setItem('userData', JSON.stringify({ name: firstnameVal, email: emailVal, phone: smsVal }));
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'subscription_success_popup' });
-      successEl.style.display = 'block';
-      btn.textContent = 'Starting video...';
-      document.querySelector('.hero-subtext')?.remove();
-      closeModal();
-      player.play();
-    } catch {
-      btn.disabled = false;
-      btn.textContent = 'Unlock the FREE Tutorial!';
-      errorEl.style.display = 'block';
-    }
-  });
-</script>
 
 <script>
   import Swiper from 'swiper';
@@ -2286,24 +2676,61 @@ background-size: 300px 300px;
   import 'swiper/css/navigation';
   import 'swiper/css/pagination';
 
-  new Swiper('.testimonials-swiper', {
-    modules: [Navigation, Pagination, Autoplay],
-    slidesPerView: 1,
-    spaceBetween: 16,
-    breakpoints: {
-      1024: { slidesPerView: 3, spaceBetween: 24 },
-    },
-    loop: true,
-    autoplay: {
-      delay: 3500,
-      disableOnInteraction: false,
-      pauseOnMouseEnter: true,
-    },
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    pagination: false,
+  document.querySelectorAll('.testimonials-swiper').forEach((swiperEl) => {
+    const container = swiperEl.closest('.carousel-container');
+    new Swiper(swiperEl, {
+      modules: [Navigation, Pagination, Autoplay],
+      slidesPerView: 1,
+      spaceBetween: 16,
+      breakpoints: {
+        600: { slidesPerView: 2, spaceBetween: 20 },
+        1024: { slidesPerView: 3, spaceBetween: 24 },
+      },
+      loop: true,
+      autoplay: {
+        delay: 3500,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true,
+      },
+      navigation: {
+        nextEl: container.querySelector('.swiper-button-next'),
+        prevEl: container.querySelector('.swiper-button-prev'),
+      },
+      pagination: false,
+    });
+  });
+</script>
+
+<script>
+  document.querySelectorAll('.faq-item').forEach((item) => {
+    const summary = item.querySelector('summary');
+    if (!summary) return;
+
+    summary.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      if (item.open) {
+        const anim = item.animate([
+          { height: item.offsetHeight + 'px' },
+          { height: summary.offsetHeight + 'px' }
+        ], { duration: 280, easing: 'ease' });
+        item.style.overflow = 'hidden';
+        anim.onfinish = () => {
+          item.open = false;
+          item.style.height = '';
+          item.style.overflow = '';
+        };
+      } else {
+        item.open = true;
+        const fullHeight = item.offsetHeight;
+        item.style.overflow = 'hidden';
+        item.animate([
+          { height: summary.offsetHeight + 'px' },
+          { height: fullHeight + 'px' }
+        ], { duration: 280, easing: 'ease' });
+        setTimeout(() => { item.style.overflow = ''; }, 280);
+      }
+    });
   });
 </script>
 
@@ -2364,6 +2791,33 @@ background-size: 300px 300px;
           btn.textContent = btnText;
           errorEl.style.display = 'block';
         });
+    });
+  });
+</script>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    var overlay = document.getElementById('cta-popup-overlay');
+    var closeBtn = document.getElementById('cta-popup-close');
+    var ctaBtn = document.getElementById('cta-popup-btn');
+    if (!overlay) return;
+
+    function closePopup() {
+      overlay.classList.remove('is-open');
+    }
+
+    setTimeout(function () {
+      if (sessionStorage.getItem('da_free_website_popup_shown')) return;
+      overlay.classList.add('is-open');
+      sessionStorage.setItem('da_free_website_popup_shown', '1');
+    }, 6000);
+
+    closeBtn.addEventListener('click', closePopup);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) closePopup();
+    });
+    ctaBtn.addEventListener('click', function () {
+      sessionStorage.setItem('da_cta_popup', 'free_website_6s');
     });
   });
 </script>
