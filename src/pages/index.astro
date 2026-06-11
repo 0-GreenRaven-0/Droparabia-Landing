@@ -2806,11 +2806,14 @@ background-size: 300px 300px;
       overlay.classList.remove('is-open');
     }
 
-    setTimeout(function () {
-      if (sessionStorage.getItem('da_free_website_popup_shown')) return;
-      overlay.classList.add('is-open');
-      sessionStorage.setItem('da_free_website_popup_shown', '1');
-    }, 6000);
+    var POPUP_ENABLED = false;
+    if (POPUP_ENABLED) {
+      setTimeout(function () {
+        if (sessionStorage.getItem('da_free_website_popup_shown')) return;
+        overlay.classList.add('is-open');
+        sessionStorage.setItem('da_free_website_popup_shown', '1');
+      }, 6000);
+    }
 
     closeBtn.addEventListener('click', closePopup);
     overlay.addEventListener('click', function (e) {
