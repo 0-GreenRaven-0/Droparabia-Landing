@@ -52,7 +52,10 @@
       "Bash(powershell -Command \"\\(Get-Content -Raw src/pages/index.astro\\) -replace 'id=\\\\\"cta-hero\\\\\"','id=\\\\\"cta1\\\\\"' -replace 'id=\\\\\"cta-how-it-works\\\\\"','id=\\\\\"cta2\\\\\"' -replace 'id=\\\\\"cta-bonuses\\\\\"','id=\\\\\"cta3\\\\\"' -replace 'id=\\\\\"cta-popup-btn\\\\\"','id=\\\\\"cta-popup\\\\\"' | Set-Content -NoNewline src/pages/index.astro\")",
       "Read(//d/Projects/**)",
       "Bash(git log *)",
-      "Bash(powershell -Command \"\\(Get-Content -Raw src/pages/index.astro\\) -replace 'tr=w-700,q-95,f-webp','tr=w-1400,q-100,f-webp' | Set-Content -NoNewline src/pages/index.astro\")"
+      "Bash(powershell -Command \"\\(Get-Content -Raw src/pages/index.astro\\) -replace 'tr=w-700,q-95,f-webp','tr=w-1400,q-100,f-webp' | Set-Content -NoNewline src/pages/index.astro\")",
+      "Read(//tmp/**)",
+      "Bash(node -e ' *)",
+      "Bash(npx wrangler *)"
     ],
     "additionalDirectories": [
       "d:\\Projects\\droparabia-book",
