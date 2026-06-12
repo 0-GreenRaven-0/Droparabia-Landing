@@ -55,7 +55,9 @@
       "Bash(powershell -Command \"\\(Get-Content -Raw src/pages/index.astro\\) -replace 'tr=w-700,q-95,f-webp','tr=w-1400,q-100,f-webp' | Set-Content -NoNewline src/pages/index.astro\")",
       "Read(//tmp/**)",
       "Bash(node -e ' *)",
-      "Bash(npx wrangler *)"
+      "Bash(npx wrangler *)",
+      "PowerShell(Add-Type -AssemblyName System.Drawing; $img = [System.Drawing.Image]::FromFile\\(\\(Resolve-Path 'public/hero.png'\\)\\); \"$\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\))",
+      "PowerShell(Add-Type -AssemblyName System.Drawing; foreach \\($f in 'r1','r2','r4','k1','g1','p1'\\) { $img = [System.Drawing.Image]::FromFile\\(\\(Resolve-Path \"public/products/$f.png\"\\)\\); \"$f : $\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\) })"
     ],
     "additionalDirectories": [
       "d:\\Projects\\droparabia-book",

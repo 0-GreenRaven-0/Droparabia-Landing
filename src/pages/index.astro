@@ -15,17 +15,51 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
           <img src="/Droparabia.png" alt="Droparabia" class="hero-brand-img" />
           <span class="hero-brand-name">Droparabia</span>
         </div>
-        <p class="hero-brand-tagline">Lebanon's 1st Dropshipping Platform!</p>
       </div>
 
       <h1 class="hero-new-headline">Launch a <span class="h1-underline">high-earning</span></span> online store in less than <span class="h1-simple-underline">30 days</span>!</h1>
 
-      <p class="hero-new-sub">Used by <strong>+600 Lebanese</strong> to sell online <strong>without a huge capital</strong> or owning and managing Inventory</p>
+      <p class="hero-new-flow">with Lebanon's 1st Dropshipping Platform!</p>
+
+      <div class="niche-carousel-wrap">
+        <div class="niche-carousel">
+          <div class="niche-set active" data-niche="health">
+            <img src="/products/r1.png" alt="" loading="lazy" />
+            <img src="/products/r2.png" alt="" loading="lazy" />
+            <img src="/products/r4.png" alt="" loading="lazy" />
+          </div>
+          <div class="niche-set" data-niche="kitchen">
+            <img src="/products/k1.png" alt="" loading="lazy" />
+            <img src="/products/k2.png" alt="" loading="lazy" />
+            <img src="/products/k3.png" alt="" loading="lazy" />
+          </div>
+          <div class="niche-set" data-niche="gadgets">
+            <img src="/products/g1.png" alt="" loading="lazy" />
+            <img src="/products/g2.png" alt="" loading="lazy" />
+            <img src="/products/g3.png" alt="" loading="lazy" />
+          </div>
+          <div class="niche-set" data-niche="pets">
+            <img src="/products/p1.png" alt="" loading="lazy" />
+            <img src="/products/p2.png" alt="" loading="lazy" />
+            <img src="/products/p3.png" alt="" loading="lazy" />
+          </div>
+        </div>
+        <div class="niche-nav">
+          <button class="niche-arrow niche-arrow-prev" type="button" aria-label="Previous niche">&#8249;</button>
+          <span class="niche-label">Health &amp; Beauty</span>
+          <button class="niche-arrow niche-arrow-next" type="button" aria-label="Next niche">&#8250;</button>
+        </div>
+      </div>
+
+      <ul class="hero-new-sub">
+        <li>No Searching for hours on Alibaba</li>
+        <li>No owning or managing Inventory</li>
+      </ul>
 
       <div class="cta-block">
         <a href="/survey" class="cta-btn" id="cta1">
           <span class="cta-btn-main">Start selling with Droparabia!</span>
-          <span class="cta-btn-sub">See if Droparabia's the right fit for you!</span>
+          <span class="cta-btn-sub">Book a FREE call to learn how this platform works!</span>
         </a>
         <div class="tp-row">
           <div class="auth-stat">
@@ -39,9 +73,9 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
             </span>
           </div>
           <span class="tp-divider"></span>
-          <div class="auth-stat auth-stat-row">
-            <img src="/MBG.png" alt="Money Back Guarantee" class="badge-mbg-img" />
-            <span class="badge-mbg-text">90 Days Money Back Guarantee<br/><span>If you don't get any results after using our system</span></span>
+          <div class="auth-stat hero-user-stat">
+            <span class="hero-user-stat-number">+600</span>
+            <span class="hero-user-stat-label">Lebanese Seller</span>
           </div>
         </div>
       </div>
@@ -66,7 +100,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   <!-- SOCIAL PROOF -->
   <section class="carousel-section carousel-section--before-about">
     <h2 class="carousel-heading">
-      These people started just like you! <span class="carousel-heading-emoji">👇</span>
+      You're not alone <span class="carousel-heading-emoji">👇</span>
     </h2>
     <div class="carousel-container">
       <button class="swiper-button-prev" aria-label="Previous">
@@ -435,13 +469,126 @@ background-size: 300px 300px;
     border-radius: 0 0 50% 50% / 0 0 60px 60px;
   }
 
+  .niche-carousel-wrap {
+    max-width: 620px;
+    margin: 0 auto 20px;
+    margin-left: -8px;
+    margin-right: -8px;
+    width: calc(100% + 16px);
+  }
+
+  .niche-set {
+    display: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .niche-set.active {
+    display: grid;
+    animation: niche-fade-in 0.4s ease;
+  }
+
+  .niche-set img {
+    width: 100%;
+    aspect-ratio: 921 / 1086;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid var(--gray-200);
+  }
+
+  .niche-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 14px;
+  }
+
+  .niche-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+    color: var(--blue);
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.2s, color 0.2s, transform 0.15s, border-color 0.2s;
+  }
+
+  .niche-arrow:hover {
+    background: var(--blue);
+    color: var(--white);
+    border-color: var(--blue);
+    transform: scale(1.08);
+  }
+
+  .niche-arrow:active {
+    transform: scale(0.95);
+  }
+
+  .niche-label {
+    min-width: 140px;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .niche-label.niche-label-anim {
+    animation: niche-label-in 0.35s ease;
+  }
+
+  @keyframes niche-label-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes niche-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   .hero-new-sub {
-    font-size: 1.1rem;
-    font-weight: 400;
+    display: inline-block;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 600;
     font-family: var(--font-body);
     color: #000;
     line-height: 1.5;
-    margin-bottom: 24px;
+    margin: 0 0 24px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hero-new-sub li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-new-sub li + li {
+    margin-top: 4px;
+  }
+
+  .hero-new-sub li::before {
+    content: '\2713';
+    color: var(--blue);
+    font-weight: 700;
+    flex-shrink: 0;
   }
 
   /* ─── HERO ─── */
@@ -475,24 +622,17 @@ background-size: 300px 300px;
   }
 
   .hero-brand-img {
-    width: 48px;
-    height: 64px;
+    width: 38px;
+    height: 50px;
     border-radius: 12px;
     object-fit: contain;
   }
 
   .hero-brand-name {
     font-family: var(--font-brand);
-    font-size: 2.75rem;
+    font-size: 2.25rem;
     color: var(--gray-900);
     letter-spacing: -0.01em;
-  }
-
-  .hero-brand-tagline {
-    font-family: var(--font-brand);
-    font-size: 1.25rem;
-    font-weight: 400;
-    color: var(--gray-900);
   }
 
   h1 {
@@ -505,6 +645,17 @@ background-size: 300px 300px;
     max-width: 860px;
     margin: 0 auto 12px;
     padding: 0 20px 24px;
+  }
+
+  .hero-new-flow {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+    margin: -24px auto 12px;
+    padding: 0 20px;
   }
 
   .h1-divider {
@@ -1482,7 +1633,7 @@ background-size: 300px 300px;
   .tp-container {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 16px;
   }
 
   .cta-section {
@@ -1971,8 +2122,8 @@ background-size: 300px 300px;
   }
 
   .cta-btn-sub {
-    font-size: 0.75rem;
-    font-weight: 500;
+    font-size: 0.7rem;
+    font-weight: 700;
     color: rgba(255,255,255,0.8);
     pointer-events: none;
     text-align: center;
@@ -2021,6 +2172,21 @@ background-size: 300px 300px;
   .badge-mbg-text span {
     font-weight: 400;
     font-size: 0.8125rem;
+    color: var(--gray-500);
+  }
+
+  .hero-user-stat-number {
+    font-family: var(--font-brand);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--gray-900);
+    line-height: 1.1;
+  }
+
+  .hero-user-stat-label {
+    font-family: var(--font-brand);
+    font-size: 0.8125rem;
+    font-weight: 400;
     color: var(--gray-500);
   }
 
@@ -2555,9 +2721,8 @@ background-size: 300px 300px;
     .hero-bullets { margin-bottom: 20px; }
     .hero-bullets li { font-size: 0.9rem; }
     .hero-brand-bar { gap: 4px; }
-    .hero-brand-img { width: 48px; height: 48px; }
-    .hero-brand-name { font-size: 2rem; }
-    .hero-brand-tagline { font-size: 1rem; }
+    .hero-brand-img { width: 36px; height: 36px; }
+    .hero-brand-name { font-size: 1.6rem; }
     .hero-subtext { font-size: 0.8rem; padding-bottom: 6px; padding-left: 20px; padding-right: 20px; }
     .subtext-mobile-hide { display: none; }
     .vsl-wrapper { margin-bottom: 0 !important; }
@@ -2579,7 +2744,7 @@ background-size: 300px 300px;
     .bonuses-list li { font-size: 0.95rem; gap: 12px; }
     .cta-btn { width: 94%; padding: 12px 16px; border-radius: 0.75rem; }
     .cta-btn-main { font-size: 0.95rem; }
-    .cta-btn-sub { font-size: 0.72rem; }
+    .cta-btn-sub { font-size: 0.68rem; }
     .tp-row { flex-wrap: nowrap; gap: 8px; }
     .tp-divider { margin: 0 4px; min-height: 1.4rem; }
     .tp-logo { height: 20px; }
@@ -2589,8 +2754,10 @@ background-size: 300px 300px;
     .badge-mbg-img { width: 2.2rem; height: 2.2rem; }
     .badge-mbg-text { font-size: 0.65rem; max-width: 11rem; line-height: 1.3; }
     .badge-mbg-text span { font-size: 0.6rem; }
+    .hero-user-stat-number { font-size: 1.2rem; }
+    .hero-user-stat-label { font-size: 0.7rem; }
     /* Headline — more width */
-    h1 { padding: 0 4px; font-size: 2.15rem; }
+    h1 { padding: 0 1px; font-size: 1.4rem; }
 
     .carousel-section { padding: 64px 0 24px; }
     .carousel-section::before { height: 56px; }
@@ -2645,6 +2812,7 @@ background-size: 300px 300px;
 
     /* ─── NEW HERO ─── */
     .hero-new { padding: 16px 0 32px; }
+    .hero-new-flow { font-size: 0.8rem; margin-top: -12px; padding: 0 8px; }
     .hero-new-sub { font-size: 0.8rem; margin-bottom: 24px; }
 
     /* ─── WHO IS THIS FOR ─── */
@@ -2822,5 +2990,44 @@ background-size: 300px 300px;
     ctaBtn.addEventListener('click', function () {
       sessionStorage.setItem('da_cta_popup', 'free_website_6s');
     });
+  });
+</script>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    var niches = ['health', 'kitchen', 'gadgets', 'pets'];
+    var labels = {
+      health: 'Health & Beauty',
+      kitchen: 'Kitchen',
+      gadgets: 'Gadgets',
+      pets: 'Pets'
+    };
+    var sets = document.querySelectorAll('.niche-set');
+    var labelEl = document.querySelector('.niche-label');
+    var prevBtn = document.querySelector('.niche-arrow-prev');
+    var nextBtn = document.querySelector('.niche-arrow-next');
+    var current = 0;
+
+    function show(index) {
+      var niche = niches[index];
+      sets.forEach(function (s) {
+        s.classList.toggle('active', s.getAttribute('data-niche') === niche);
+      });
+      labelEl.classList.remove('niche-label-anim');
+      void labelEl.offsetWidth;
+      labelEl.textContent = labels[niche];
+      labelEl.classList.add('niche-label-anim');
+    }
+
+    if (prevBtn && nextBtn && labelEl) {
+      prevBtn.addEventListener('click', function () {
+        current = (current - 1 + niches.length) % niches.length;
+        show(current);
+      });
+      nextBtn.addEventListener('click', function () {
+        current = (current + 1) % niches.length;
+        show(current);
+      });
+    }
   });
 </script>
