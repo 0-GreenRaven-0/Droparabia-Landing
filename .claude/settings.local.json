@@ -86,7 +86,13 @@
       "PowerShell(Remove-Item -Recurse -Force -Path \"D:\\\\Projects\\\\droparabia-landing\\\\dist\" -Confirm:$false -ErrorAction SilentlyContinue)",
       "PowerShell(Get-Process node -ErrorAction SilentlyContinue)",
       "Bash(npm run dev > /tmp/dev.log 2>&1 & *)",
-      "Bash(xargs -I{} sh -c 'echo \"=== {} ===\"; wc -c \"{}\"; head -c 300 \"{}\"; echo')"
+      "Bash(xargs -I{} sh -c 'echo \"=== {} ===\"; wc -c \"{}\"; head -c 300 \"{}\"; echo')",
+      "Bash(curl -s -o /tmp/resp.html -w \"%{http_code}\\\\n\" http://localhost:4322/)",
+      "Bash(curl -s -o /tmp/resp4321.html -w \"%{http_code}\\\\n\" http://localhost:4321/)",
+      "Bash(curl -sv http://localhost:4321/)",
+      "PowerShell(Get-NetTCPConnection -LocalPort 4321 -State Listen -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-CimInstance Win32_Process -Filter \"ProcessId=1236 or ProcessId=26156\")",
+      "PowerShell(Stop-Process -Id 1236 -Force -Confirm:$false)"
     ],
     "additionalDirectories": [
       "d:\\Projects\\droparabia-book",
