@@ -2924,34 +2924,42 @@ background-size: 300px 300px;
 
 <script>
   import Swiper from 'swiper';
-  import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+  import { Navigation, Autoplay } from 'swiper/modules';
   import 'swiper/css';
   import 'swiper/css/navigation';
-  import 'swiper/css/pagination';
 
-  document.querySelectorAll('.testimonials-swiper').forEach((swiperEl) => {
-    const container = swiperEl.closest('.carousel-container');
-    new Swiper(swiperEl, {
-      modules: [Navigation, Pagination, Autoplay],
-      slidesPerView: 1,
-      spaceBetween: 16,
-      breakpoints: {
-        600: { slidesPerView: 2, spaceBetween: 20 },
-        1024: { slidesPerView: 3, spaceBetween: 24 },
-      },
-      loop: true,
-      autoplay: {
-        delay: 3500,
-        disableOnInteraction: false,
-        pauseOnMouseEnter: true,
-      },
-      navigation: {
-        nextEl: container.querySelector('.swiper-button-next'),
-        prevEl: container.querySelector('.swiper-button-prev'),
-      },
-      pagination: false,
+  function initSwipers() {
+    document.querySelectorAll('.testimonials-swiper').forEach((swiperEl) => {
+      const container = swiperEl.closest('.carousel-container');
+      if (!container) return;
+      new Swiper(swiperEl, {
+        modules: [Navigation, Autoplay],
+        slidesPerView: 1,
+        spaceBetween: 16,
+        breakpoints: {
+          600: { slidesPerView: 2, spaceBetween: 20 },
+          1024: { slidesPerView: 3, spaceBetween: 24 },
+        },
+        loop: true,
+        autoplay: {
+          delay: 3500,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        },
+        navigation: {
+          nextEl: container.querySelector('.swiper-button-next'),
+          prevEl: container.querySelector('.swiper-button-prev'),
+        },
+        pagination: false,
+      });
     });
-  });
+  }
+
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(initSwipers);
+  } else {
+    setTimeout(initSwipers, 200);
+  }
 </script>
 
 <script>
