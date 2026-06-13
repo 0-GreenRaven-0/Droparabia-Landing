@@ -14,12 +14,32 @@ const {
   <head>
     <script is:inline>window.dataLayer = window.dataLayer || [];</script>
     <script is:inline>(function(){var p=new URLSearchParams(window.location.search);var hasUtm=false;['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k){var v=p.get(k);if(v){sessionStorage.setItem(k,v);hasUtm=true;}});if(!hasUtm&&!sessionStorage.getItem('da_referrer')&&document.referrer&&document.referrer.indexOf(window.location.hostname)===-1){sessionStorage.setItem('da_referrer',document.referrer);};}());</script>
-    <!-- Google Tag Manager -->
-    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-NTGWNM69');</script>
+    <!-- Google Tag Manager + gtag: deferred until first interaction (or 5s fallback) to keep them off the critical render path -->
+    <script is:inline>
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-L1VGFRGHHN');
+
+      function daLoadAnalytics(){
+        if (window.__daLoaded) return;
+        window.__daLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-NTGWNM69');
+
+        var gtagScript = document.createElement('script');
+        gtagScript.async = true;
+        gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-L1VGFRGHHN';
+        document.head.appendChild(gtagScript);
+      }
+
+      ['scroll','mousemove','keydown','touchstart','click'].forEach(function(evt){
+        window.addEventListener(evt, daLoadAnalytics, { once: true, passive: true });
+      });
+      setTimeout(daLoadAnalytics, 5000);
+    </script>
     <!-- End Google Tag Manager -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -48,14 +68,6 @@ const {
       rel="stylesheet"
     />
     <slot name="head" />
-    <!-- Google tag (gtag.js) -->
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-L1VGFRGHHN"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-L1VGFRGHHN');
-    </script>
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
@@ -98,8 +110,8 @@ const {
     --gray-700: #334155;
     --gray-800: #1e293b;
     --gray-900: #0f172a;
-    --font-body: 'Inter', sans-serif;
-    --font-brand: 'IBrand', serif;
+    --font-body: 'Inter', 'Noto Sans', Arial, sans-serif;
+    --font-brand: 'IBrand', 'Noto Sans', Arial, sans-serif;
     --radius-sm: 8px;
     --radius: 12px;
     --radius-lg: 16px;
