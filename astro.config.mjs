@@ -9,4 +9,7 @@ export default defineConfig({
   output: 'static',
   adapter: cloudflare(),
   integrations: [react()],
+  build: {
+    inlineStylesheets: 'always',
+  },
 });
