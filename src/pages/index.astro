@@ -2957,7 +2957,16 @@ background-size: 300px 300px;
     });
   }
 
-  if ('requestIdleCallback' in window) {
+  const swiperEls = document.querySelectorAll('.testimonials-swiper');
+  if (swiperEls.length && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries, obs) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        obs.disconnect();
+        initSwipers();
+      }
+    }, { rootMargin: '200px' });
+    swiperEls.forEach((el) => observer.observe(el));
+  } else if ('requestIdleCallback' in window) {
     requestIdleCallback(initSwipers);
   } else {
     setTimeout(initSwipers, 200);
@@ -2985,13 +2994,15 @@ background-size: 300px 300px;
         };
       } else {
         item.open = true;
-        const fullHeight = item.offsetHeight;
         item.style.overflow = 'hidden';
-        item.animate([
-          { height: summary.offsetHeight + 'px' },
-          { height: fullHeight + 'px' }
-        ], { duration: 280, easing: 'ease' });
-        setTimeout(() => { item.style.overflow = ''; }, 280);
+        requestAnimationFrame(() => {
+          const fullHeight = item.offsetHeight;
+          item.animate([
+            { height: summary.offsetHeight + 'px' },
+            { height: fullHeight + 'px' }
+          ], { duration: 280, easing: 'ease' });
+          setTimeout(() => { item.style.overflow = ''; }, 280);
+        });
       }
     });
   });
@@ -3113,9 +3124,10 @@ background-size: 300px 300px;
           s.classList.toggle('active', s.getAttribute('data-niche') === niche);
         });
         labelEl.classList.remove('niche-label-anim');
-        void labelEl.offsetWidth;
         labelEl.textContent = labels[niche];
-        labelEl.classList.add('niche-label-anim');
+        requestAnimationFrame(function () {
+          labelEl.classList.add('niche-label-anim');
+        });
       }
 
       if (prevBtn && nextBtn && labelEl) {
