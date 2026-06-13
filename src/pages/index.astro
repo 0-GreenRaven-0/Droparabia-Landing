@@ -3072,9 +3072,11 @@ background-size: 300px 300px;
     overlay.addEventListener('click', function (e) {
       if (e.target === overlay) closePopup();
     });
-    ctaBtn.addEventListener('click', function () {
-      sessionStorage.setItem('da_cta_popup', 'free_website_6s');
-    });
+    if (ctaBtn) {
+      ctaBtn.addEventListener('click', function () {
+        sessionStorage.setItem('da_cta_popup', 'free_website_6s');
+      });
+    }
   });
 </script>
 
