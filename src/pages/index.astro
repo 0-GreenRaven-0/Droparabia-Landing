@@ -17,14 +17,20 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         </div>
       </div>
 
-      <h1 class="hero-new-headline">Launch a <span class="h1-underline">high-earning</span></span> online store in less than <span class="h1-simple-underline">30 days</span>!</h1>
+       <ul class="hero-new-sub">
+       STOP BUYING DROPSHIPPING & E-COM COURSES
+      </ul>
+
+      <h1 class="hero-new-headline">Launch your <span class="h1-underline">high-earning</span></span> online store in less than <span class="h1-simple-underline">30 days</span>!</h1>
 
       <div class="attention-bar">
         <span class="attention-bar-label">Using Lebanon's 1st Dropshipping Platform</span>
       </div>
 
-      <ul class="hero-new-sub">
-        Find winning products and sell them directly to your customer without touching or owning Inventory!
+      <ul class="hero-bullets">
+        <li>No experience or technical skills</li>
+        <li>No owning or managing Inventory</li>
+        <li>No hours searching for a winning product</li>
       </ul>
 
       <div class="cta-block">
@@ -41,9 +47,21 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   <section class="carousel-section carousel-section--before-about">
     <h2 class="carousel-heading">
       <svg class="carousel-arrow-svg carousel-arrow-svg--left carousel-arrow-svg--green" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad3)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad3" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#4ade80"/><stop offset="100%" stop-color="#16a34a"/></linearGradient></defs></svg>
-      Run your own successful online store along +600 Lebanese sellers!
+      Sell along +600 Lebanese users
       <svg class="carousel-arrow-svg carousel-arrow-svg--right carousel-arrow-svg--green" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad4)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad4" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#4ade80"/><stop offset="100%" stop-color="#16a34a"/></linearGradient></defs></svg>
     </h2>
+    <div class="tp-row">
+      <div class="auth-stat auth-stat-row">
+        <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="tp-logo" width="300" height="74" />
+        <span class="tp-stars-row">
+          <span class="tp-star">★</span>
+          <span class="tp-star">★</span>
+          <span class="tp-star">★</span>
+          <span class="tp-star">★</span>
+          <span class="tp-star tp-star-empty">★</span>
+        </span>
+      </div>
+    </div>
     <div class="carousel-container">
       <button class="swiper-button-prev" aria-label="Previous">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
@@ -67,17 +85,29 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     </div>
   </section>
 
-  <!-- WHO IS THIS FOR -->
+<!-- WHO IS THIS FOR -->
   <section class="who-section">
     <div class="tp-container">
-      <p class="who-intro">This is for every Lebanese who is...</p>
+      <p class="who-intro who-intro--first">You don't need a dropshipping or e-commerce course or mentorship</p>
+
+      <p class="who-intro who-intro--body">And you don't need to burn your hard-earned savings</p>
+
+      <p class="who-intro who-intro--body">trying to learn how to build that dream online business of yours</p>
+
+      <p class="who-intro who-intro--body">What you need is a system that eliminates every obstacle</p>
+
+      <p class="who-intro who-intro--body">that causes a business to fail before it even starts</p>
+
+      <p class="who-intro who-intro--body">A system that lets you succeed regardless of Lebanon's circumstances</p>
+
+      <p class="who-intro who-intro--brand">So if you are:</p>
       <ul class="who-list">
-        <li>A 9 to 5 worker who wants to start an online business to increase their monthly income</li>
-        <li>A university student who'd like to start his own hustle</li>
+        <li>A university student who wants to start a hustle of their own</li>
+        <li>A 9-to-5 worker looking to start an online business and grow their monthly income</li>
         <li>A mother who'd love to run a business of her own from home</li>
-        <li>Or simply anyone who wants to start dropshipping and later scale to full e-com store</li>
+        <li>Or simply someone ready to start dropshipping and scale into a full e-com store</li>
       </ul>
-      <p class="who-outro">Does that sound like you?</p>
+      <p class="who-outro who-intro--brand">Droparabia was built specifically for you!</p>
     </div>
   </section>
 
@@ -448,10 +478,13 @@ background-size: 300px 300px;
 
   /* ─── NEW HERO ─── */
   .hero-new {
+    position: relative;
+    z-index: 4;
     padding: 12px 0 0;
     text-align: center;
     background: var(--white);
     border-radius: 0 0 50% 50% / 0 0 60px 60px;
+    margin-bottom: -60px;
   }
 
   @media (min-width: 481px) {
@@ -584,9 +617,40 @@ background-size: 300px 300px;
     font-family: var(--font-body);
     color: #000;
     line-height: 1.5;
-    margin: 0 0 24px;
+    margin: 0 0 18px;
     padding: 0;
     list-style: none;
+  }
+
+  .hero-bullets {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: max-content;
+    max-width: 480px;
+    margin: 0 auto 20px;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+  }
+
+  .hero-bullets li {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .hero-bullets li::before {
+    content: "✓";
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
   }
 
   .hero-new-sub li {
@@ -620,7 +684,7 @@ background-size: 300px 300px;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    margin-bottom: 8px;
+    margin-bottom: 2px;
   }
 
   .hero-brand-row {
@@ -657,12 +721,12 @@ background-size: 300px 300px;
   }
 
   .attention-bar-label {
-    font-family: var(--font-brand);
+    font-family: var(--font-body);
     background: none;
     color: var(--gray-900);
     font-size: 0.95rem;
-    font-weight: 300;
-    letter-spacing: -0.03em;
+    font-weight: 800;
+    letter-spacing: normal;
     white-space: nowrap;
     flex-shrink: 0;
   }
@@ -692,8 +756,8 @@ background-size: 300px 300px;
     line-height: 1.25;
     letter-spacing: -0.03em;
     max-width: 860px;
-    margin: 0 auto 12px;
-    padding: 0 20px 24px;
+    margin: 0 auto 4px;
+    padding: 0 20px 8px;
   }
 
   .h1-divider {
@@ -1545,7 +1609,7 @@ background-size: 300px 300px;
     top: 0;
     left: 0;
     right: 0;
-    height: 24px;
+    height: 80px;
     background: var(--white);
     border-radius: 0 0 50% 50% / 0 0 60px 60px;
   }
@@ -1554,6 +1618,7 @@ background-size: 300px 300px;
     z-index: 3;
     border-radius: 0 0 50% 50% / 0 0 60px 60px;
     margin-bottom: -60px;
+    padding-top: 96px;
   }
 
   .carousel-section--after-about::before {
@@ -1963,6 +2028,10 @@ background-size: 300px 300px;
     flex-wrap: wrap;
   }
 
+  .carousel-section--before-about .tp-row {
+    margin-top: -10px;
+  }
+
   .auth-stat {
     display: flex;
     flex-direction: column;
@@ -2252,16 +2321,33 @@ background-size: 300px 300px;
 
   /* ─── WHO IS THIS FOR ─── */
   .who-section {
-    padding: 48px 0;
+    padding: 80px 0 48px;
     text-align: center;
   }
 
   .who-intro {
-    font-family: var(--font-brand);
+    font-family: var(--font-body);
     font-weight: 300;
     font-size: clamp(1.8rem, 3.2vw, 2.6rem);
     color: var(--gray-900);
     margin-bottom: 24px;
+  }
+
+  .who-intro--brand {
+    font-family: var(--font-brand);
+  }
+
+  .who-intro--first {
+    font-weight: 700;
+  }
+
+  .who-intro--body {
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-align: left;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .who-list {
@@ -2294,8 +2380,8 @@ background-size: 300px 300px;
   }
 
   .who-outro {
-    font-size: 1.15rem;
-    font-weight: 600;
+    font-size: 1.2rem;
+    font-weight: 400;
     color: var(--gray-900);
     max-width: 700px;
     margin: 0 auto;
@@ -2756,8 +2842,9 @@ background-size: 300px 300px;
     #vsl-inline-gate-2 { order: 5; }
     #vsl-inline-gate-3 { order: 5; }
     .carousel-section { order: 6; padding-top: 40px; }
-    .carousel-section--before-about { padding-top: 64px; }
+    .carousel-section--before-about { padding-top: 96px; }
     .carousel-heading { padding: 0 64px; margin-bottom: 36px !important; }
+    .carousel-section--before-about .tp-row { margin-top: -36px; }
     .carousel-arrow-svg { width: 32px; height: 42px; }
     .carousel-arrow-svg--left { left: 18%; }
     .carousel-arrow-svg--right { right: 18%; }
@@ -2789,8 +2876,9 @@ background-size: 300px 300px;
     .brand-logo-inline { gap: 6px; margin-bottom: 6px; }
     h1 { font-size: 2rem; max-width: 100%; }
     .h1-sub { font-size: 1.05rem; font-weight: 400; line-height: 1.5; margin-top: 6px; padding-bottom: 16px; }
+    .attention-bar-label { font-size: 0.85rem; font-weight: 800; }
     .hero-bullets { margin-bottom: 20px; }
-    .hero-bullets li { font-size: 0.9rem; }
+    .hero-bullets li { font-size: 0.78rem; }
     .hero-brand-bar { gap: 4px; }
     .hero-brand-img { width: 36px; height: 36px; }
     .hero-brand-name { font-size: 1.6rem; }
@@ -2828,16 +2916,17 @@ background-size: 300px 300px;
     .hero-user-stat-number { font-size: 1.2rem; }
     .hero-user-stat-label { font-size: 0.7rem; }
     /* Headline — more width */
-    h1 { padding: 0 1px; font-size: 1.8rem; }
+    h1 { padding: 0 1px; font-size: 2.3rem; margin-bottom: 4px; }
 
     .carousel-section { padding: 64px 0 24px; }
     .carousel-section::before { height: 40px; }
-    .carousel-section--before-about { padding-top: 40px; border-radius: 0 0 50% 50% / 0 0 28px 28px; margin-bottom: -28px; }
+    .carousel-section--before-about { padding-top: 56px; border-radius: 0 0 50% 50% / 0 0 28px 28px; margin-bottom: -28px; }
     .carousel-section--after-about { padding-top: 64px; }
     .carousel-heading { font-size: 1.1rem; }
     .carousel-section--before-about .carousel-heading { font-size: 0.9rem; }
     .form-section { padding: 8px 0 32px; }
     .carousel-heading { padding: 0 48px; margin-bottom: 24px; }
+    .carousel-section--before-about .tp-row { margin-top: -24px; }
 
     .carousel-container { padding: 0 52px; }
     .carousel-container .swiper-button-prev,
@@ -2884,15 +2973,17 @@ background-size: 300px 300px;
     .header-results { font-size: 0.8rem; }
 
     /* ─── NEW HERO ─── */
-    .hero-new { padding: 16px 0 0; border-radius: 0 0 50% 50% / 0 0 28px 28px; position: relative; z-index: 4; margin-bottom: -28px; }
-    .hero-new-sub { font-size: 0.75rem; margin-bottom: 24px; }
+    .hero-new { padding: 16px 0 8px; border-radius: 0 0 50% 50% / 0 0 28px 28px; position: relative; z-index: 4; margin-bottom: -28px; }
+    .hero-new-sub { font-size: 0.75rem; margin-bottom: 18px; }
 
     /* ─── WHO IS THIS FOR ─── */
-    .who-section { padding: 48px 0 32px; }
+    .who-section { padding: 32px 0 32px; }
     .who-intro { font-size: 1.4rem; }
+    .who-intro--first { font-size: 1.2rem; }
+    .who-intro--body { font-size: 0.95rem; }
     .who-list { padding: 0; gap: 24px; }
     .who-list li { font-size: 0.95rem; }
-    .who-outro { font-size: 1rem; padding: 0 16px; }
+    .who-outro { font-size: 1.2rem; padding: 0 16px; }
 
     /* ─── ABOUT ─── */
     .about-section { padding: 72px 0 32px; border-radius: 0 0 50% 50% / 0 0 40px 40px; margin-bottom: -40px; }

@@ -76,11 +76,10 @@
         <div class="survey-progress-track">
           <div class="survey-progress-bar" id="progress-bar" style="width:14.28%"></div>
         </div>
-        <p class="survey-page-count" id="page-count">Question 1 of 7</p>
 
         <!-- Q1 -->
         <div class="survey-page active" data-field="contact">
-          <h2 class="survey-question">Please enter your:</h2>
+          <h2 class="survey-question">Let's start with where to reach you and set up your Droparabia account</h2>
           <div class="survey-inputs">
             <input type="text" class="survey-input" id="input-name" placeholder="First and Last Name" autocomplete="name" />
             <input type="email" class="survey-input" id="input-email" placeholder="Email Address" autocomplete="email" />
@@ -100,15 +99,6 @@
           <div class="survey-error" id="err-1">Please select an option to continue</div>
         </div>
 
-        <!-- Q3 -->
-        <div class="survey-page" data-field="commitment" style="display:none">
-          <h2 class="survey-question">This isn't a generic sales call, it's to determine if Droparabia is the right fit to help you start your business.<br><br>Any chance you might cancel or not attend the meeting?</h2>
-          <div class="survey-options">
-            <button class="survey-option" data-value="yes">No, I will attend for sure</button>
-            <button class="survey-option" data-value="maybe">Maybe...</button>
-          </div>
-          <div class="survey-error" id="err-2">Please select an option to continue</div>
-        </div>
 
         <!-- Q4 -->
         <div class="survey-page" data-field="effort" style="display:none">
@@ -219,7 +209,6 @@
         var pages = document.querySelectorAll('.survey-page');
         pages.forEach(function(p, i) { p.style.display = i === page ? 'block' : 'none'; });
         document.getElementById('progress-bar').style.width = (((page + 1) / total) * 100) + '%';
-        document.getElementById('page-count').textContent = 'Question ' + (page + 1) + ' of ' + total;
         document.getElementById('btn-prev').style.display = page > 0 ? 'inline-block' : 'none';
         document.getElementById('btn-next').textContent = page === total - 1 ? 'Complete ✓' : 'Next →';
       }

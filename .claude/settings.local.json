@@ -92,7 +92,11 @@
       "Bash(curl -sv http://localhost:4321/)",
       "PowerShell(Get-NetTCPConnection -LocalPort 4321 -State Listen -ErrorAction SilentlyContinue)",
       "PowerShell(Get-CimInstance Win32_Process -Filter \"ProcessId=1236 or ProcessId=26156\")",
-      "PowerShell(Stop-Process -Id 1236 -Force -Confirm:$false)"
+      "PowerShell(Stop-Process -Id 1236 -Force -Confirm:$false)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:4321/)",
+      "Bash(curl -s http://localhost:4321/)",
+      "Bash(curl -s http://localhost:4321/ -o /tmp/page.html)",
+      "Bash(grep -o \"hero-new[^,{]*{[^}]*}\" /tmp/page.html)"
     ],
     "additionalDirectories": [
       "d:\\Projects\\droparabia-book",
