@@ -87,8 +87,26 @@
           const tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
           if (tokens.qualified) {
             document.getElementById('main-content').style.display = 'block';
+
+            var userData = {};
+            try { userData = JSON.parse(sessionStorage.getItem('userData') || '{}'); } catch(_) {}
+
+            var phoneDigits = (userData.phone || '').replace(/[\s\-()+.]/g, '');
+            if (phoneDigits.startsWith('00961')) phoneDigits = phoneDigits.slice(5);
+            else if (phoneDigits.startsWith('961') && phoneDigits.length >= 10) phoneDigits = phoneDigits.slice(3);
+            var phoneE164 = phoneDigits ? '+961' + phoneDigits : '';
+
+            var params = new URLSearchParams();
+            if (userData.name)  params.set('name', userData.name);
+            if (userData.email) params.set('email', userData.email);
+            if (phoneE164) { params.set('a2', phoneE164); }
+
+            var calendlyUrl = 'https://calendly.com/d/cx6h-n22-cr7/45-min-droparabia-advisory-call';
+            var query = params.toString();
+            if (query) calendlyUrl += '?' + query;
+
             Calendly.initInlineWidget({
-              url: 'https://calendly.com/d/cx6h-n22-cr7/45-min-droparabia-advisory-call',
+              url: calendlyUrl,
               parentElement: document.getElementById('calendly-widget'),
             });
             // Hide loader once Calendly signals it's ready

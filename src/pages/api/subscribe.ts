@@ -213,6 +213,48 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
   });
 }
 
+async function incrementBookingCount(sheetId: string, token: string): Promise<void> {
+  const base = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
+  const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+  const today = new Date().toLocaleDateString('en-GB');
+
+  // Ensure headers
+  const headerRes = await fetch(`${base}/A1`, { headers: auth });
+  const headerData = await headerRes.json() as { values?: string[][] };
+  if (!headerData.values || headerData.values[0]?.[0] !== 'Date') {
+    await fetch(`${base}/A1:B1?valueInputOption=USER_ENTERED`, {
+      method: 'PUT', headers: auth,
+      body: JSON.stringify({ values: [['Date', 'Number of Bookings']] }),
+    });
+  }
+
+  // Read all dates in column A
+  const colRes = await fetch(`${base}/A:B`, { headers: auth });
+  const colData = await colRes.json() as { values?: string[][] };
+  const rows = colData.values || [];
+
+  // Find row index for today (1-based, skip header)
+  let todayRowIndex = -1;
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i][0] === today) { todayRowIndex = i + 1; break; }
+  }
+
+  if (todayRowIndex > 0) {
+    // Increment existing count
+    const current = parseInt(rows[todayRowIndex - 1][1] || '0', 10);
+    await fetch(`${base}/A${todayRowIndex}:B${todayRowIndex}?valueInputOption=USER_ENTERED`, {
+      method: 'PUT', headers: auth,
+      body: JSON.stringify({ values: [[today, current + 1]] }),
+    });
+  } else {
+    // Append new row for today
+    await fetch(`${base}/A:B:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
+      method: 'POST', headers: auth,
+      body: JSON.stringify({ values: [[today, 1]] }),
+    });
+  }
+}
+
 // ── Handler ───────────────────────────────────────────────────────────────────
 
 export const POST: APIRoute = async ({ request }) => {
@@ -274,6 +316,11 @@ export const POST: APIRoute = async ({ request }) => {
         const token = await getGoogleAccessToken(credsJson);
         await removeEmailFromAllSheets(email, token);
         await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, creative, hook, cta_popup || ''], token);
+
+        const landingBookingsSheetId = import.meta.env.GOOGLE_SHEET_LANDING_PAGE_BOOKINGS;
+        if (list === 'booked' && landingBookingsSheetId) {
+          await incrementBookingCount(landingBookingsSheetId, token);
+        }
       })().catch(() => {});
     }
 

@@ -43,6 +43,20 @@
       .survey-btn-secondary:hover { background: #EFF6FF; }
       .survey-page { display: none; }
       .survey-page.active { display: block; }
+      .survey-intro-text { font-size: 1rem; color: #374151; line-height: 1.65; margin-bottom: 1.25rem; }
+      .survey-intro-text strong { color: #2563EB; }
+      .niche-carousel-wrap { max-width: 480px; margin: 0 auto 1.25rem; width: 100%; }
+      .niche-set { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .niche-set.active { display: grid; animation: niche-fade-in 0.4s ease; }
+      .niche-set img { width: 100%; aspect-ratio: 921 / 1086; object-fit: cover; border-radius: 12px; border: 1px solid #E2E8F0; }
+      .niche-nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 14px; }
+      .niche-arrow { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; border: 1px solid #E2E8F0; background: #fff; color: #2563EB; font-size: 1.25rem; line-height: 1; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; transition: background 0.2s, color 0.2s, transform 0.15s, border-color 0.2s; }
+      .niche-arrow:hover { background: #2563EB; color: #fff; border-color: #2563EB; transform: scale(1.08); }
+      .niche-arrow:active { transform: scale(0.95); }
+      .niche-label { min-width: 140px; text-align: center; font-size: 0.95rem; font-weight: 600; color: #374151; user-select: none; -webkit-tap-highlight-color: transparent; }
+      .niche-label.niche-label-anim { animation: niche-label-in 0.35s ease; }
+      @keyframes niche-label-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes niche-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
       @media (max-width: 768px) {
         body { background: #fff !important; }
         .survey-wrap { padding: 1rem 1.25rem; justify-content: flex-start; }
@@ -70,77 +84,113 @@
             <img src="/Droparabia.png" alt="Droparabia" style="height:72px;" />
             <span style="font-family:'IBrand', sans-serif; font-size:3rem; font-weight:400; color:#0f172a;">Droparabia</span>
           </div>
-          <h1 class="survey-title">Book a FREE call with our team and find out if Droparabia's the right fit for you!</h1>
+ 
         </div>
 
         <div class="survey-progress-track">
           <div class="survey-progress-bar" id="progress-bar" style="width:14.28%"></div>
         </div>
 
+        <!-- Q0: Intro -->
+        <div class="survey-page active" data-field="intro">
+          <div class="survey-intro-text">
+            <p>Droparabia helps you find hundreds of winning products that have demand in the Lebanese market and deliver them to your customers directly!</p>
+            <p style="margin-top:0.75rem;"><strong>You only focus on marketing and advertising!</strong></p>
+          </div>
+          <div class="niche-carousel-wrap">
+            <div class="niche-carousel">
+              <div class="niche-set active" data-niche="health">
+                <img src="/products/r1.webp" alt="" loading="lazy" />
+                <img src="/products/r2.webp" alt="" loading="lazy" />
+                <img src="/products/r4.webp" alt="" loading="lazy" />
+              </div>
+              <div class="niche-set" data-niche="kitchen">
+                <img src="/products/k1.png" alt="" loading="lazy" />
+                <img src="/products/k2.png" alt="" loading="lazy" />
+                <img src="/products/k3.png" alt="" loading="lazy" />
+              </div>
+              <div class="niche-set" data-niche="gadgets">
+                <img src="/products/g1.png" alt="" loading="lazy" />
+                <img src="/products/g2.png" alt="" loading="lazy" />
+                <img src="/products/g3.png" alt="" loading="lazy" />
+              </div>
+              <div class="niche-set" data-niche="pets">
+                <img src="/products/p1.png" alt="" loading="lazy" />
+                <img src="/products/p2.png" alt="" loading="lazy" />
+                <img src="/products/p3.png" alt="" loading="lazy" />
+              </div>
+            </div>
+            <div class="niche-nav">
+              <button class="niche-arrow niche-arrow-prev" type="button" aria-label="Previous niche">&#8249;</button>
+              <span class="niche-label">Health &amp; Beauty</span>
+              <button class="niche-arrow niche-arrow-next" type="button" aria-label="Next niche">&#8250;</button>
+            </div>
+          </div>
+        </div>
+
         <!-- Q1 -->
-        <div class="survey-page active" data-field="contact">
-          <h2 class="survey-question">Let's start with where to reach you and set up your Droparabia account</h2>
+        <div class="survey-page" data-field="stopped" style="display:none">
+          <h2 class="survey-question">What stopped you from starting your own e-commerce or dropshipping business?</h2>
+          <div class="survey-options">
+            <button class="survey-option" data-value="knowledge">Lack of experience or knowledge</button>
+            <button class="survey-option" data-value="fear">Fear of loosing my money</button>
+            <button class="survey-option" data-value="never">Never thought about it</button>
+          </div>
+          <div class="survey-error" id="err-1">Please select an option to continue</div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="survey-page" data-field="courses" style="display:none">
+          <h2 class="survey-question">Have you purchased any kind of dropshipping/e-com courses or mentorships?</h2>
+          <div class="survey-options">
+            <button class="survey-option" data-value="yes">Yes</button>
+            <button class="survey-option" data-value="no">No</button>
+          </div>
+          <div class="survey-error" id="err-2">Please select an option to continue</div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="survey-page" data-field="goalIncome" style="display:none">
+          <h2 class="survey-question">What's your monthly goal income?</h2>
+          <div class="survey-options">
+            <button class="survey-option" data-value="upTo1k">Up to $1,000</button>
+            <button class="survey-option" data-value="1kTo3k">$1,000 – $3,000</button>
+            <button class="survey-option" data-value="3kTo5k">$3,000 – $5,000</button>
+            <button class="survey-option" data-value="5kPlus">$5,000+</button>
+          </div>
+          <div class="survey-error" id="err-3">Please select an option to continue</div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="survey-page" data-field="effort" style="display:none">
+          <h2 class="survey-question">Droparabia, our community and our expert team of advisors will help you reach that income goal but only if you're ready to work hard for it<br><br>Are you willing to put in the effort?</h2>
+          <div class="survey-options">
+            <button class="survey-option" data-value="hardWork">Yes I'll work hard</button>
+            <button class="survey-option" data-value="doWhatICan">I'll do what I can</button>
+          </div>
+          <div class="survey-error" id="err-4">Please select an option to continue</div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="survey-page" data-field="budget" style="display:none">
+          <h2 class="survey-question">We recommend that you have a sufficient budget of $600~$700 for marketing and advertising to ensure the best results possible<br><br>Do you have a budget ready for your business?</h2>
+          <div class="survey-options">
+            <button class="survey-option" data-value="yes">Yes I have the funds</button>
+            <button class="survey-option" data-value="partial">I have at least $600</button>
+            <button class="survey-option" data-value="no">No I don't have the funds :(</button>
+          </div>
+          <div class="survey-error" id="err-5">Please select an option to continue</div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="survey-page" data-field="contact" style="display:none">
+          <h2 class="survey-question">That's great! In order to create your Droparabia account and book you a call, we need your:</h2>
           <div class="survey-inputs">
             <input type="text" class="survey-input" id="input-name" placeholder="First and Last Name" autocomplete="name" />
             <input type="email" class="survey-input" id="input-email" placeholder="Email Address" autocomplete="email" />
             <input type="tel" class="survey-input" id="input-phone" placeholder="Phone Number (e.g. 70 123 456)" autocomplete="tel" />
           </div>
-          <div class="survey-error" id="err-0">Please fill in your name, a valid email and a valid phone number</div>
-        </div>
-
-        <!-- Q2 -->
-        <div class="survey-page" data-field="stopped" style="display:none">
-          <h2 class="survey-question">What stopped you from starting your own ecommerce or any kind of online store before?</h2>
-          <div class="survey-options">
-            <button class="survey-option" data-value="knowledge">Lack of knowledge/guidance</button>
-            <button class="survey-option" data-value="fear">Fear of Risking my budget</button>
-            <button class="survey-option" data-value="never">Never thought about it before</button>
-          </div>
-          <div class="survey-error" id="err-1">Please select an option to continue</div>
-        </div>
-
-
-        <!-- Q4 -->
-        <div class="survey-page" data-field="effort" style="display:none">
-          <h2 class="survey-question">This isn't a "get rich quick" scheme, it will require a lot of effort and dedication to build a successful online business,<br><br>Are you willing to put in the work? (Even if you fail at first)</h2>
-          <div class="survey-options">
-            <button class="survey-option" data-value="ready">I'm Ready to Learn and Work Hard</button>
-            <button class="survey-option" data-value="best">I'll Do My Best</button>
-          </div>
-          <div class="survey-error" id="err-3">Please select an option to continue</div>
-        </div>
-
-        <!-- Q5 -->
-        <div class="survey-page" data-field="budget" style="display:none">
-          <h2 class="survey-question">We Recommend that you have a sufficient capital in order to start your online store (Software, marketing, packaging...)<br><br>Do you have access to at least a budget of $600~$700?</h2>
-          <div class="survey-options">
-            <button class="survey-option" data-value="yes">Yes, I have the capital</button>
-            <button class="survey-option" data-value="partial">I have at least $600</button>
-            <button class="survey-option" data-value="no">No, I don't have the funds right now</button>
-          </div>
-          <div class="survey-error" id="err-4">Please select an option to continue</div>
-        </div>
-
-        <!-- Q6 -->
-        <div class="survey-page" data-field="decisionMaker" style="display:none">
-          <h2 class="survey-question">Are you the decision maker when it comes to starting your business?</h2>
-          <div class="survey-options">
-            <button class="survey-option" data-value="yes">Yes, I'm the decision maker</button>
-            <button class="survey-option" data-value="partner">No, I have a partner involved</button>
-          </div>
-          <div class="survey-error" id="err-5">Please select an option to continue</div>
-        </div>
-
-        <!-- Q7 -->
-        <div class="survey-page" data-field="startTime" style="display:none">
-          <h2 class="survey-question">If we're a good fit to help you build your online business, how soon can you start?</h2>
-          <div class="survey-options">
-            <button class="survey-option" data-value="today">Today</button>
-            <button class="survey-option" data-value="week">Within a week</button>
-            <button class="survey-option" data-value="month">Within 30 days</button>
-            <button class="survey-option" data-value="notReady">Not Ready Yet</button>
-          </div>
-          <div class="survey-error" id="err-6">Please select an option to continue</div>
+          <div class="survey-error" id="err-6">Please fill in your name, a valid email and a valid phone number</div>
         </div>
 
         <div class="survey-nav">
@@ -178,18 +228,53 @@
           window.dataLayer.push({ event: 'survey_started' });
         } catch(_) {}
 
-        // If they already gave their info to watch the VSL, skip the contact question
+        // If they already gave their info to watch the VSL, prefill the contact fields
         try {
           var existingUserData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-          if (existingUserData.name && existingUserData.email && existingUserData.phone) {
-            answers.contact = true;
-            page = 1;
-          }
+          if (existingUserData.name)  document.getElementById('input-name').value  = existingUserData.name;
+          if (existingUserData.email) document.getElementById('input-email').value = existingUserData.email;
+          if (existingUserData.phone) document.getElementById('input-phone').value = existingUserData.phone;
         } catch(_) {}
 
         document.getElementById('survey-loader').style.display = 'none';
         document.getElementById('survey-content').style.display = 'flex';
         updateUI();
+      })();
+
+      // Product niche carousel (intro page)
+      (function() {
+        var niches = ['health', 'kitchen', 'gadgets', 'pets'];
+        var labels = { health: 'Health & Beauty', kitchen: 'Kitchen', gadgets: 'Gadgets', pets: 'Pets' };
+        document.querySelectorAll('.niche-carousel-wrap').forEach(function (wrap) {
+          var sets = wrap.querySelectorAll('.niche-set');
+          var labelEl = wrap.querySelector('.niche-label');
+          var prevBtn = wrap.querySelector('.niche-arrow-prev');
+          var nextBtn = wrap.querySelector('.niche-arrow-next');
+          var current = 0;
+
+          function show(index) {
+            var niche = niches[index];
+            sets.forEach(function (s) {
+              s.classList.toggle('active', s.getAttribute('data-niche') === niche);
+            });
+            labelEl.classList.remove('niche-label-anim');
+            labelEl.textContent = labels[niche];
+            requestAnimationFrame(function () {
+              labelEl.classList.add('niche-label-anim');
+            });
+          }
+
+          if (prevBtn && nextBtn && labelEl) {
+            prevBtn.addEventListener('click', function () {
+              current = (current - 1 + niches.length) % niches.length;
+              show(current);
+            });
+            nextBtn.addEventListener('click', function () {
+              current = (current + 1) % niches.length;
+              show(current);
+            });
+          }
+        });
       })();
 
       // Option selection
@@ -210,7 +295,10 @@
         pages.forEach(function(p, i) { p.style.display = i === page ? 'block' : 'none'; });
         document.getElementById('progress-bar').style.width = (((page + 1) / total) * 100) + '%';
         document.getElementById('btn-prev').style.display = page > 0 ? 'inline-block' : 'none';
-        document.getElementById('btn-next').textContent = page === total - 1 ? 'Complete ✓' : 'Next →';
+        var btn = document.getElementById('btn-next');
+        if (page === 0) btn.textContent = "That's amazing!";
+        else if (page === total - 1) btn.textContent = 'Complete ✓';
+        else btn.textContent = 'Next →';
       }
 
       function prevPage() {
@@ -221,21 +309,43 @@
         var pages = document.querySelectorAll('.survey-page');
         var field = pages[page].dataset.field;
 
+        if (field === 'intro') {
+          page++;
+          updateUI();
+          return;
+        }
+
         if (field === 'contact') {
           var nameVal  = document.getElementById('input-name').value.trim();
           var emailVal = document.getElementById('input-email').value.trim();
           var phoneVal = document.getElementById('input-phone').value.trim();
 
           if (!nameVal || !isValidEmail(emailVal) || !isValidLebanesePhone(phoneVal)) {
-            document.getElementById('err-0').style.display = 'block';
+            document.getElementById('err-6').style.display = 'block';
             return;
           }
-          document.getElementById('err-0').style.display = 'none';
+          document.getElementById('err-6').style.display = 'none';
 
           sessionStorage.setItem('userData', JSON.stringify({ name: nameVal, email: emailVal, phone: phoneVal }));
           sessionStorage.setItem('da_subscribed', '1');
           answers.contact = true;
 
+          // Complete
+          var btn = document.getElementById('btn-next');
+          btn.disabled = true;
+          btn.textContent = 'Processing...';
+
+          var qualified = answers.budget !== 'no';
+
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ event: 'survey_completed', survey_qualified: qualified, user_name: nameVal, user_email: emailVal, user_phone: phoneVal });
+
+          var tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
+          var token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+          tokens[qualified ? 'qualified' : 'unqualified'] = token;
+          sessionStorage.setItem('userTokens', JSON.stringify(tokens));
+
+          var list = qualified ? 'qualified_no_book' : 'unqualified';
           var utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
           var utms = {};
           utmKeys.forEach(function(k) { var v = sessionStorage.getItem(k); if (v) utms[k] = v; });
@@ -244,11 +354,10 @@
           fetch('/api/subscribe', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(Object.assign({ name: nameVal, email: emailVal, phone: phoneVal, list: 'survey', referrer: ref, cta_popup: sessionStorage.getItem('da_cta_popup') || '' }, utms)),
-          }).catch(function(){});
-
-          page++;
-          updateUI();
+            body: JSON.stringify(Object.assign({ name: nameVal, email: emailVal, phone: phoneVal, list: list, referrer: ref, cta_popup: sessionStorage.getItem('da_cta_popup') || '' }, utms)),
+          }).finally(function() {
+            window.location.href = qualified ? '/choose-schedule' : '/get-free-program';
+          });
           return;
         }
 
@@ -256,50 +365,12 @@
           document.getElementById('err-' + page).style.display = 'block';
           return;
         }
-        if (page < total - 1) {
-          page++;
-          updateUI();
-          return;
-        }
-        // Complete
-        var btn = document.getElementById('btn-next');
-        btn.disabled = true;
-        btn.textContent = 'Processing...';
-
-        var qualified =
-          answers.budget !== 'no' &&
-          answers.startTime !== 'notReady';
-
-        var userData = {};
-        try { userData = JSON.parse(sessionStorage.getItem('userData') || '{}'); } catch(_) {}
-
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({ event: 'survey_completed', survey_qualified: qualified, user_name: userData.name, user_email: userData.email, user_phone: userData.phone });
-
-        var tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
-        var token = Math.random().toString(36).substring(2) + Date.now().toString(36);
-        tokens[qualified ? 'qualified' : 'unqualified'] = token;
-        sessionStorage.setItem('userTokens', JSON.stringify(tokens));
-
-        var list = qualified ? 'qualified_no_book' : 'unqualified';
-        var userData = {};
-        try { userData = JSON.parse(sessionStorage.getItem('userData') || '{}'); } catch(_) {}
-
-        if (userData.email) {
-          fetch('/api/subscribe', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: userData.name, email: userData.email, phone: userData.phone, list: list, cta_popup: sessionStorage.getItem('da_cta_popup') || '' }),
-          }).finally(function() {
-            window.location.href = qualified ? '/choose-schedule' : '/get-free-program';
-          });
-        } else {
-          window.location.href = qualified ? '/choose-schedule' : '/get-free-program';
-        }
+        page++;
+        updateUI();
       }
 
       window.addEventListener('beforeunload', function() {
-        if (page < total - 1 || !answers.commitment) {
+        if (page < total - 1 || !answers.contact) {
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({ event: 'survey_abandoned' });
         }
