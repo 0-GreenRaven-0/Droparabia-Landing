@@ -106,7 +106,7 @@
             if (phoneE164) { params.set('a2', phoneE164); }
 
             var calendlyUrl = 'https://calendly.com/d/cx6h-n22-cr7/45-min-droparabia-advisory-call';
-            var query = params.toString();
+            var query = params.toString().replace(/\+/g, '%20');
             if (query) calendlyUrl += '?' + query;
 
             Calendly.initInlineWidget({
