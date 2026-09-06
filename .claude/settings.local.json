@@ -97,7 +97,8 @@
       "Bash(curl -s http://localhost:4321/)",
       "Bash(curl -s http://localhost:4321/ -o /tmp/page.html)",
       "Bash(grep -o \"hero-new[^,{]*{[^}]*}\" /tmp/page.html)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(git status *)"
     ],
     "additionalDirectories": [
       "d:\\Projects\\droparabia-book",

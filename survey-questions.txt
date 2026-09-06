@@ -1,0 +1,91 @@
+DROPARABIA SURVEY — QUESTIONS & ANSWERS
+(src/pages/survey.astro)
+
+===============================================================
+STEP 0 — INTRO (no question, informational)
+===============================================================
+Droparabia helps you find hundreds of winning products that have demand
+in the Lebanese market and deliver them to your customers directly!
+
+You only focus on marketing and advertising!
+
+[Product niche carousel: Health & Beauty / Kitchen / Gadgets / Pets]
+
+Button: "That's amazing!"
+
+
+===============================================================
+STEP 1 — What stopped you from starting your own e-commerce or
+dropshipping business?
+===============================================================
+- Lack of experience or knowledge
+- Fear of loosing my money
+- Never thought about it
+
+
+===============================================================
+STEP 2 — Have you purchased any kind of dropshipping/e-com
+courses or mentorships?
+===============================================================
+- Yes
+- No
+
+
+===============================================================
+STEP 3 — What's your monthly goal income?
+===============================================================
+- Up to $1,000
+- $1,000 – $3,000
+- $3,000 – $5,000
+- $5,000+
+
+
+===============================================================
+STEP 4 — Droparabia, our community and our expert team of
+advisors will help you reach that income goal but only if you're
+ready to work hard for it.
+
+Are you willing to put in the effort?
+===============================================================
+- Yes I'll work hard
+- I'll do what I can
+
+
+===============================================================
+STEP 5 — We recommend that you have a sufficient budget of
+$600~$700 for marketing and advertising to ensure the best
+results possible.
+
+Do you have a budget ready for your business?
+===============================================================
+- Yes I have the funds
+- I have at least $600
+- No I don't have the funds :(
+
+
+===============================================================
+STEP 6 — CONTACT (final step)
+===============================================================
+That's great! In order to create your Droparabia account and
+book you a call, we need your:
+
+- First and Last Name
+- Email Address
+- Phone Number (Lebanese number, validated)
+
+
+===============================================================
+QUALIFICATION LOGIC
+===============================================================
+Only the budget answer (Step 5) decides qualification:
+
+  qualified = (budget answer is NOT "No I don't have the funds :(")
+
+- Qualified            -> redirected to /choose-schedule
+                          (Brevo list: qualified_no_book)
+- Not qualified (budget = "No I don't have the funds :(")
+                          -> redirected to /get-free-program
+                          (Brevo list: unqualified)
+
+Steps 1-4 (stopped, courses, goalIncome, effort) are collected
+and stored but do NOT affect routing/qualification.

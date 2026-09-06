@@ -63,18 +63,15 @@ const {
     <meta name="description" content={description} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Plain blocking stylesheet, not the preload+onload swap trick: that technique
+         only applies the font CSS after it's fetched, so first paint rendered in the
+         browser's fallback sans-serif and then visibly swapped to Inter/Valley Sans a
+         moment later. This costs a touch of first-paint speed but means the chosen
+         font is what actually shows, with nothing to swap away from. -->
     <link
-      rel="preload"
-      as="style"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'"
+      rel="stylesheet"
     />
-    <noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet"
-      />
-    </noscript>
     <slot name="head" />
   </head>
   <body>
@@ -92,6 +89,51 @@ const {
     src: url('/fonts/ibrand.woff2') format('woff2'),
          url('/fonts/ibrand.otf') format('opentype');
     font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* Valley Sans — body typeface. Drop the licensed files into
+     public/fonts/valley-sans/ (see the filenames below). Until they're there these
+     URLs 404 and the stack falls through to Inter, so the page never renders in a
+     system default font. Delete the static @font-face blocks if you have the
+     variable file, or delete the variable block if you have statics. */
+  @font-face {
+    font-family: 'Valley Sans';
+    src: url('/fonts/valley-sans/ValleySans-Variable.woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Valley Sans';
+    src: url('/fonts/valley-sans/ValleySans-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Valley Sans';
+    src: url('/fonts/valley-sans/ValleySans-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Valley Sans';
+    src: url('/fonts/valley-sans/ValleySans-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Valley Sans';
+    src: url('/fonts/valley-sans/ValleySans-ExtraBold.woff2') format('woff2');
+    font-weight: 800;
     font-style: normal;
     font-display: swap;
   }
@@ -119,8 +161,8 @@ const {
     --gray-700: #334155;
     --gray-800: #1e293b;
     --gray-900: #0f172a;
-    --font-body: 'Inter', 'Noto Sans', Arial, sans-serif;
-    --font-brand: 'IBrand', 'Noto Sans', Arial, sans-serif;
+    --font-body: 'Valley Sans', 'Inter', sans-serif;
+    --font-brand: 'IBrand', 'Valley Sans', 'Inter', sans-serif;
     --radius-sm: 8px;
     --radius: 12px;
     --radius-lg: 16px;

@@ -1,0 +1,329 @@
+---
+// Reusable flat hex-tile grid background, rendered with Three.js. Ported from
+// droparabia-official — drop it in as the first child of a `position: relative` section
+// and it fills that section via absolute inset-0.
+interface Props {
+	id?: string;
+	// Cuts a diagonal corner off the bottom of the grid, like the official Hero has.
+	cutCorner?: boolean;
+	// Which bottom corner the diagonal cut removes.
+	cutSide?: "left" | "right";
+	// Restricts the grid to only the left (or right) fraction of the section's width —
+	// e.g. 0.5 fills only the left half. Hexes past that boundary are dropped whole
+	// (scaled to 0, same technique as the corner cut) so the edge is the natural jagged
+	// silhouette of the hex packing, never a clipped/half-drawn hex.
+	revealWidth?: number;
+	revealSide?: "left" | "right";
+	// Same idea as revealWidth, but measured in whole hex columns from the edge instead
+	// of as a fraction of the section's width — `revealColumns={1}` leaves exactly one
+	// staggered column hugging the edge. Takes precedence over revealWidth when set.
+	// A fraction can't express this: hex column width is a fixed pixel value that changes
+	// per breakpoint (135px desktop, 104px tablet, 55px mobile), so any single fraction
+	// yields a different number of columns on every screen size.
+	revealColumns?: number;
+	// The horizontal counterpart of revealColumns: keeps only the outermost N hex rows
+	// along the top (or bottom) edge, so `revealRows={1}` leaves a single row banding
+	// that edge. Row pitch is HEX_R * 1.5.
+	revealRows?: number;
+	revealVSide?: "top" | "bottom";
+	// Shifts the whole grid vertically (by at most half a row) so that a row lands with
+	// its top edge exactly on the section's top edge, instead of wherever the row pitch
+	// happens to fall. Set it on EVERY instance in a section, not just the top-row one —
+	// the shift is derived identically from the section's own box, so applying it
+	// everywhere keeps the side columns aligned with the top row at the corners.
+	alignTopEdge?: boolean;
+	// Instead of a clean cut line, dissolves hexes with increasing probability toward the
+	// top edge of the section — solid at the bottom, scattered gaps growing as it climbs,
+	// fully gone by the top. fadeHeight is the fraction of the section's height the dissolve
+	// happens over (measured up from the bottom), the rest below it stays fully solid.
+	fadeTop?: boolean;
+	fadeHeight?: number;
+	// Same idea as fadeTop, mirrored onto the bottom edge — off by default, since most
+	// sections already drop one partial row at the bottom anyway for edge clearance.
+	fadeBottom?: boolean;
+	// That clearance (~1 hex radius) is dropped so a section's bottom edge never shows a
+	// half-cut hex where it butts against the next section — but for the very last section
+	// on the page there's nothing below it to clash with, so the clearance just reads as a
+	// blank gap instead. Set true to shrink it down to almost nothing.
+	bottomFlush?: boolean;
+}
+const {
+	id = "hex-bg",
+	cutCorner = true,
+	cutSide = "left",
+	revealWidth = 1,
+	revealSide = "left",
+	revealColumns = 0,
+	revealRows = 0,
+	revealVSide = "top",
+	alignTopEdge = false,
+	fadeTop = false,
+	fadeHeight = 0.6,
+	fadeBottom = false,
+	bottomFlush = false,
+} = Astro.props;
+---
+
+<canvas
+	id={id}
+	class="hex-bg-canvas"
+	aria-hidden="true"
+	data-cut-corner={cutCorner}
+	data-cut-side={cutSide}
+	data-reveal-width={revealWidth}
+	data-reveal-side={revealSide}
+	data-reveal-columns={revealColumns}
+	data-reveal-rows={revealRows}
+	data-reveal-vside={revealVSide}
+	data-align-top-edge={alignTopEdge}
+	data-fade-top={fadeTop}
+	data-fade-height={fadeHeight}
+	data-fade-bottom={fadeBottom}
+	data-bottom-flush={bottomFlush}
+></canvas>
+
+<style>
+	/* Plain-CSS stand-in for the official repo's Tailwind
+	   `pointer-events-none absolute inset-0 h-full w-full`. */
+	.hex-bg-canvas {
+		pointer-events: none;
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+<script>
+	// A single InstancedMesh keeps this to one draw call. An orthographic camera (instead of
+	// a perspective one) maps world units 1:1 to screen pixels, so the grid sits flat and
+	// evenly across the section — no tilt, no perspective skew. Hexes are colored to match
+	// the page background so the grid reads as a subtle tonal texture rather than a
+	// foreground object.
+	//
+	// This background is 100% static (nothing about it ever animates frame-to-frame), so
+	// there's no requestAnimationFrame loop here at all — it renders once after setup, and
+	// again only when something that actually changes its pixels happens (a resize).
+	import * as THREE from "three";
+
+	document.querySelectorAll<HTMLCanvasElement>("canvas[data-cut-corner]").forEach((canvas) => {
+		const section = canvas.closest("section") ?? canvas.parentElement;
+		if (!(section instanceof HTMLElement)) return;
+		const cutCorner = canvas.dataset.cutCorner === "true";
+		const cutSide = canvas.dataset.cutSide === "right" ? "right" : "left";
+		const revealWidth = Math.min(1, Math.max(0, parseFloat(canvas.dataset.revealWidth ?? "1")));
+		const revealSide = canvas.dataset.revealSide === "right" ? "right" : "left";
+		const revealColumns = Math.max(0, parseFloat(canvas.dataset.revealColumns ?? "0"));
+		const revealRows = Math.max(0, parseFloat(canvas.dataset.revealRows ?? "0"));
+		const revealVSide = canvas.dataset.revealVside === "bottom" ? "bottom" : "top";
+		const alignTopEdge = canvas.dataset.alignTopEdge === "true";
+		const fadeTop = canvas.dataset.fadeTop === "true";
+		// Despite the name this is really a row count (see topEdge/bottomEdge below, both
+		// measured in HEX_R * 1.5 units), not a 0-1 fraction, so it isn't clamped to 1.
+		const fadeHeight = Math.max(0, parseFloat(canvas.dataset.fadeHeight ?? "0.6"));
+		const fadeBottom = canvas.dataset.fadeBottom === "true";
+		const bottomFlush = canvas.dataset.bottomFlush === "true";
+
+		// Hex radius in CSS pixels — world units are mapped 1:1 to pixels via the ortho camera.
+		// Smaller on narrow screens so the tiling reads at roughly the same visual density
+		// as on desktop, instead of a few oversized hexes dominating a small viewport.
+		const HEX_R = window.innerWidth < 640 ? 32 : window.innerWidth < 1024 ? 60 : 78;
+		const GAP = 1.0; // edges nearly touching — just enough seam to read as tiled hexes
+		// Each corner is trimmed back along its two edges, then joined with a curve instead
+		// of a sharp point.
+		const points: [number, number][] = Array.from({ length: 6 }, (_, i) => {
+			const angle = (Math.PI / 180) * (60 * i - 30);
+			return [HEX_R * 0.98 * Math.cos(angle), HEX_R * 0.98 * Math.sin(angle)];
+		});
+		const CORNER_RADIUS = HEX_R * 0.16;
+		const lerp = (a: [number, number], b: [number, number], t: number): [number, number] => [
+			a[0] + (b[0] - a[0]) * t,
+			a[1] + (b[1] - a[1]) * t,
+		];
+		const shape = new THREE.Shape();
+		for (let i = 0; i < 6; i++) {
+			const curr = points[i];
+			const prev = points[(i - 1 + 6) % 6];
+			const next = points[(i + 1) % 6];
+			const distPrev = Math.hypot(curr[0] - prev[0], curr[1] - prev[1]);
+			const distNext = Math.hypot(next[0] - curr[0], next[1] - curr[1]);
+			const approach = lerp(curr, prev, Math.min(CORNER_RADIUS / distPrev, 0.5));
+			const leave = lerp(curr, next, Math.min(CORNER_RADIUS / distNext, 0.5));
+			if (i === 0) shape.moveTo(approach[0], approach[1]);
+			else shape.lineTo(approach[0], approach[1]);
+			shape.quadraticCurveTo(curr[0], curr[1], leave[0], leave[1]);
+		}
+		shape.closePath();
+		const geometry = new THREE.ShapeGeometry(shape);
+
+		// A diagonal two-stop gradient baked into each hex's own vertex colors — every hex
+		// gets the identical gradient across its own face, not one gradient spread across
+		// the whole grid.
+		const GRADIENT_STOPS: [number, string][] = [
+			[0.41, "#d0d0d0"],
+			[0.6, "#c0c0c0"],
+		];
+		function hexToRGB(hex: string): [number, number, number] {
+			const n = parseInt(hex.slice(1), 16);
+			return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+		}
+		function gradientColor(t: number): [number, number, number] {
+			const clamped = Math.min(1, Math.max(0, t));
+			const [t0, c0] = GRADIENT_STOPS[0];
+			const [t1, c1] = GRADIENT_STOPS[1];
+			if (clamped <= t0) return hexToRGB(c0);
+			if (clamped >= t1) return hexToRGB(c1);
+			const localT = (clamped - t0) / (t1 - t0);
+			const [r0, g0, b0] = hexToRGB(c0);
+			const [r1, g1, b1] = hexToRGB(c1);
+			return [r0 + (r1 - r0) * localT, g0 + (g1 - g0) * localT, b0 + (b1 - b0) * localT];
+		}
+		geometry.computeBoundingBox();
+		const hexBBox = geometry.boundingBox!;
+		const hexBBoxW = hexBBox.max.x - hexBBox.min.x;
+		const hexBBoxH = hexBBox.max.y - hexBBox.min.y;
+		const posAttr = geometry.attributes.position;
+		const colorArray = new Float32Array(posAttr.count * 3);
+		for (let v = 0; v < posAttr.count; v++) {
+			const nx = (posAttr.getX(v) - hexBBox.min.x) / hexBBoxW;
+			const nyFromTop = (hexBBox.max.y - posAttr.getY(v)) / hexBBoxH;
+			const [r, g, b] = gradientColor((nx + nyFromTop) / 2);
+			colorArray[v * 3] = r;
+			colorArray[v * 3 + 1] = g;
+			colorArray[v * 3 + 2] = b;
+		}
+		geometry.setAttribute("color", new THREE.BufferAttribute(colorArray, 3));
+
+		// The baked gradient is already the light-mode tone — material.color is just a
+		// tint multiplier on top of it, white (no-op).
+		const material = new THREE.MeshBasicMaterial({ vertexColors: true, color: 0xffffff });
+
+		const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+		const scene = new THREE.Scene();
+		const camera = new THREE.OrthographicCamera(0, 0, 0, 0, 0.1, 100);
+		camera.position.set(0, 0, 50);
+		camera.lookAt(0, 0, 0);
+
+		function render() {
+			renderer.render(scene, camera);
+		}
+
+		// Grid sized to this section's own footprint (plus a little headroom for modest
+		// resizes without a rebuild) instead of a single one-size-fits-all constant — a
+		// short section gets a short/cheap grid instead of always paying for enough
+		// instances to cover a 4200x2000 world.
+		const rect0 = section.getBoundingClientRect();
+		const GRID_W = Math.max(rect0.width, window.innerWidth) * 1.3;
+		const GRID_H = rect0.height * 1.3;
+		const COLS = Math.ceil(GRID_W / (HEX_R * Math.sqrt(3) * GAP)) + 2;
+		const ROWS = Math.ceil(GRID_H / (HEX_R * 1.5 * GAP)) + 2;
+		const count = COLS * ROWS;
+		const mesh = new THREE.InstancedMesh(geometry, material, count);
+		const dummy = new THREE.Object3D();
+
+		// A straight diagonal cut taking a corner off the bottom of the grid — one clean
+		// line, not a blob of holes or a ragged edge. Optional per-instance, either bottom
+		// corner.
+		const cornerSign = cutSide === "right" ? 1 : -1;
+		const cornerX = cornerSign * (rect0.width / 2);
+		const cornerY = -rect0.height / 2;
+		const cutDistance = Math.max(rect0.width, rect0.height) * 0.42;
+		const cutAngle = cutSide === "right" ? Math.PI - Math.PI / 4 : Math.PI / 4; // 45deg diagonal, mirrored for the right corner
+		const cutNormalX = Math.cos(cutAngle);
+		const cutNormalY = Math.sin(cutAngle);
+		// Also drop the row that would otherwise sit half-cut across the very bottom edge
+		// of the section — a full hex radius of clearance so nothing there gets clipped.
+		// fadeBottom extends that same clearance to drop fadeHeight rows' worth instead of
+		// just the one, mirroring fadeTop on the opposite edge. bottomFlush shrinks that
+		// clearance to almost nothing instead, for a section with nothing below it.
+		const bottomEdge = cornerY + HEX_R * (fadeBottom ? 1.5 * fadeHeight : bottomFlush ? 0.05 : 1.05);
+
+		// Restricting the grid to a fraction of the section's width (e.g. only the left
+		// half) drops whole hexes past the boundary, same as the corner cut — never a
+		// half-rendered/clipped hex, just a naturally jagged edge from the hex packing.
+		// revealColumns wins when set: the inset is a whole number of hex columns measured
+		// in pixels, so one column stays one column at every breakpoint.
+		const revealInset = revealColumns > 0 ? revealColumns * (HEX_R * Math.sqrt(3) * GAP) : rect0.width * revealWidth;
+		const revealBoundaryX =
+			revealSide === "left" ? -rect0.width / 2 + revealInset : rect0.width / 2 - revealInset;
+
+		// Row banding along the top/bottom edge. Row pitch is HEX_R * 1.5.
+		const revealRowInset = revealRows * (HEX_R * 1.5 * GAP);
+		const revealBoundaryY =
+			revealVSide === "top" ? rect0.height / 2 - revealRowInset : -rect0.height / 2 + revealRowInset;
+
+		// Nudge every row by up to half a pitch so the row nearest the top edge lands with
+		// its top vertex exactly on it (centre at height/2 - HEX_R), rather than stopping
+		// short and leaving a strip of bare background above the grid.
+		const rowPitch = HEX_R * 1.5 * GAP;
+		let rowShift = 0;
+		if (alignTopEdge) {
+			// Sit the row's centre EDGE_BITE below the top edge, so the hex is cut by the
+			// edge rather than merely touching it — that trailing bit of daylight was the
+			// corner rounding, which pulls each vertex inside the raw radius.
+			// Must stay strictly between 0 and HEX_R: at exactly 0 the next row down lands
+			// precisely on revealBoundaryY and slips through the `y < boundary` test, which
+			// is what put a second row on screen.
+			const EDGE_BITE = HEX_R * 0.5;
+			const target = rect0.height / 2 - EDGE_BITE;
+			const nearestRow = Math.round((target + (ROWS * rowPitch) / 2) / rowPitch);
+			rowShift = target - (rowPitch * nearestRow - (ROWS * rowPitch) / 2);
+		}
+
+		let i = 0;
+		for (let r = 0; r < ROWS; r++) {
+			for (let c = 0; c < COLS; c++) {
+				const x = (HEX_R * Math.sqrt(3) * (c + (r % 2) / 2) - (COLS * HEX_R * Math.sqrt(3)) / 2) * GAP;
+				const y = (HEX_R * 1.5 * r - (ROWS * HEX_R * 1.5) / 2) * GAP + rowShift;
+
+				const reveals = revealColumns > 0 || revealWidth < 1;
+				const outOfReveal = reveals && (revealSide === "left" ? x > revealBoundaryX : x < revealBoundaryX);
+				// Bounded on both sides: without the second clause, rows centred beyond the
+				// section's own edge (off-screen, but half a hex tall) still hang into view
+				// and read as an extra half row.
+				const outOfRevealRows =
+					revealRows > 0 &&
+					(revealVSide === "top"
+						? y < revealBoundaryY || y > rect0.height / 2
+						: y > revealBoundaryY || y < -rect0.height / 2);
+
+				// Drops just the topmost row(s) of hexes — a clean, solid grid otherwise, no
+				// scattered gaps. fadeHeight counts how many rows (in HEX_R * 1.5 units) get
+				// dropped from the top edge.
+				const topEdge = rect0.height / 2 - HEX_R * 1.5 * fadeHeight;
+				const fadeMissing = fadeTop && y > topEdge;
+
+				const missing =
+					outOfReveal ||
+					outOfRevealRows ||
+					fadeMissing ||
+					y < bottomEdge ||
+					(cutCorner && (x - cornerX) * cutNormalX + (y - cornerY) * cutNormalY < cutDistance);
+
+				dummy.position.set(x, y, 0);
+				dummy.rotation.set(0, 0, 0);
+				dummy.scale.setScalar(missing ? 0 : 1);
+				dummy.updateMatrix();
+				mesh.setMatrixAt(i, dummy.matrix);
+				i++;
+			}
+		}
+		mesh.instanceMatrix.needsUpdate = true;
+		scene.add(mesh);
+
+		function resize() {
+			const rect = section!.getBoundingClientRect();
+			renderer.setSize(rect.width, rect.height, false);
+			camera.left = -rect.width / 2;
+			camera.right = rect.width / 2;
+			camera.top = rect.height / 2;
+			camera.bottom = -rect.height / 2;
+			camera.updateProjectionMatrix();
+			render();
+		}
+		resize();
+		window.addEventListener("resize", resize);
+	});
+</script>
