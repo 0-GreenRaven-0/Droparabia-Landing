@@ -192,7 +192,10 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
           <span class="field-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
           </span>
-          <input type="text" name="EMAIL" placeholder="Your Best Email" required autocomplete="email" />
+          <!-- type="email", not "text": as a plain text field Chrome's autofill treated
+               this as a generic box and filled it with the surname, which Brevo then
+               rejected as an invalid email. Also gives an email keyboard on mobile. -->
+          <input type="email" name="EMAIL" placeholder="Your Best Email" required autocomplete="email" inputmode="email" />
         </div>
         <div class="field-line">
           <span class="field-icon">
@@ -203,6 +206,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
           <span class="sms-divider">|</span>
           <input type="tel" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
         </div>
+        <p id="vsl-modal-email-err" class="vsl-inline-err" style="display:none">Please enter a valid email address</p>
         <p id="vsl-modal-phone-err" class="vsl-inline-err" style="display:none">Please enter a valid Lebanese number (e.g. 70 123 456)</p>
         <button type="submit" class="vsl-inline-btn">Start Watching!</button>
         <p class="vsl-inline-consent">By subscribing, you agree to receive invitation to future events and offers from Droparabia</p>
@@ -925,6 +929,10 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     return result;
   }
 
+  function isValidEmail(raw: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw.trim());
+  }
+
   function isValidLebanesePhone(raw: string): boolean {
     let d = raw.replace(/[\s\-()+.]/g, '');
     if (d.startsWith('00961')) d = d.slice(5);
@@ -980,9 +988,19 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     const emailVal = (this.querySelector('[name="EMAIL"]') as HTMLInputElement)?.value ?? '';
     const smsVal = (this.querySelector('[name="SMS"]') as HTMLInputElement)?.value ?? '';
     const phoneErrEl = document.getElementById('vsl-modal-phone-err') as HTMLElement | null;
+    const emailErrEl = document.getElementById('vsl-modal-email-err') as HTMLElement | null;
 
     successEl.style.display = 'none';
     errorEl.style.display = 'none';
+
+    // Validate the email here rather than letting Brevo reject it — an invalid address
+    // came back as a generic "Could not subscribe. Please try again.", which gave the
+    // visitor no idea which field was actually wrong.
+    if (!isValidEmail(emailVal)) {
+      if (emailErrEl) emailErrEl.style.display = 'block';
+      return;
+    }
+    if (emailErrEl) emailErrEl.style.display = 'none';
 
     if (!isValidLebanesePhone(smsVal)) {
       if (phoneErrEl) phoneErrEl.style.display = 'block';

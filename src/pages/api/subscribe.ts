@@ -290,11 +290,38 @@ export const POST: APIRoute = async ({ request }) => {
     };
     if (unlinkListIds.length > 0) brevoBody.unlinkListIds = unlinkListIds;
 
-    const res = await fetch('https://api.brevo.com/v3/contacts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'api-key': import.meta.env.BREVO_API_KEY },
-      body: JSON.stringify(brevoBody),
-    });
+    function postContact(body: Record<string, unknown>) {
+      return fetch('https://api.brevo.com/v3/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'api-key': import.meta.env.BREVO_API_KEY },
+        body: JSON.stringify(body),
+      });
+    }
+
+    let res = await postContact(brevoBody);
+
+    // `updateEnabled` resolves a duplicate EMAIL, but not a duplicate SMS: if that phone
+    // number is already attached to a different contact, Brevo hard-rejects with 400
+    // duplicate_parameter and the signup is lost entirely. Retry without the phone so the
+    // lead still lands on the right list with their email and name — the phone simply
+    // stays on whichever contact already owns it.
+    if (res.status === 400) {
+      const errText = await res.clone().text();
+      let isDuplicateSms = false;
+      try {
+        const parsed = JSON.parse(errText) as { code?: string; metadata?: { duplicate_identifiers?: string[] } };
+        isDuplicateSms =
+          parsed.code === 'duplicate_parameter' &&
+          Array.isArray(parsed.metadata?.duplicate_identifiers) &&
+          parsed.metadata.duplicate_identifiers.includes('SMS');
+      } catch { /* non-JSON error body — fall through and report it as-is below */ }
+
+      if (isDuplicateSms) {
+        const attributes = { ...(brevoBody.attributes as Record<string, unknown>) };
+        delete attributes.SMS;
+        res = await postContact({ ...brevoBody, attributes });
+      }
+    }
 
     if (res.status !== 201 && res.status !== 204) {
       const errBody = await res.text();
