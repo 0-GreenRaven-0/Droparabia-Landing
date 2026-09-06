@@ -31,3 +31,4 @@ pnpm-debug.log*
 
 # Raw video masters — kept locally only, never deployed (see public/vsl.mp4 for the compressed web copy)
 video-masters/
+.dev.vars

@@ -81,6 +81,14 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         </video>
       </div>
 
+      <!-- Hidden until the subscribe modal succeeds (or the visitor is already
+           subscribed this session) — see the "unlockVideo"-equivalent block in the
+           Plyr script below. -->
+      <a href="/survey" class="book-cta" id="book-cta" style="display:none">
+        Book a FREE strategy call
+        <span class="book-cta-sub">Let's get your business started</span>
+      </a>
+
     </div>
   </section>
 
@@ -440,6 +448,37 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     box-shadow:
       0 0 0 4px var(--da-blue),
       0 24px 60px rgba(0, 30, 255, 0.20);
+  }
+
+  /* Book-a-call CTA, revealed the moment the VSL unlocks (see the Plyr script). */
+  .book-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    max-width: 420px;
+    width: 100%;
+    margin: 22px auto 0;
+    padding: 15px 20px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--da-cta) 0%, var(--da-cta-light) 100%);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.10), 0 2px 16px rgba(22, 163, 74, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .book-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 6px 32px rgba(22, 163, 74, 0.50);
+  }
+
+  .book-cta-sub {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
   }
 
   /* ─── VSL SUBSCRIPTION MODAL ─── */
@@ -911,6 +950,15 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     modal.setAttribute('aria-hidden', 'true');
   }
 
+  // Book-a-call CTA: hidden until the VSL is actually unlocked, so it shows up the
+  // moment subscribing succeeds — and immediately on load for a returning visitor
+  // who already subscribed earlier this session.
+  const bookCta = document.getElementById('book-cta') as HTMLElement | null;
+  function showBookCta() {
+    if (bookCta) bookCta.style.display = 'flex';
+  }
+  if (sessionStorage.getItem('da_subscribed')) showBookCta();
+
   player.on('play', () => {
     if (!sessionStorage.getItem('da_subscribed')) {
       player.pause();
@@ -962,6 +1010,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       successEl.style.display = 'block';
       btn.textContent = 'Starting video...';
       closeModal();
+      showBookCta();
       player.play();
     } catch {
       errorEl.style.display = 'block';
