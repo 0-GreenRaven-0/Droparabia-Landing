@@ -28,9 +28,6 @@
       .survey-page-count { color: #94A3B8; font-size: 0.9rem; margin-bottom: 1rem; }
       .survey-question { font-size: 1rem; font-weight: 600; color: #374151; margin-bottom: 1rem; line-height: 1.65; }
       .survey-options { display: flex; flex-direction: column; gap: 0.5rem; }
-      .survey-inputs { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 0.5rem; }
-      .survey-input { padding: 0.75rem 1rem; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #fff; font-size: 0.95rem; font-family: 'Inter', sans-serif; color: #374151; outline: none; transition: border-color 0.15s; width: 100%; }
-      .survey-input:focus { border-color: #2563EB; }
       .survey-option { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.9rem; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #fff; cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.15s; font-weight: 500; color: #374151; font-size: 0.875rem; width: 100%; text-align: left; }
       .survey-option:hover { border-color: #93C5FD; background: #EFF6FF; transform: translateX(3px); }
       .survey-option.selected { border-color: #2563EB; background: #EFF6FF; box-shadow: 0 2px 8px rgba(37,99,235,0.12); }
@@ -43,20 +40,6 @@
       .survey-btn-secondary:hover { background: #EFF6FF; }
       .survey-page { display: none; }
       .survey-page.active { display: block; }
-      .survey-intro-text { font-size: 1rem; font-weight: 600; color: #374151; line-height: 1.65; margin-bottom: 1.25rem; }
-      .survey-intro-text strong { color: #2563EB; }
-      .niche-carousel-wrap { max-width: 480px; margin: 0 auto 1.25rem; width: 100%; }
-      .niche-set { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-      .niche-set.active { display: grid; animation: niche-fade-in 0.4s ease; }
-      .niche-set img { width: 100%; aspect-ratio: 921 / 1086; object-fit: cover; border-radius: 12px; border: 1px solid #E2E8F0; }
-      .niche-nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 14px; }
-      .niche-arrow { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; border: 1px solid #E2E8F0; background: #fff; color: #2563EB; font-size: 1.25rem; line-height: 1; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; transition: background 0.2s, color 0.2s, transform 0.15s, border-color 0.2s; }
-      .niche-arrow:hover { background: #2563EB; color: #fff; border-color: #2563EB; transform: scale(1.08); }
-      .niche-arrow:active { transform: scale(0.95); }
-      .niche-label { min-width: 140px; text-align: center; font-size: 0.95rem; font-weight: 600; color: #374151; user-select: none; -webkit-tap-highlight-color: transparent; }
-      .niche-label.niche-label-anim { animation: niche-label-in 0.35s ease; }
-      @keyframes niche-label-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-      @keyframes niche-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
       @media (max-width: 768px) {
         body { background: #fff !important; }
         .survey-wrap { padding: 1rem 1.25rem; justify-content: flex-start; }
@@ -88,48 +71,11 @@
         </div>
 
         <div class="survey-progress-track">
-          <div class="survey-progress-bar" id="progress-bar" style="width:14.28%"></div>
-        </div>
-
-        <!-- Q0: Intro -->
-        <div class="survey-page active" data-field="intro">
-          <div class="survey-intro-text">
-            <p>Droparabia helps you find hundreds of winning products that have demand in the Lebanese market and deliver them to your customers directly!</p>
-            <p style="margin-top:0.75rem;"><strong>You only focus on marketing and advertising!</strong></p>
-          </div>
-          <div class="niche-carousel-wrap">
-            <div class="niche-carousel">
-              <div class="niche-set active" data-niche="health">
-                <img src="/products/r1.webp" alt="" loading="lazy" />
-                <img src="/products/r2.webp" alt="" loading="lazy" />
-                <img src="/products/r4.webp" alt="" loading="lazy" />
-              </div>
-              <div class="niche-set" data-niche="kitchen">
-                <img src="/products/k1.png" alt="" loading="lazy" />
-                <img src="/products/k2.png" alt="" loading="lazy" />
-                <img src="/products/k3.png" alt="" loading="lazy" />
-              </div>
-              <div class="niche-set" data-niche="gadgets">
-                <img src="/products/g1.png" alt="" loading="lazy" />
-                <img src="/products/g2.png" alt="" loading="lazy" />
-                <img src="/products/g3.png" alt="" loading="lazy" />
-              </div>
-              <div class="niche-set" data-niche="pets">
-                <img src="/products/p1.png" alt="" loading="lazy" />
-                <img src="/products/p2.png" alt="" loading="lazy" />
-                <img src="/products/p3.png" alt="" loading="lazy" />
-              </div>
-            </div>
-            <div class="niche-nav">
-              <button class="niche-arrow niche-arrow-prev" type="button" aria-label="Previous niche">&#8249;</button>
-              <span class="niche-label">Health &amp; Beauty</span>
-              <button class="niche-arrow niche-arrow-next" type="button" aria-label="Next niche">&#8250;</button>
-            </div>
-          </div>
+          <div class="survey-progress-bar" id="progress-bar" style="width:12.5%"></div>
         </div>
 
         <!-- Q1 -->
-        <div class="survey-page" data-field="startingOrExploring" style="display:none">
+        <div class="survey-page active" data-field="startingOrExploring">
           <h2 class="survey-question">Are you looking to start building an online business for yourself or you're just exploring?</h2>
           <div class="survey-options">
             <button class="survey-option" data-value="starting">Yes I wanna start an online business</button>
@@ -162,10 +108,10 @@
 
         <!-- Q4 -->
         <div class="survey-page" data-field="budget" style="display:none">
-          <h2 class="survey-question">We require our users to have a sufficient budget of $600~$700 for SaaS fees, marketing and advertising<br><br>Do you have the budget?</h2>
+          <h2 class="survey-question">We require our users to have a sufficient budget of $700-$1,000 for SaaS fees<br><br>Do you have the budget?</h2>
           <div class="survey-options">
             <button class="survey-option" data-value="yes">Yes I have the budget!</button>
-            <button class="survey-option" data-value="partial">I have at least $600</button>
+            <button class="survey-option" data-value="partial">I have at least $700</button>
             <button class="survey-option" data-value="no" data-end="true">No I don't have the budget</button>
           </div>
           <div class="survey-error" id="err-4">Please select an option to continue</div>
@@ -195,7 +141,7 @@
 
         <!-- Q7 -->
         <div class="survey-page" data-field="howSoon" style="display:none">
-          <h2 class="survey-question">That's great! If you're qualified to access the Droparabia system and our free courses, how soon can you start?</h2>
+          <h2 class="survey-question">That's great! If you're qualified to access the Droparabia system (Plus our +20 hours courses which you get as a bonus), how soon can you start?</h2>
           <div class="survey-options">
             <button class="survey-option" data-value="today">Today</button>
             <button class="survey-option" data-value="asSoonAsICan">As soon as I can</button>
@@ -214,17 +160,6 @@
           <div class="survey-error" id="err-8">Please select an option to continue</div>
         </div>
 
-        <!-- Q9: Contact (final step) -->
-        <div class="survey-page" data-field="contact" style="display:none">
-          <h2 class="survey-question">That's great! In order to create your Droparabia account and book you a call, we need your:</h2>
-          <div class="survey-inputs">
-            <input type="text" class="survey-input" id="input-name" placeholder="First and Last Name" autocomplete="name" />
-            <input type="email" class="survey-input" id="input-email" placeholder="Email Address" autocomplete="email" />
-            <input type="tel" class="survey-input" id="input-phone" placeholder="Phone Number (e.g. 70 123 456)" autocomplete="tel" />
-          </div>
-          <div class="survey-error" id="err-9">Please fill in your name, a valid email and a valid phone number</div>
-        </div>
-
         <div class="survey-nav">
           <button class="survey-btn survey-btn-secondary" id="btn-prev" style="display:none" onclick="prevPage()">← Previous</button>
           <button class="survey-btn" id="btn-next" onclick="nextPage()">Next →</button>
@@ -235,18 +170,11 @@
 
     <script is:inline>
       var page = 0;
-      var total = 10;
+      var total = document.querySelectorAll('.survey-page').length;
       var answers = {};
       var answerIsEnd = {}; // field -> true if the currently selected option ends the survey early
       var pageHistory = [0]; // actual path taken, so Previous retraces skips correctly
-
-      function isValidLebanesePhone(raw) {
-        var d = raw.replace(/[\s\-()+.]/g, '');
-        if (d.startsWith('00961')) d = d.slice(5);
-        else if (d.startsWith('961') && d.length >= 10) d = d.slice(3);
-        if (d.startsWith('0')) d = d.slice(1);
-        return /^\d{7,8}$/.test(d);
-      }
+      var submitted = false;
 
       function isValidEmail(raw) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw);
@@ -262,53 +190,9 @@
           window.dataLayer.push({ event: 'survey_started' });
         } catch(_) {}
 
-        // If they already gave their info to watch the VSL, prefill the contact fields
-        try {
-          var existingUserData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-          if (existingUserData.name)  document.getElementById('input-name').value  = existingUserData.name;
-          if (existingUserData.email) document.getElementById('input-email').value = existingUserData.email;
-          if (existingUserData.phone) document.getElementById('input-phone').value = existingUserData.phone;
-        } catch(_) {}
-
         document.getElementById('survey-loader').style.display = 'none';
         document.getElementById('survey-content').style.display = 'flex';
         updateUI();
-      })();
-
-      // Product niche carousel (intro page)
-      (function() {
-        var niches = ['health', 'kitchen', 'gadgets', 'pets'];
-        var labels = { health: 'Health & Beauty', kitchen: 'Kitchen', gadgets: 'Gadgets', pets: 'Pets' };
-        document.querySelectorAll('.niche-carousel-wrap').forEach(function (wrap) {
-          var sets = wrap.querySelectorAll('.niche-set');
-          var labelEl = wrap.querySelector('.niche-label');
-          var prevBtn = wrap.querySelector('.niche-arrow-prev');
-          var nextBtn = wrap.querySelector('.niche-arrow-next');
-          var current = 0;
-
-          function show(index) {
-            var niche = niches[index];
-            sets.forEach(function (s) {
-              s.classList.toggle('active', s.getAttribute('data-niche') === niche);
-            });
-            labelEl.classList.remove('niche-label-anim');
-            labelEl.textContent = labels[niche];
-            requestAnimationFrame(function () {
-              labelEl.classList.add('niche-label-anim');
-            });
-          }
-
-          if (prevBtn && nextBtn && labelEl) {
-            prevBtn.addEventListener('click', function () {
-              current = (current - 1 + niches.length) % niches.length;
-              show(current);
-            });
-            nextBtn.addEventListener('click', function () {
-              current = (current + 1) % niches.length;
-              show(current);
-            });
-          }
-        });
       })();
 
       // Option selection
@@ -318,10 +202,11 @@
           if (!btn) return;
           opts.querySelectorAll('.survey-option').forEach(function(b) { b.classList.remove('selected'); });
           btn.classList.add('selected');
-          var field = btn.closest('.survey-page').dataset.field;
-          answers[field] = btn.dataset.value;
-          answerIsEnd[field] = btn.dataset.end === 'true';
-          document.getElementById('err-' + page).style.display = 'none';
+          var pageEl = btn.closest('.survey-page');
+          answers[pageEl.dataset.field] = btn.dataset.value;
+          answerIsEnd[pageEl.dataset.field] = btn.dataset.end === 'true';
+          var err = pageEl.querySelector('.survey-error');
+          if (err) err.style.display = 'none';
         });
       });
 
@@ -331,9 +216,7 @@
         document.getElementById('progress-bar').style.width = (((page + 1) / total) * 100) + '%';
         document.getElementById('btn-prev').style.display = page > 0 ? 'inline-block' : 'none';
         var btn = document.getElementById('btn-next');
-        if (page === 0) btn.textContent = "That's amazing!";
-        else if (page === total - 1) btn.textContent = 'Complete ✓';
-        else btn.textContent = 'Next →';
+        btn.textContent = page === total - 1 ? 'Complete ✓' : 'Next →';
       }
 
       function prevPage() {
@@ -344,81 +227,88 @@
         }
       }
 
+      // Name/email/phone were already collected before the VSL — reuse them instead
+      // of asking for them again at the end of the survey.
+      function storedUser() {
+        try { return JSON.parse(sessionStorage.getItem('userData') || '{}'); } catch(_) { return {}; }
+      }
+
+      function completeSurvey() {
+        if (submitted) return;
+        submitted = true;
+
+        var btn = document.getElementById('btn-next');
+        btn.disabled = true;
+        btn.textContent = 'Processing...';
+
+        var user = storedUser();
+        var nameVal  = user.name  || '';
+        var emailVal = user.email || '';
+        var phoneVal = user.phone || '';
+
+        // Disqualified the moment any of the three "end the survey here" options is
+        // picked (readyToStart, budget, howSoon) — regardless of how far they got
+        // afterwards, or whether budget was ever reached at all.
+        var qualified = !(answerIsEnd.readyToStart || answerIsEnd.budget || answerIsEnd.howSoon);
+
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'survey_completed', survey_qualified: qualified, user_name: nameVal, user_email: emailVal, user_phone: phoneVal });
+
+        var tokens = {};
+        try { tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}'); } catch(_) {}
+        var token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+        tokens[qualified ? 'qualified' : 'unqualified'] = token;
+        sessionStorage.setItem('userTokens', JSON.stringify(tokens));
+
+        var dest = qualified ? '/choose-schedule' : '/get-free-program';
+
+        // No stored contact info (they somehow reached the survey without the VSL
+        // gate) — nothing to subscribe with, so just route them.
+        if (!isValidEmail(emailVal)) {
+          window.location.href = dest;
+          return;
+        }
+
+        var list = qualified ? 'qualified_no_book' : 'unqualified';
+        var utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+        var utms = {};
+        utmKeys.forEach(function(k) { var v = sessionStorage.getItem(k); if (v) utms[k] = v; });
+        var ref = sessionStorage.getItem('da_referrer') || '';
+
+        fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.assign({ name: nameVal, email: emailVal, phone: phoneVal, list: list, referrer: ref, cta_popup: sessionStorage.getItem('da_cta_popup') || '' }, utms)),
+        }).finally(function() {
+          window.location.href = dest;
+        });
+      }
+
       function nextPage() {
         var pages = document.querySelectorAll('.survey-page');
-        var field = pages[page].dataset.field;
-
-        if (field === 'intro') {
-          page++;
-          pageHistory.push(page);
-          updateUI();
-          return;
-        }
-
-        if (field === 'contact') {
-          var nameVal  = document.getElementById('input-name').value.trim();
-          var emailVal = document.getElementById('input-email').value.trim();
-          var phoneVal = document.getElementById('input-phone').value.trim();
-
-          if (!nameVal || !isValidEmail(emailVal) || !isValidLebanesePhone(phoneVal)) {
-            document.getElementById('err-9').style.display = 'block';
-            return;
-          }
-          document.getElementById('err-9').style.display = 'none';
-
-          sessionStorage.setItem('userData', JSON.stringify({ name: nameVal, email: emailVal, phone: phoneVal }));
-          sessionStorage.setItem('da_subscribed', '1');
-          answers.contact = true;
-
-          // Complete
-          var btn = document.getElementById('btn-next');
-          btn.disabled = true;
-          btn.textContent = 'Processing...';
-
-          // Disqualified the moment any of the three "end the survey here" options is
-          // picked (readyToStart, budget, howSoon) — regardless of how far they got
-          // afterwards, or whether budget was ever reached at all.
-          var qualified = !(answerIsEnd.readyToStart || answerIsEnd.budget || answerIsEnd.howSoon);
-
-          window.dataLayer = window.dataLayer || [];
-          window.dataLayer.push({ event: 'survey_completed', survey_qualified: qualified, user_name: nameVal, user_email: emailVal, user_phone: phoneVal });
-
-          var tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
-          var token = Math.random().toString(36).substring(2) + Date.now().toString(36);
-          tokens[qualified ? 'qualified' : 'unqualified'] = token;
-          sessionStorage.setItem('userTokens', JSON.stringify(tokens));
-
-          var list = qualified ? 'qualified_no_book' : 'unqualified';
-          var utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
-          var utms = {};
-          utmKeys.forEach(function(k) { var v = sessionStorage.getItem(k); if (v) utms[k] = v; });
-          var ref = sessionStorage.getItem('da_referrer') || '';
-
-          fetch('/api/subscribe', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(Object.assign({ name: nameVal, email: emailVal, phone: phoneVal, list: list, referrer: ref, cta_popup: sessionStorage.getItem('da_cta_popup') || '' }, utms)),
-          }).finally(function() {
-            window.location.href = qualified ? '/choose-schedule' : '/get-free-program';
-          });
-          return;
-        }
+        var pageEl = pages[page];
+        var field = pageEl.dataset.field;
 
         if (!answers[field]) {
-          document.getElementById('err-' + page).style.display = 'block';
+          var err = pageEl.querySelector('.survey-error');
+          if (err) err.style.display = 'block';
           return;
         }
 
         // "End the survey here" options (readyToStart/notInterested, budget/no,
-        // howSoon/notReady) skip straight to the contact step instead of the next
-        // question in sequence — still collect their info, just route them unqualified.
-        page = answerIsEnd[field] ? pages.length - 1 : page + 1;
+        // howSoon/notReady) submit right away and route them unqualified.
+        if (answerIsEnd[field] || page === total - 1) {
+          completeSurvey();
+          return;
+        }
+
+        page++;
         pageHistory.push(page);
         updateUI();
       }
 
       window.addEventListener('beforeunload', function() {
-        if (page < total - 1 || !answers.contact) {
+        if (!submitted) {
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({ event: 'survey_abandoned' });
         }

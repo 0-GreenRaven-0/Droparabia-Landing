@@ -489,6 +489,13 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   .vsl-modal-overlay {
     position: fixed;
     inset: 0;
+    /* html/body carry overflow-x: hidden, and on mobile that lets a fixed overlay
+       stretch to the page's scrollable width instead of the viewport whenever
+       something on the page overflows sideways — which pushed this modal and its
+       inputs off the right edge of the screen. Pinning the width to the viewport
+       keeps the box centred however wide the document gets; min() so desktop,
+       where 100% already excludes the scrollbar, is left alone. */
+    width: min(100vw, 100%);
     background: rgba(0, 0, 0, 0.72);
     display: flex;
     align-items: center;

@@ -260,7 +260,7 @@ async function incrementBookingCount(sheetId: string, token: string): Promise<vo
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { name, email, phone, list, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, cta_popup } = body;
+    const { name, email, phone, list, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, cta_popup, prev_email } = body;
 
     if (!email || !list) {
       return json({ success: false, error: 'Missing email or list' }, 400);
@@ -270,6 +270,12 @@ export const POST: APIRoute = async ({ request }) => {
     if (!listId) {
       return json({ success: false, error: `Unknown or unconfigured list: ${list}` }, 400);
     }
+
+    // An address they were previously filed under (they booked with a different one).
+    // Everything below keys off the email, so without this the old list membership and
+    // the old sheet row would both be left behind.
+    const previousEmail = typeof prev_email === 'string' ? prev_email.trim() : '';
+    const hasPreviousEmail = !!previousEmail && previousEmail.toLowerCase() !== String(email).toLowerCase();
 
     const nameParts = (name || '').trim().split(/\s+/);
     const firstName = nameParts[0] || '';
@@ -328,6 +334,19 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ success: false, error: errBody }, res.status);
     }
 
+    // Detach the old contact from every list it was on. '' matches no list key, so
+    // getUnlinkListIds returns all of them.
+    if (hasPreviousEmail) {
+      const allListIds = getUnlinkListIds('');
+      if (allListIds.length > 0) {
+        await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(previousEmail)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'api-key': import.meta.env.BREVO_API_KEY },
+          body: JSON.stringify({ unlinkListIds: allListIds }),
+        }).catch(() => {});
+      }
+    }
+
     // ── Google Sheets (fire after Brevo succeeds, silent fail) ──
     const sheetId   = getSheetId(list);
     const credsJson = import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
@@ -342,6 +361,7 @@ export const POST: APIRoute = async ({ request }) => {
       await (async () => {
         const token = await getGoogleAccessToken(credsJson);
         await removeEmailFromAllSheets(email, token);
+        if (hasPreviousEmail) await removeEmailFromAllSheets(previousEmail, token);
         await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, creative, hook, cta_popup || ''], token);
 
         const landingBookingsSheetId = import.meta.env.GOOGLE_SHEET_LANDING_PAGE_BOOKINGS;

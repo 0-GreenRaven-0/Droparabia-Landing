@@ -176,10 +176,15 @@ document.addEventListener('DOMContentLoaded', function() {
             var utms = {};
             utmKeys.forEach(function(k) { var v = sessionStorage.getItem(k); if (v) utms[k] = v; });
             var ref = sessionStorage.getItem('da_referrer') || '';
+            var payload = { name: name, email: email, phone: phone, list: 'booked', referrer: ref, cta_popup: sessionStorage.getItem('da_cta_popup') || '' };
+            // Calendly lets them book under a different address than the one they gave
+            // us earlier. Send the original too, otherwise their qualified_no_book row
+            // (filed under that address) survives the move to the booked list.
+            if (stored.email && stored.email.toLowerCase() !== email.toLowerCase()) payload.prev_email = stored.email;
             fetch('/api/subscribe', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(Object.assign({ name: name, email: email, phone: phone, list: 'booked', referrer: ref, cta_popup: sessionStorage.getItem('da_cta_popup') || '' }, utms)),
+              body: JSON.stringify(Object.assign(payload, utms)),
               keepalive: true,
             }).finally(function() {
               window.location.href = 'https://thank-you.droparabia.com';
