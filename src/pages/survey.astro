@@ -180,6 +180,18 @@
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw);
       }
 
+      // How much of the VSL they'd watched at the moment they opened the survey.
+      // Frozen here rather than read at submit time: going back to the video mid-survey
+      // shouldn't change the answer to "how much did they watch before they hopped on".
+      (function() {
+        try {
+          if (!sessionStorage.getItem('da_vsl_at_survey')) {
+            var live = sessionStorage.getItem('da_vsl_watch');
+            if (live) sessionStorage.setItem('da_vsl_at_survey', live);
+          }
+        } catch(_) {}
+      })();
+
       // Mark survey as started and reveal it
       (function() {
         try {
@@ -275,10 +287,20 @@
         utmKeys.forEach(function(k) { var v = sessionStorage.getItem(k); if (v) utms[k] = v; });
         var ref = sessionStorage.getItem('da_referrer') || '';
 
+        var vsl = {};
+        try { vsl = JSON.parse(sessionStorage.getItem('da_vsl_at_survey') || '{}'); } catch(_) {}
+
         fetch('/api/subscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(Object.assign({ name: nameVal, email: emailVal, phone: phoneVal, list: list, referrer: ref, cta_popup: sessionStorage.getItem('da_cta_popup') || '' }, utms)),
+          body: JSON.stringify(Object.assign({
+            name: nameVal, email: emailVal, phone: phoneVal, list: list, referrer: ref,
+            cta_popup: sessionStorage.getItem('da_cta_popup') || '',
+            headline: sessionStorage.getItem('da_headline_variant') || '',
+            vsl_watched_seconds: vsl.watched || 0,
+            vsl_furthest_seconds: vsl.furthest || 0,
+            vsl_duration_seconds: vsl.duration || 0,
+          }, utms)),
         }).finally(function() {
           window.location.href = dest;
         });

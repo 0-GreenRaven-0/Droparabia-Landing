@@ -933,6 +933,8 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     });
     const ref = sessionStorage.getItem('da_referrer');
     if (ref) result.referrer = ref;
+    const headline = sessionStorage.getItem('da_headline_variant');
+    if (headline) result.headline = headline;
     return result;
   }
 
@@ -1044,11 +1046,55 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     }
   });
 
+  // ── VSL watch tracking ─────────────────────────────────────────────────────
+  // Kept in sessionStorage so /survey can report how much of the video they'd seen
+  // before leaving to book. Two numbers, because they answer different questions:
+  // "watched" is time actually played (a seek forward doesn't earn credit, a rewatch
+  // doesn't double-count), "furthest" is the deepest point they reached.
+  const WATCH_KEY = 'da_vsl_watch';
+  let watchedSeconds = 0;
+  let furthestSeconds = 0;
+  let lastTick = 0;
+  let lastSaved = 0;
+
+  try {
+    const prior = JSON.parse(sessionStorage.getItem(WATCH_KEY) || '{}');
+    watchedSeconds = Number(prior.watched) || 0;
+    furthestSeconds = Number(prior.furthest) || 0;
+  } catch { /* nothing recorded yet */ }
+
+  function saveWatch() {
+    try {
+      sessionStorage.setItem(WATCH_KEY, JSON.stringify({
+        watched: Math.round(watchedSeconds),
+        furthest: Math.round(furthestSeconds),
+        duration: Math.round(player.duration || 0),
+      }));
+    } catch { /* storage unavailable — tracking is best-effort */ }
+  }
+
+  // timeupdate fires ~4x/sec, so a real playback tick is a small positive step. Any
+  // jump larger than that is a seek (or the tab coming back from the background) and
+  // is not counted as watched.
+  player.on('play', () => { lastTick = player.currentTime; });
+  player.on('seeked', () => { lastTick = player.currentTime; });
+  player.on('pause', saveWatch);
+  player.on('ended', saveWatch);
+  window.addEventListener('pagehide', saveWatch);
+
   // Fire video_complete when the user reaches 80% of the video
   let videoCompleteTracked = false;
   player.on('timeupdate', () => {
     const dur = player.duration;
-    if (!videoCompleteTracked && dur > 0 && player.currentTime >= dur * 0.8) {
+    const t = player.currentTime;
+
+    const delta = t - lastTick;
+    if (delta > 0 && delta < 1.5) watchedSeconds += delta;
+    lastTick = t;
+    if (t > furthestSeconds) furthestSeconds = t;
+    if (watchedSeconds - lastSaved >= 2) { lastSaved = watchedSeconds; saveWatch(); }
+
+    if (!videoCompleteTracked && dur > 0 && t >= dur * 0.8) {
       videoCompleteTracked = true;
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: 'video_complete' });

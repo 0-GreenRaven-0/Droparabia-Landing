@@ -120,7 +120,17 @@ async function getGoogleAccessToken(credsJson: string): Promise<string> {
   return data.access_token;
 }
 
-const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook', 'Form Clicked'];
+const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook', 'Form Clicked', 'Headline', 'VSL Watched', 'VSL %'];
+// Ranges follow the header list so adding a column doesn't need three edits. A sheet
+// still on the old, narrower header row is rewritten on the next append (see
+// appendToSheet), leaving existing rows padded with blanks.
+const LAST_COL = String.fromCharCode(64 + SHEET_HEADERS.length);
+
+// Seconds → m:ss, for the watch-time column.
+function formatClock(totalSeconds: number): string {
+  const s = Math.max(0, Math.round(totalSeconds));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
 
 function buildTrafficSource(source: string, medium: string, referrer: string): string {
   const s = (source || '').toLowerCase().trim();
@@ -195,18 +205,18 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
   // Write headers if missing or outdated (column count changed)
-  const check = await fetch(`${base}/A1:I1`, { headers: auth });
+  const check = await fetch(`${base}/A1:${LAST_COL}1`, { headers: auth });
   const checkData = await check.json() as { values?: string[][] };
   const existingHeaders = checkData.values?.[0] ?? [];
   if (existingHeaders[0] !== 'Name' || existingHeaders.length < SHEET_HEADERS.length) {
-    await fetch(`${base}/A1:I1?valueInputOption=USER_ENTERED`, {
+    await fetch(`${base}/A1:${LAST_COL}1?valueInputOption=USER_ENTERED`, {
       method: 'PUT',
       headers: auth,
       body: JSON.stringify({ values: [SHEET_HEADERS] }),
     });
   }
 
-  await fetch(`${base}/A:I:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
+  await fetch(`${base}/A:${LAST_COL}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
@@ -260,7 +270,8 @@ async function incrementBookingCount(sheetId: string, token: string): Promise<vo
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { name, email, phone, list, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, cta_popup, prev_email } = body;
+    const { name, email, phone, list, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, cta_popup, prev_email,
+            headline, vsl_watched_seconds, vsl_furthest_seconds, vsl_duration_seconds } = body;
 
     if (!email || !list) {
       return json({ success: false, error: 'Missing email or list' }, 400);
@@ -358,11 +369,27 @@ export const POST: APIRoute = async ({ request }) => {
       const campaignName  = isPaid ? (utm_campaign || '') : '';
       const creative      = isPaid ? (utm_content  || '') : '';
       const hook          = isPaid ? (utm_term     || '') : '';
+
+      // Which A/B/C hero hook was on screen when they signed up.
+      const headlineVariant = typeof headline === 'string' ? headline : '';
+
+      // Watch time is only known once they've actually played the VSL, so it lands on
+      // the survey/booked rows and stays blank on the initial vsl-list row. "Watched"
+      // is time actually played (re-watching the same stretch doesn't double-count,
+      // skipping ahead doesn't inflate it); the percentage is the furthest point they
+      // reached, which is what "how far did they get" usually means.
+      const watchedSecs  = Number(vsl_watched_seconds)  || 0;
+      const furthestSecs = Number(vsl_furthest_seconds) || 0;
+      const durationSecs = Number(vsl_duration_seconds) || 0;
+      const vslWatched = watchedSecs > 0 ? formatClock(watchedSecs) : '';
+      const vslPercent = durationSecs > 0 && furthestSecs > 0
+        ? Math.min(100, Math.round((furthestSecs / durationSecs) * 100)) + '%'
+        : '';
       await (async () => {
         const token = await getGoogleAccessToken(credsJson);
         await removeEmailFromAllSheets(email, token);
         if (hasPreviousEmail) await removeEmailFromAllSheets(previousEmail, token);
-        await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, creative, hook, cta_popup || ''], token);
+        await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, creative, hook, cta_popup || '', headlineVariant, vslWatched, vslPercent], token);
 
         const landingBookingsSheetId = import.meta.env.GOOGLE_SHEET_LANDING_PAGE_BOOKINGS;
         if (list === 'booked' && landingBookingsSheetId) {
