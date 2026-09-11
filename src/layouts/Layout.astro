@@ -64,7 +64,7 @@ const {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Self-hosted brand font, fetched as early as possible so it's ready before
-         first paint — see the font-display: optional note below for why this pairs
+         first paint — see the font-display: block note below for why this pairs
          with preload rather than swap. -->
     <link rel="preload" href="/fonts/ibrand.woff2" as="font" type="font/woff2" crossorigin />
     <!-- Plain blocking stylesheet, not the preload+onload swap trick: that technique
@@ -88,20 +88,23 @@ const {
 </html>
 
 <style is:global>
-  /* font-display: optional (not swap) on every local face below: swap guarantees an
-     initial paint in the fallback font while the file downloads, then visibly snaps
-     to the real one — that's the flash. optional gives the browser a very short
-     window to use an already-fetched/cached file, and if it isn't ready in that
-     window it just keeps the fallback for this page view rather than swapping
-     later — so text only ever renders once, never twice. Paired with the preload
-     above, IBrand (14.7KB) is essentially always ready in time. */
+  /* font-display: block (not swap, not optional) on every local face below.
+     swap paints the fallback immediately and visibly snaps to the real font once
+     it's fetched — that's the flash. optional sounds like the fix but isn't safe
+     for a brand wordmark: it lets the browser skip the custom font for the entire
+     page view based on its own network-speed guess, so on anything but a fast
+     warm-cache load IBrand can simply not appear at all. block instead renders
+     invisible text for a short window (near-instant here, since the preload above
+     means the 14.7KB file is essentially always ready in time) and then always
+     swaps in the real font once it arrives — no visible wrong-font flash, and
+     IBrand is never silently dropped. */
   @font-face {
     font-family: 'IBrand';
     src: url('/fonts/ibrand.woff2') format('woff2'),
          url('/fonts/ibrand.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
-    font-display: optional;
+    font-display: block;
   }
 
   /* Valley Sans — body typeface. Drop the licensed files into
@@ -115,7 +118,7 @@ const {
     src: url('/fonts/valley-sans/ValleySans-Variable.woff2') format('woff2-variations');
     font-weight: 100 900;
     font-style: normal;
-    font-display: optional;
+    font-display: block;
   }
 
   @font-face {
@@ -123,7 +126,7 @@ const {
     src: url('/fonts/valley-sans/ValleySans-Regular.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
-    font-display: optional;
+    font-display: block;
   }
 
   @font-face {
@@ -131,7 +134,7 @@ const {
     src: url('/fonts/valley-sans/ValleySans-SemiBold.woff2') format('woff2');
     font-weight: 600;
     font-style: normal;
-    font-display: optional;
+    font-display: block;
   }
 
   @font-face {
@@ -139,7 +142,7 @@ const {
     src: url('/fonts/valley-sans/ValleySans-Bold.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
-    font-display: optional;
+    font-display: block;
   }
 
   @font-face {
@@ -147,7 +150,7 @@ const {
     src: url('/fonts/valley-sans/ValleySans-ExtraBold.woff2') format('woff2');
     font-weight: 800;
     font-style: normal;
-    font-display: optional;
+    font-display: block;
   }
 
   *, *::before, *::after {
