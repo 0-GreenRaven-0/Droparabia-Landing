@@ -210,111 +210,131 @@ const {
 			renderer.render(scene, camera);
 		}
 
+		const dummy = new THREE.Object3D();
+		// Reassigned on every rebuild — the previous instance is dropped from the scene
+		// first, see buildGrid below.
+		let mesh: THREE.InstancedMesh | null = null;
+
 		// Grid sized to this section's own footprint (plus a little headroom for modest
 		// resizes without a rebuild) instead of a single one-size-fits-all constant — a
 		// short section gets a short/cheap grid instead of always paying for enough
 		// instances to cover a 4200x2000 world.
-		const rect0 = section.getBoundingClientRect();
-		const GRID_W = Math.max(rect0.width, window.innerWidth) * 1.3;
-		const GRID_H = rect0.height * 1.3;
-		const COLS = Math.ceil(GRID_W / (HEX_R * Math.sqrt(3) * GAP)) + 2;
-		const ROWS = Math.ceil(GRID_H / (HEX_R * 1.5 * GAP)) + 2;
-		const count = COLS * ROWS;
-		const mesh = new THREE.InstancedMesh(geometry, material, count);
-		const dummy = new THREE.Object3D();
+		//
+		// Rebuildable rather than a one-shot IIFE: the section's own box can still be
+		// wrong the instant this script runs — e.g. mid-navigation between pages of very
+		// different heights, or any other timing this component can't fully rule out —
+		// and the camera/canvas-buffer resize below only ever re-synced to the CURRENT
+		// box, never the hex grid itself (built once, from whatever the box was at
+		// startup). That mismatch is what "stretched" hexes actually was: the canvas's
+		// CSS size (100%/100% of the section) tracks the section correctly, but a
+		// drawing-buffer resolution left over from a different, earlier box size gets
+		// scaled by the browser to fit — warping every hex into an ellipse. Rebuilding
+		// the whole grid (not just the camera) whenever the section's box changes is
+		// what actually fixes that; see the ResizeObserver at the bottom.
+		function buildGrid(rect: DOMRect) {
+			const GRID_W = Math.max(rect.width, window.innerWidth) * 1.3;
+			const GRID_H = rect.height * 1.3;
+			const COLS = Math.ceil(GRID_W / (HEX_R * Math.sqrt(3) * GAP)) + 2;
+			const ROWS = Math.ceil(GRID_H / (HEX_R * 1.5 * GAP)) + 2;
+			const count = COLS * ROWS;
+			const nextMesh = new THREE.InstancedMesh(geometry, material, count);
 
-		// A straight diagonal cut taking a corner off the bottom of the grid — one clean
-		// line, not a blob of holes or a ragged edge. Optional per-instance, either bottom
-		// corner.
-		const cornerSign = cutSide === "right" ? 1 : -1;
-		const cornerX = cornerSign * (rect0.width / 2);
-		const cornerY = -rect0.height / 2;
-		const cutDistance = Math.max(rect0.width, rect0.height) * 0.42;
-		const cutAngle = cutSide === "right" ? Math.PI - Math.PI / 4 : Math.PI / 4; // 45deg diagonal, mirrored for the right corner
-		const cutNormalX = Math.cos(cutAngle);
-		const cutNormalY = Math.sin(cutAngle);
-		// Also drop the row that would otherwise sit half-cut across the very bottom edge
-		// of the section — a full hex radius of clearance so nothing there gets clipped.
-		// fadeBottom extends that same clearance to drop fadeHeight rows' worth instead of
-		// just the one, mirroring fadeTop on the opposite edge. bottomFlush shrinks that
-		// clearance to almost nothing instead, for a section with nothing below it.
-		const bottomEdge = cornerY + HEX_R * (fadeBottom ? 1.5 * fadeHeight : bottomFlush ? 0.05 : 1.05);
+			// A straight diagonal cut taking a corner off the bottom of the grid — one clean
+			// line, not a blob of holes or a ragged edge. Optional per-instance, either bottom
+			// corner.
+			const cornerSign = cutSide === "right" ? 1 : -1;
+			const cornerX = cornerSign * (rect.width / 2);
+			const cornerY = -rect.height / 2;
+			const cutDistance = Math.max(rect.width, rect.height) * 0.42;
+			const cutAngle = cutSide === "right" ? Math.PI - Math.PI / 4 : Math.PI / 4; // 45deg diagonal, mirrored for the right corner
+			const cutNormalX = Math.cos(cutAngle);
+			const cutNormalY = Math.sin(cutAngle);
+			// Also drop the row that would otherwise sit half-cut across the very bottom edge
+			// of the section — a full hex radius of clearance so nothing there gets clipped.
+			// fadeBottom extends that same clearance to drop fadeHeight rows' worth instead of
+			// just the one, mirroring fadeTop on the opposite edge. bottomFlush shrinks that
+			// clearance to almost nothing instead, for a section with nothing below it.
+			const bottomEdge = cornerY + HEX_R * (fadeBottom ? 1.5 * fadeHeight : bottomFlush ? 0.05 : 1.05);
 
-		// Restricting the grid to a fraction of the section's width (e.g. only the left
-		// half) drops whole hexes past the boundary, same as the corner cut — never a
-		// half-rendered/clipped hex, just a naturally jagged edge from the hex packing.
-		// revealColumns wins when set: the inset is a whole number of hex columns measured
-		// in pixels, so one column stays one column at every breakpoint.
-		const revealInset = revealColumns > 0 ? revealColumns * (HEX_R * Math.sqrt(3) * GAP) : rect0.width * revealWidth;
-		const revealBoundaryX =
-			revealSide === "left" ? -rect0.width / 2 + revealInset : rect0.width / 2 - revealInset;
+			// Restricting the grid to a fraction of the section's width (e.g. only the left
+			// half) drops whole hexes past the boundary, same as the corner cut — never a
+			// half-rendered/clipped hex, just a naturally jagged edge from the hex packing.
+			// revealColumns wins when set: the inset is a whole number of hex columns measured
+			// in pixels, so one column stays one column at every breakpoint.
+			const revealInset = revealColumns > 0 ? revealColumns * (HEX_R * Math.sqrt(3) * GAP) : rect.width * revealWidth;
+			const revealBoundaryX =
+				revealSide === "left" ? -rect.width / 2 + revealInset : rect.width / 2 - revealInset;
 
-		// Row banding along the top/bottom edge. Row pitch is HEX_R * 1.5.
-		const revealRowInset = revealRows * (HEX_R * 1.5 * GAP);
-		const revealBoundaryY =
-			revealVSide === "top" ? rect0.height / 2 - revealRowInset : -rect0.height / 2 + revealRowInset;
+			// Row banding along the top/bottom edge. Row pitch is HEX_R * 1.5.
+			const revealRowInset = revealRows * (HEX_R * 1.5 * GAP);
+			const revealBoundaryY =
+				revealVSide === "top" ? rect.height / 2 - revealRowInset : -rect.height / 2 + revealRowInset;
 
-		// Nudge every row by up to half a pitch so the row nearest the top edge lands with
-		// its top vertex exactly on it (centre at height/2 - HEX_R), rather than stopping
-		// short and leaving a strip of bare background above the grid.
-		const rowPitch = HEX_R * 1.5 * GAP;
-		let rowShift = 0;
-		if (alignTopEdge) {
-			// Sit the row's centre EDGE_BITE below the top edge, so the hex is cut by the
-			// edge rather than merely touching it — that trailing bit of daylight was the
-			// corner rounding, which pulls each vertex inside the raw radius.
-			// Must stay strictly between 0 and HEX_R: at exactly 0 the next row down lands
-			// precisely on revealBoundaryY and slips through the `y < boundary` test, which
-			// is what put a second row on screen.
-			const EDGE_BITE = HEX_R * 0.5;
-			const target = rect0.height / 2 - EDGE_BITE;
-			const nearestRow = Math.round((target + (ROWS * rowPitch) / 2) / rowPitch);
-			rowShift = target - (rowPitch * nearestRow - (ROWS * rowPitch) / 2);
-		}
-
-		let i = 0;
-		for (let r = 0; r < ROWS; r++) {
-			for (let c = 0; c < COLS; c++) {
-				const x = (HEX_R * Math.sqrt(3) * (c + (r % 2) / 2) - (COLS * HEX_R * Math.sqrt(3)) / 2) * GAP;
-				const y = (HEX_R * 1.5 * r - (ROWS * HEX_R * 1.5) / 2) * GAP + rowShift;
-
-				const reveals = revealColumns > 0 || revealWidth < 1;
-				const outOfReveal = reveals && (revealSide === "left" ? x > revealBoundaryX : x < revealBoundaryX);
-				// Bounded on both sides: without the second clause, rows centred beyond the
-				// section's own edge (off-screen, but half a hex tall) still hang into view
-				// and read as an extra half row.
-				const outOfRevealRows =
-					revealRows > 0 &&
-					(revealVSide === "top"
-						? y < revealBoundaryY || y > rect0.height / 2
-						: y > revealBoundaryY || y < -rect0.height / 2);
-
-				// Drops just the topmost row(s) of hexes — a clean, solid grid otherwise, no
-				// scattered gaps. fadeHeight counts how many rows (in HEX_R * 1.5 units) get
-				// dropped from the top edge.
-				const topEdge = rect0.height / 2 - HEX_R * 1.5 * fadeHeight;
-				const fadeMissing = fadeTop && y > topEdge;
-
-				const missing =
-					outOfReveal ||
-					outOfRevealRows ||
-					fadeMissing ||
-					y < bottomEdge ||
-					(cutCorner && (x - cornerX) * cutNormalX + (y - cornerY) * cutNormalY < cutDistance);
-
-				dummy.position.set(x, y, 0);
-				dummy.rotation.set(0, 0, 0);
-				dummy.scale.setScalar(missing ? 0 : 1);
-				dummy.updateMatrix();
-				mesh.setMatrixAt(i, dummy.matrix);
-				i++;
+			// Nudge every row by up to half a pitch so the row nearest the top edge lands with
+			// its top vertex exactly on it (centre at height/2 - HEX_R), rather than stopping
+			// short and leaving a strip of bare background above the grid.
+			const rowPitch = HEX_R * 1.5 * GAP;
+			let rowShift = 0;
+			if (alignTopEdge) {
+				// Sit the row's centre EDGE_BITE below the top edge, so the hex is cut by the
+				// edge rather than merely touching it — that trailing bit of daylight was the
+				// corner rounding, which pulls each vertex inside the raw radius.
+				// Must stay strictly between 0 and HEX_R: at exactly 0 the next row down lands
+				// precisely on revealBoundaryY and slips through the `y < boundary` test, which
+				// is what put a second row on screen.
+				const EDGE_BITE = HEX_R * 0.5;
+				const target = rect.height / 2 - EDGE_BITE;
+				const nearestRow = Math.round((target + (ROWS * rowPitch) / 2) / rowPitch);
+				rowShift = target - (rowPitch * nearestRow - (ROWS * rowPitch) / 2);
 			}
-		}
-		mesh.instanceMatrix.needsUpdate = true;
-		scene.add(mesh);
 
-		function resize() {
-			const rect = section!.getBoundingClientRect();
+			let i = 0;
+			for (let r = 0; r < ROWS; r++) {
+				for (let c = 0; c < COLS; c++) {
+					const x = (HEX_R * Math.sqrt(3) * (c + (r % 2) / 2) - (COLS * HEX_R * Math.sqrt(3)) / 2) * GAP;
+					const y = (HEX_R * 1.5 * r - (ROWS * HEX_R * 1.5) / 2) * GAP + rowShift;
+
+					const reveals = revealColumns > 0 || revealWidth < 1;
+					const outOfReveal = reveals && (revealSide === "left" ? x > revealBoundaryX : x < revealBoundaryX);
+					// Bounded on both sides: without the second clause, rows centred beyond the
+					// section's own edge (off-screen, but half a hex tall) still hang into view
+					// and read as an extra half row.
+					const outOfRevealRows =
+						revealRows > 0 &&
+						(revealVSide === "top"
+							? y < revealBoundaryY || y > rect.height / 2
+							: y > revealBoundaryY || y < -rect.height / 2);
+
+					// Drops just the topmost row(s) of hexes — a clean, solid grid otherwise, no
+					// scattered gaps. fadeHeight counts how many rows (in HEX_R * 1.5 units) get
+					// dropped from the top edge.
+					const topEdge = rect.height / 2 - HEX_R * 1.5 * fadeHeight;
+					const fadeMissing = fadeTop && y > topEdge;
+
+					const missing =
+						outOfReveal ||
+						outOfRevealRows ||
+						fadeMissing ||
+						y < bottomEdge ||
+						(cutCorner && (x - cornerX) * cutNormalX + (y - cornerY) * cutNormalY < cutDistance);
+
+					dummy.position.set(x, y, 0);
+					dummy.rotation.set(0, 0, 0);
+					dummy.scale.setScalar(missing ? 0 : 1);
+					dummy.updateMatrix();
+					nextMesh.setMatrixAt(i, dummy.matrix);
+					i++;
+				}
+			}
+			nextMesh.instanceMatrix.needsUpdate = true;
+
+			if (mesh) scene.remove(mesh);
+			mesh = nextMesh;
+			scene.add(mesh);
+		}
+
+		function applyRect(rect: DOMRect) {
+			buildGrid(rect);
 			renderer.setSize(rect.width, rect.height, false);
 			camera.left = -rect.width / 2;
 			camera.right = rect.width / 2;
@@ -323,7 +343,23 @@ const {
 			camera.updateProjectionMatrix();
 			render();
 		}
-		resize();
-		window.addEventListener("resize", resize);
+
+		// Watches the section's actual rendered box (not just window resizes) — a
+		// ResizeObserver fires once immediately with the current size when observation
+		// starts, so this also does the very first build; there's no separate initial
+		// call needed. rAF-coalesced so a burst of layout changes (e.g. several sections
+		// on the page settling at once) doesn't rebuild on every single one of them.
+		let pending: DOMRect | null = null;
+		let rafId = 0;
+		const observer = new ResizeObserver((entries) => {
+			pending = entries[entries.length - 1].target.getBoundingClientRect();
+			if (rafId) return;
+			rafId = requestAnimationFrame(() => {
+				rafId = 0;
+				if (pending) applyRect(pending);
+				pending = null;
+			});
+		});
+		observer.observe(section);
 	});
 </script>
