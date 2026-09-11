@@ -307,13 +307,15 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     position: relative;
     z-index: 5;
     background: var(--da-bg);
-    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16);
   }
 
   .site-header-inner {
-    max-width: 1040px;
-    margin: 0 auto;
-    padding: 14px 20px;
+    /* No max-width/centering here on purpose — the logo and the link sit at the
+       browser's actual left/right edges on every screen, not the edges of a boxed,
+       centered container that only reaches them on narrower viewports. */
+    width: 100%;
+    padding: 14px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -342,9 +344,9 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   }
 
   .site-header-link {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--da-blue);
+    font-family: var(--font-brand);
+    font-size: 1.15rem;
+    color: #000;
     text-decoration: none;
     white-space: nowrap;
   }
@@ -871,7 +873,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     /* Cast upward, separating it from the section above rather than the page edge
        below — matches the header's shadow, which casts the opposite way for the
        same reason. */
-    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.16);
   }
 
   .footer-inner {
