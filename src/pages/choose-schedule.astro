@@ -177,7 +177,17 @@ document.addEventListener('DOMContentLoaded', function() {
             utmKeys.forEach(function(k) { var v = sessionStorage.getItem(k); if (v) utms[k] = v; });
             var ref = sessionStorage.getItem('da_referrer') || '';
             var vsl = {};
-            try { vsl = JSON.parse(sessionStorage.getItem('da_vsl_at_survey') || sessionStorage.getItem('da_vsl_watch') || '{}'); } catch(_) {}
+            // sessionStorage first (frozen-at-survey, then this tab's live figure);
+            // localStorage last, for a returning visitor whose session reset since
+            // actually watching the VSL.
+            try {
+              vsl = JSON.parse(
+                sessionStorage.getItem('da_vsl_at_survey') ||
+                sessionStorage.getItem('da_vsl_watch') ||
+                localStorage.getItem('da_vsl_watch_persist') ||
+                '{}'
+              );
+            } catch(_) {}
 
             var payload = {
               name: name, email: email, phone: phone, list: 'booked', referrer: ref,

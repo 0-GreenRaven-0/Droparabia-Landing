@@ -186,7 +186,10 @@
       (function() {
         try {
           if (!sessionStorage.getItem('da_vsl_at_survey')) {
-            var live = sessionStorage.getItem('da_vsl_watch');
+            // sessionStorage first (this tab actually watched it this session); fall
+            // back to the localStorage copy for a returning visitor whose session
+            // reset (closed the tab, came back later) since watching.
+            var live = sessionStorage.getItem('da_vsl_watch') || localStorage.getItem('da_vsl_watch_persist');
             if (live) sessionStorage.setItem('da_vsl_at_survey', live);
           }
         } catch(_) {}

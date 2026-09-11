@@ -1059,6 +1059,12 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   // (ahead of the book-cta section below) because showBookCta needs furthestSeconds
   // to set the CTA's initial lock state for a returning, already-subscribed visitor.
   const WATCH_KEY = 'da_vsl_watch';
+  // Same figures, mirrored into localStorage. sessionStorage alone loses this the
+  // moment the tab closes, so anyone who watches the VSL and comes back later (a
+  // different tab, a bookmark, the next day) to finish the survey or book would
+  // otherwise report as having watched nothing. localStorage survives that; read as
+  // a fallback wherever this data gets sent, never as the primary source.
+  const WATCH_PERSIST_KEY = 'da_vsl_watch_persist';
   const BOOK_UNLOCK_RATIO = 0.4; // must watch 40% of the VSL to unlock booking
   let watchedSeconds = 0;
   let furthestSeconds = 0;
@@ -1072,13 +1078,13 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   } catch { /* nothing recorded yet */ }
 
   function saveWatch() {
-    try {
-      sessionStorage.setItem(WATCH_KEY, JSON.stringify({
-        watched: Math.round(watchedSeconds),
-        furthest: Math.round(furthestSeconds),
-        duration: Math.round(player.duration || 0),
-      }));
-    } catch { /* storage unavailable — tracking is best-effort */ }
+    const payload = JSON.stringify({
+      watched: Math.round(watchedSeconds),
+      furthest: Math.round(furthestSeconds),
+      duration: Math.round(player.duration || 0),
+    });
+    try { sessionStorage.setItem(WATCH_KEY, payload); } catch { /* storage unavailable — tracking is best-effort */ }
+    try { localStorage.setItem(WATCH_PERSIST_KEY, payload); } catch { /* same */ }
   }
 
   // Book-a-call CTA: hidden until the VSL is actually unlocked, so it shows up the
