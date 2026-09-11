@@ -81,10 +81,23 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         </video>
       </div>
 
+      <!-- Watch-progress bar — hidden until they subscribe, then tracks how far into
+           the VSL they've gotten. Booking is gated on reaching 40%, so this is the
+           visible half of that gate; see the Plyr script below for the other half. -->
+      <div class="vsl-progress-wrap" id="vsl-progress-wrap" style="display:none">
+        <div class="vsl-progress-track">
+          <div class="vsl-progress-marker" style="left:40%"></div>
+          <div class="vsl-progress-bar" id="vsl-progress-bar" style="width:0%"></div>
+        </div>
+        <span class="vsl-progress-label" id="vsl-progress-label">0% watched</span>
+      </div>
+
       <!-- Hidden until the subscribe modal succeeds (or the visitor is already
            subscribed this session) — see the "unlockVideo"-equivalent block in the
-           Plyr script below. -->
-      <a href="/survey" class="book-cta" id="book-cta" style="display:none">
+           Plyr script below. Starts locked (grey, inert) until 40% of the VSL has
+           been watched. -->
+      <p class="book-cta-gate" id="book-cta-gate" style="display:none">Watch at least 40% of the VSL to book a FREE discovery call</p>
+      <a href="/survey" class="book-cta is-locked" id="book-cta" style="display:none" aria-disabled="true">
         Book a FREE strategy call
         <span class="book-cta-sub">Let's get your business started</span>
       </a>
@@ -483,6 +496,80 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     font-size: 0.78rem;
     font-weight: 700;
     color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* Watch-progress bar, shown once subscribed. */
+  .vsl-progress-wrap {
+    max-width: 420px;
+    width: 100%;
+    margin: 18px auto 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .vsl-progress-track {
+    position: relative;
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--da-line);
+    overflow: hidden;
+  }
+
+  /* Tick at the 40% unlock point, so the bar reads as "progress toward a goal"
+     rather than a plain loading indicator. */
+  .vsl-progress-marker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 1;
+  }
+
+  .vsl-progress-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--da-cta) 0%, var(--da-cta-light) 100%);
+    transition: width 0.3s ease;
+  }
+
+  .vsl-progress-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--da-ink-mute);
+  }
+
+  /* Gate message, shown above the CTA only while it's locked. */
+  .book-cta-gate {
+    max-width: 420px;
+    width: 100%;
+    margin: 16px auto 0;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--da-ink-mute);
+  }
+
+  /* Locked state: same CTA, just inert and greyed out until 40% is reached. */
+  .book-cta.is-locked {
+    margin-top: 10px;
+    background: var(--da-line);
+    color: var(--da-ink-mute);
+    box-shadow: none;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .book-cta.is-locked:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .book-cta.is-locked .book-cta-sub {
+    color: var(--da-ink-mute);
   }
 
   /* ─── VSL SUBSCRIPTION MODAL ─── */
@@ -967,14 +1054,72 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     modal.setAttribute('aria-hidden', 'true');
   }
 
+  // ── VSL watch tracking ─────────────────────────────────────────────────────
+  // Kept in sessionStorage so /survey can report how much of the video they'd seen
+  // before leaving to book. Two numbers, because they answer different questions:
+  // "watched" is time actually played (a seek forward doesn't earn credit, a rewatch
+  // doesn't double-count), "furthest" is the deepest point they reached. Declared here
+  // (ahead of the book-cta section below) because showBookCta needs furthestSeconds
+  // to set the CTA's initial lock state for a returning, already-subscribed visitor.
+  const WATCH_KEY = 'da_vsl_watch';
+  const BOOK_UNLOCK_RATIO = 0.4; // must watch 40% of the VSL to unlock booking
+  let watchedSeconds = 0;
+  let furthestSeconds = 0;
+  let lastTick = 0;
+  let lastSaved = 0;
+
+  try {
+    const prior = JSON.parse(sessionStorage.getItem(WATCH_KEY) || '{}');
+    watchedSeconds = Number(prior.watched) || 0;
+    furthestSeconds = Number(prior.furthest) || 0;
+  } catch { /* nothing recorded yet */ }
+
+  function saveWatch() {
+    try {
+      sessionStorage.setItem(WATCH_KEY, JSON.stringify({
+        watched: Math.round(watchedSeconds),
+        furthest: Math.round(furthestSeconds),
+        duration: Math.round(player.duration || 0),
+      }));
+    } catch { /* storage unavailable — tracking is best-effort */ }
+  }
+
   // Book-a-call CTA: hidden until the VSL is actually unlocked, so it shows up the
   // moment subscribing succeeds — and immediately on load for a returning visitor
-  // who already subscribed earlier this session.
+  // who already subscribed earlier this session. Even once shown it stays locked
+  // (grey, inert) until 40% of the VSL has been watched.
   const bookCta = document.getElementById('book-cta') as HTMLElement | null;
+  const bookCtaGate = document.getElementById('book-cta-gate') as HTMLElement | null;
+  const progressWrap = document.getElementById('vsl-progress-wrap') as HTMLElement | null;
+  const progressBar = document.getElementById('vsl-progress-bar') as HTMLElement | null;
+  const progressLabel = document.getElementById('vsl-progress-label') as HTMLElement | null;
+
+  function updateWatchProgressUI() {
+    const dur = player.duration || 0;
+    const pct = dur > 0 ? Math.min(100, Math.round((furthestSeconds / dur) * 100)) : 0;
+    if (progressBar) progressBar.style.width = pct + '%';
+    if (progressLabel) progressLabel.textContent = pct + '% watched';
+
+    const unlocked = dur > 0 && furthestSeconds / dur >= BOOK_UNLOCK_RATIO;
+    if (bookCta) {
+      bookCta.classList.toggle('is-locked', !unlocked);
+      bookCta.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
+    }
+    if (bookCtaGate) bookCtaGate.style.display = unlocked ? 'none' : 'block';
+  }
+
   function showBookCta() {
     if (bookCta) bookCta.style.display = 'flex';
+    if (progressWrap) progressWrap.style.display = 'flex';
+    updateWatchProgressUI();
   }
   if (sessionStorage.getItem('da_subscribed')) showBookCta();
+
+  // A locked CTA is also pointer-events:none in CSS, but that alone won't stop a
+  // keyboard Enter/Space activation — belt and suspenders.
+  bookCta?.addEventListener('click', (e) => {
+    if (bookCta.classList.contains('is-locked')) e.preventDefault();
+  });
 
   player.on('play', () => {
     if (!sessionStorage.getItem('da_subscribed')) {
@@ -1046,33 +1191,6 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     }
   });
 
-  // ── VSL watch tracking ─────────────────────────────────────────────────────
-  // Kept in sessionStorage so /survey can report how much of the video they'd seen
-  // before leaving to book. Two numbers, because they answer different questions:
-  // "watched" is time actually played (a seek forward doesn't earn credit, a rewatch
-  // doesn't double-count), "furthest" is the deepest point they reached.
-  const WATCH_KEY = 'da_vsl_watch';
-  let watchedSeconds = 0;
-  let furthestSeconds = 0;
-  let lastTick = 0;
-  let lastSaved = 0;
-
-  try {
-    const prior = JSON.parse(sessionStorage.getItem(WATCH_KEY) || '{}');
-    watchedSeconds = Number(prior.watched) || 0;
-    furthestSeconds = Number(prior.furthest) || 0;
-  } catch { /* nothing recorded yet */ }
-
-  function saveWatch() {
-    try {
-      sessionStorage.setItem(WATCH_KEY, JSON.stringify({
-        watched: Math.round(watchedSeconds),
-        furthest: Math.round(furthestSeconds),
-        duration: Math.round(player.duration || 0),
-      }));
-    } catch { /* storage unavailable — tracking is best-effort */ }
-  }
-
   // timeupdate fires ~4x/sec, so a real playback tick is a small positive step. Any
   // jump larger than that is a seek (or the tab coming back from the background) and
   // is not counted as watched.
@@ -1081,6 +1199,10 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   player.on('pause', saveWatch);
   player.on('ended', saveWatch);
   window.addEventListener('pagehide', saveWatch);
+
+  // Duration isn't known until metadata loads — re-check the lock/progress state
+  // once it is, for a subscribed visitor who reloaded mid-video.
+  player.on('loadedmetadata', updateWatchProgressUI);
 
   // Fire video_complete when the user reaches 80% of the video
   let videoCompleteTracked = false;
@@ -1093,6 +1215,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     lastTick = t;
     if (t > furthestSeconds) furthestSeconds = t;
     if (watchedSeconds - lastSaved >= 2) { lastSaved = watchedSeconds; saveWatch(); }
+    updateWatchProgressUI();
 
     if (!videoCompleteTracked && dur > 0 && t >= dur * 0.8) {
       videoCompleteTracked = true;
