@@ -274,12 +274,6 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     --plyr-font-family: var(--font-body);
   }
 
-  .vsl-wrapper .plyr__time,
-  .vsl-wrapper .plyr__time--duration,
-  .vsl-wrapper .plyr__time--current {
-    display: none !important;
-  }
-
   .vsl-wrapper .plyr,
   .vsl-wrapper .plyr__video-wrapper {
     width: 100%;
@@ -542,7 +536,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     color: var(--da-ink-mute);
   }
 
-  /* Gate message, shown above the CTA only while it's locked. */
+  /* Gate message, shown above the CTA only once subscribed and only while locked. */
   .book-cta-gate {
     max-width: 420px;
     width: 100%;
@@ -550,7 +544,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     text-align: center;
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--da-ink-mute);
+    color: var(--da-ink);
   }
 
   /* Locked state: same CTA, just inert and greyed out until 40% is reached. */
@@ -1008,7 +1002,10 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   import 'plyr/dist/plyr.css';
 
   const player = new Plyr('#vsl-player', {
-    controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+    // No progress/scrubber control and no keyboard seeking — the 40% watch gate on
+    // the book-a-call CTA only means anything if there's no click-to-skip-ahead.
+    controls: ['play-large', 'play', 'current-time', 'duration', 'fullscreen'],
+    keyboard: { focused: false, global: false },
     resetOnEnd: false,
   });
 
@@ -1105,7 +1102,13 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       bookCta.classList.toggle('is-locked', !unlocked);
       bookCta.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
     }
-    if (bookCtaGate) bookCtaGate.style.display = unlocked ? 'none' : 'block';
+    // This runs on every timeupdate tick regardless of subscription state (the video's
+    // preload="metadata" fires loadedmetadata on its own), so without the subscribed
+    // check the gate line would leak into view before anyone's actually subscribed.
+    if (bookCtaGate) {
+      const subscribed = !!sessionStorage.getItem('da_subscribed');
+      bookCtaGate.style.display = subscribed && !unlocked ? 'block' : 'none';
+    }
   }
 
   function showBookCta() {
