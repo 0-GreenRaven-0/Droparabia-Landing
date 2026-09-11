@@ -61,21 +61,12 @@ const {
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Self-hosted brand font, fetched as early as possible so it's ready before
          first paint — see the font-display: block note below for why this pairs
-         with preload rather than swap. -->
+         with preload rather than swap. Body copy is Helvetica: a system font, so
+         there's no webfont to fetch, preload, or race for it — it's simply there
+         from the very first paint on every platform. -->
     <link rel="preload" href="/fonts/ibrand.woff2" as="font" type="font/woff2" crossorigin />
-    <!-- Plain blocking stylesheet, not the preload+onload swap trick: that technique
-         only applies the font CSS after it's fetched, so first paint rendered in the
-         browser's fallback sans-serif and then visibly swapped to Inter/Valley Sans a
-         moment later. This costs a touch of first-paint speed but means the chosen
-         font is what actually shows, with nothing to swap away from. -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
     <slot name="head" />
   </head>
   <body>
@@ -107,52 +98,6 @@ const {
     font-display: block;
   }
 
-  /* Valley Sans — body typeface. Drop the licensed files into
-     public/fonts/valley-sans/ (see the filenames below). Until they're there these
-     URLs 404 and the stack falls through to Inter, so the page never renders in a
-     system default font. Delete the static @font-face blocks if you have the
-     variable file, or delete the variable block if you have statics. Once the real
-     files land, add a matching preload link above for at least the regular weight. */
-  @font-face {
-    font-family: 'Valley Sans';
-    src: url('/fonts/valley-sans/ValleySans-Variable.woff2') format('woff2-variations');
-    font-weight: 100 900;
-    font-style: normal;
-    font-display: block;
-  }
-
-  @font-face {
-    font-family: 'Valley Sans';
-    src: url('/fonts/valley-sans/ValleySans-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: block;
-  }
-
-  @font-face {
-    font-family: 'Valley Sans';
-    src: url('/fonts/valley-sans/ValleySans-SemiBold.woff2') format('woff2');
-    font-weight: 600;
-    font-style: normal;
-    font-display: block;
-  }
-
-  @font-face {
-    font-family: 'Valley Sans';
-    src: url('/fonts/valley-sans/ValleySans-Bold.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-    font-display: block;
-  }
-
-  @font-face {
-    font-family: 'Valley Sans';
-    src: url('/fonts/valley-sans/ValleySans-ExtraBold.woff2') format('woff2');
-    font-weight: 800;
-    font-style: normal;
-    font-display: block;
-  }
-
   *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -176,8 +121,11 @@ const {
     --gray-700: #334155;
     --gray-800: #1e293b;
     --gray-900: #0f172a;
-    --font-body: 'Valley Sans', 'Inter', sans-serif;
-    --font-brand: 'IBrand', 'Valley Sans', 'Inter', sans-serif;
+    /* Helvetica Neue is what real Macs/iOS actually have; Helvetica covers older
+       Mac versions; Arial is metric-compatible and what Windows/Android/Linux
+       render instead (system fonts only — nothing here is ever fetched). */
+    --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-brand: 'IBrand', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --radius-sm: 8px;
     --radius: 12px;
     --radius-lg: 16px;

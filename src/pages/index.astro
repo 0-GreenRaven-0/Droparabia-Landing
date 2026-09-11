@@ -1,27 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import HexBackground from '../components/HexBackground.astro';
 import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 ---
 
 <Layout>
 
+  <!-- ═══════════ SITE HEADER ═══════════ -->
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a href="/" class="corner-brand" aria-label="Droparabia">
+        <img src="/Droparabia.png" alt="" class="corner-brand-logo" width="40" height="40" />
+        <span class="corner-brand-name">Droparabia</span>
+      </a>
+      <a href="/testimonials" class="site-header-link">Latest Reviews</a>
+    </div>
+  </header>
+
   <!-- ═══════════ 1. HEADLINE + GATED VSL ═══════════ -->
   <section class="hero">
-    <!-- One staggered hex column hugging each edge. cutCorner is off on both: that
-         diagonal was designed to trim a corner off a full-width grid, and on a narrow
-         edge strip it erases nearly the whole strip. -->
-    <HexBackground id="hex-bg-hero-left" cutCorner={false} fadeTop={true} fadeHeight={1} revealColumns={1} revealSide="left" alignTopEdge={true} />
-    <HexBackground id="hex-bg-hero-right" cutCorner={false} fadeTop={true} fadeHeight={1} revealColumns={1} revealSide="right" alignTopEdge={true} />
-    <!-- Top edge row. fadeTop must stay off here — it drops exactly the rows this
-         instance exists to draw. -->
-    <HexBackground id="hex-bg-hero-top" cutCorner={false} fadeTop={false} revealRows={1} revealVSide="top" alignTopEdge={true} />
-
-    <a href="/" class="corner-brand" aria-label="Droparabia">
-      <img src="/Droparabia.png" alt="" class="corner-brand-logo" width="40" height="40" />
-      <span class="corner-brand-name">Droparabia</span>
-    </a>
-
     <div class="wrap">
 
       <!-- Fallback content (no-JS / first paint) — a synchronous inline script right
@@ -306,29 +302,25 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     padding: 0 20px;
   }
 
-  /* ══════════════ 1. HEADLINE + VSL ══════════════ */
-  /* position:relative anchors HexBackground's absolutely-positioned canvas to this
-     section; the .wrap below is lifted above it with its own stacking context. */
-  .hero {
+  /* ─── SITE HEADER ─── */
+  .site-header {
     position: relative;
+    z-index: 5;
     background: var(--da-bg);
-    text-align: center;
-    padding: 76px 0 48px;
-    overflow: hidden;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.07);
   }
 
-  .hero > .wrap {
-    position: relative;
-    z-index: 1;
+  .site-header-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
   }
 
-  /* Pinned to the hero's top-left corner, above the hex canvases. Absolute so it
-     doesn't push the centered headline block down. */
   .corner-brand {
-    position: absolute;
-    top: 20px;
-    left: 24px;
-    z-index: 2;
     display: flex;
     align-items: center;
     gap: 9px;
@@ -347,6 +339,31 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     line-height: 1;
     color: #000;
     letter-spacing: 0.01em;
+  }
+
+  .site-header-link {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--da-blue);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .site-header-link:hover {
+    text-decoration: underline;
+  }
+
+  .hero {
+    position: relative;
+    background: var(--da-bg);
+    text-align: center;
+    padding: 48px 0;
+    overflow: hidden;
+  }
+
+  .hero > .wrap {
+    position: relative;
+    z-index: 1;
   }
 
   .headline {
@@ -848,9 +865,13 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 
   /* ══════════════ FOOTER ══════════════ */
   .footer {
-    background: var(--da-navy);
-    color: #fff;
+    background: var(--da-bg);
+    color: var(--da-ink);
     padding: 40px 0 0;
+    /* Cast upward, separating it from the section above rather than the page edge
+       below — matches the header's shadow, which casts the opposite way for the
+       same reason. */
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.06);
   }
 
   .footer-inner {
@@ -879,7 +900,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   .footer-logo-name {
     font-family: var(--font-brand);
     font-size: 1.4rem;
-    color: #fff;
+    color: var(--da-ink);
   }
 
   .footer-links-label {
@@ -887,7 +908,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--da-ink-mute);
     margin-bottom: 10px;
   }
 
@@ -898,12 +919,12 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 
   .footer-compliance-link {
     font-size: 0.88rem;
-    color: rgba(255, 255, 255, 0.82);
+    color: var(--da-ink-soft);
     text-decoration: none;
     transition: color 0.2s ease;
   }
 
-  .footer-compliance-link:hover { color: #fff; }
+  .footer-compliance-link:hover { color: var(--da-ink); }
 
   .footer-socials {
     display: flex;
@@ -914,15 +935,15 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.10);
-    color: #fff;
+    background: var(--da-line);
+    color: var(--da-ink-soft);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease;
   }
 
-  .footer-social-link:hover { background: var(--da-primary); }
+  .footer-social-link:hover { background: var(--da-primary); color: #fff; }
 
   .footer-social-link svg {
     width: 17px;
@@ -930,22 +951,24 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   }
 
   .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1px solid var(--da-line);
     padding: 16px 20px;
     text-align: center;
   }
 
   .footer-bottom p {
     font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--da-ink-mute);
   }
 
   /* ══════════════ RESPONSIVE ══════════════ */
   @media (max-width: 640px) {
-    .hero { padding: 84px 0 40px; }
-    .corner-brand { top: 14px; left: 16px; gap: 7px; }
+    .hero { padding: 40px 0; }
+    .site-header-inner { padding: 10px 16px; }
+    .corner-brand { gap: 7px; }
     .corner-brand-logo { width: 28px; height: 28px; }
     .corner-brand-name { font-size: 1.15rem; }
+    .site-header-link { font-size: 0.82rem; }
     .social-proof { gap: 10px; }
     .sp-users { font-size: 0.92rem; }
     .sp-tp-logo { height: 23px; }
