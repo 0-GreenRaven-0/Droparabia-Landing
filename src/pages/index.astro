@@ -1002,10 +1002,10 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   import 'plyr/dist/plyr.css';
 
   const player = new Plyr('#vsl-player', {
-    // No progress/scrubber control and no keyboard seeking — the 40% watch gate on
-    // the book-a-call CTA only means anything if there's no click-to-skip-ahead.
-    controls: ['play-large', 'play', 'current-time', 'duration', 'fullscreen'],
-    keyboard: { focused: false, global: false },
+    // Progress bar and keyboard seeking are both back on — scrubbing is fine as long
+    // as it's constrained to ground already covered. See the 'seeking' clamp below,
+    // which is what actually stops anyone from dragging or arrow-keying ahead.
+    controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'fullscreen'],
     resetOnEnd: false,
   });
 
@@ -1202,6 +1202,18 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   player.on('pause', saveWatch);
   player.on('ended', saveWatch);
   window.addEventListener('pagehide', saveWatch);
+
+  // Let them scrub freely within what they've already watched — rewatching a scene
+  // is fine — but snap back any drag/click/arrow-key seek that lands past the
+  // furthest point reached. 'seeking' fires with the target time already applied to
+  // the media element, so this is the one place that can actually block a skip-ahead
+  // before it plays; a small buffer absorbs float rounding at the boundary itself.
+  const SEEK_CLAMP_BUFFER = 0.5;
+  player.on('seeking', () => {
+    if (player.currentTime > furthestSeconds + SEEK_CLAMP_BUFFER) {
+      player.currentTime = furthestSeconds;
+    }
+  });
 
   // Duration isn't known until metadata loads — re-check the lock/progress state
   // once it is, for a subscribed visitor who reloaded mid-video.
