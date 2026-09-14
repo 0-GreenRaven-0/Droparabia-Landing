@@ -1,5 +1,5 @@
 ---
-
+import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 ---
 
 <html lang="en">
@@ -7,26 +7,51 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <title>Your Free Guide — Droparabia</title>
+    <title>The Ultimate Copy Program | Droparabia</title>
     <link rel="icon" type="image/png" href="/Droparabia.png" />
 
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-      .flex { display: flex; } .flex-col { flex-direction: column; } .items-center { align-items: center; }
-      .justify-center { justify-content: center; } .p-6 { padding: 1.5rem; } .min-h-screen { min-height: 100vh; }
-      .w-full { width: 100%; } .max-w-4xl { max-width: 56rem; } .space-y-6 > * + * { margin-top: 1.5rem; }
-      .space-y-2 > * + * { margin-top: 0.5rem; } .text-center { text-align: center; }
-      .text-3xl { font-size: 1.875rem; } .font-bold { font-weight: 700; } .text-gray-900 { color: #111827; }
-      .text-gray-500 { color: #6B7280; } .text-gray-800 { color: #1F2937; } .text-gray-700 { color: #374151; }
-      .text-lg { font-size: 1.125rem; } .leading-relaxed { line-height: 1.625; }
-      .gap-8 { gap: 2rem; } .gap-4 { gap: 1rem; } .pt-2 { padding-top: 0.5rem; }
-      .flex-col { flex-direction: column; } .max-w-lg { max-width: 32rem; }
-      @media (min-width: 768px) {
-        .content-row { flex-direction: row !important; align-items: flex-start !important; }
-        .content-row .content-text { text-align: left; }
+      @font-face { font-family: 'IBrand'; src: url('/fonts/ibrand.woff2') format('woff2'), url('/fonts/ibrand.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+      html { scroll-behavior: smooth; }
+      body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; background: #fff; color: #1F2937; }
+
+      .site-header { position: relative; z-index: 5; background: #f0f0f0; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16); }
+      .site-header-inner { width: 100%; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+      .corner-brand { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+      .corner-brand-logo { width: 36px; height: 36px; object-fit: contain; }
+      .corner-brand-name { font-family: 'IBrand', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 1.5rem; line-height: 1; color: #000; letter-spacing: 0.01em; }
+      .site-header-nav { display: flex; align-items: center; gap: 24px; }
+      .site-header-link { font-family: 'IBrand', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 1.15rem; color: #000; text-decoration: none; white-space: nowrap; }
+      .site-header-link:hover { text-decoration: underline; }
+      @media (max-width: 400px) {
+        .site-header-inner { padding: 12px 16px; }
+        .site-header-nav { gap: 16px; }
       }
+      .flex { display: flex; } .flex-col { flex-direction: column; } .items-center { align-items: center; }
+      .justify-center { justify-content: center; } .text-center { text-align: center; }
+      .text-gray-900 { color: #111827; } .text-gray-700 { color: #374151; } .text-gray-500 { color: #6B7280; }
+      .leading-relaxed { line-height: 1.625; }
       .input--hidden { display: none !important; }
+
+      .section { padding: 56px 24px; }
+      .section--tint { background: #F8FAFC; }
+      .section--blue { background: linear-gradient(135deg, #0B1D42 0%, #16326B 50%, #1E3E7E 100%); }
+      .section--blue .section-heading { color: #fff; }
+      .section-inner { max-width: 880px; margin: 0 auto; }
+      .section-inner--narrow { max-width: 680px; }
+      /* Headings break out of their (narrower) content column, centered, up to 1100px. */
+      .section-heading, .proof-heading {
+        width: min(1100px, 100vw - 48px);
+        max-width: none;
+        margin-left: calc(50% - min(550px, 50vw - 24px));
+        margin-right: 0;
+      }
+      .section-heading { font-size: clamp(1.5rem, 3.4vw, 2rem); font-weight: 800; color: #111827; text-align: center; margin-bottom: 40px; }
+
+      /* Same brand gradient as droparabia-webinar's .gradient-text. */
+      .gradient-text { background-image: linear-gradient(135deg, #001EFF 0%, #7200B0 100%); background-clip: text; -webkit-background-clip: text; color: transparent; }
+      .faq-heading { font-family: 'IBrand', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; }
 
       .unq-btn {
         display: flex;
@@ -46,6 +71,7 @@
         width: 100%;
         max-width: 360px;
         text-decoration: none;
+        margin: 0 auto;
       }
       .unq-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,99,235,0.35); }
 
@@ -63,54 +89,147 @@
       @keyframes unq-shine { 0%{left:-100%} 55%{left:130%} 100%{left:130%} }
 
       .unq-btn-txt1 { font-size: 1rem; font-weight: 700; margin: 0; }
-      .unq-btn-txt2 { font-size: 0.8rem; opacity: 0.85; margin: 0; }
 
-      /* ─── VSL VIDEO ─── */
-      .vsl-wrapper .plyr__time,
-      .vsl-wrapper .plyr__time--duration,
-      .vsl-wrapper .plyr__time--current {
-        display: none !important;
+      .price-line { font-size: 1.6rem; font-weight: 800; color: #111827; text-align: center; margin-bottom: 18px; }
+      .price-line .price-now, .hero-price .price-now { color: #16A34A; }
+      .price-line .price-was, .hero-price .price-was { font-size: 1.4rem; font-weight: 600; color: #111827; text-decoration: line-through; }
+
+      /* Dark, two-column hero — headline/CTA left, product mockup right. */
+      .hero-dark { background: #fff; padding: 28px 48px 72px; }
+      .hero-attention-block { max-width: 1400px; margin: 0 auto 44px; text-align: center; }
+      .hero-dark-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 48px; }
+      .hero-dark-left { flex: 1 1 480px; }
+      .hero-dark-right { flex: 1 1 440px; display: flex; justify-content: center; }
+      .hero-kicker { font-size: 0.9rem; font-weight: 700; color: #111827; line-height: 1.4; margin-bottom: 10px; }
+      .hero-attention { font-size: 0.85rem; font-weight: 700; color: #2563EB; }
+      .hero-headline { font-family: 'IBrand', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: clamp(1.85rem, 3.7vw, 2.5rem); font-weight: 400; color: #111827; line-height: 1.15; margin-bottom: 20px; }
+      .hero-sub { font-size: 1.1rem; color: #111827; line-height: 1.6; margin-bottom: 28px; }
+      .hero-price { font-size: 2rem; font-weight: 800; color: #111827; margin-bottom: 24px; }
+      .hero-image { width: 100%; height: auto; align-self: center; max-width: 540px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.45)); }
+      .hero-dark-left .unq-btn { margin: 0; }
+
+      @media (max-width: 768px) {
+        .hero-dark { padding-left: 20px; padding-right: 20px; }
+        /* Left column dissolves so the image can slot between headline and subheadline. */
+        .hero-dark-inner { flex-direction: column; align-items: stretch; gap: 0; text-align: center; }
+        .hero-dark-left { display: contents; }
+        .hero-dark-right { flex: 0 0 auto; width: 100%; margin-bottom: 24px; }
+        .hero-headline { order: 1; }
+        .hero-dark-right { order: 2; }
+        .hero-sub { order: 3; }
+        .hero-price { order: 4; }
+        .hero-dark-left .unq-btn { order: 5; margin: 0 auto; }
+        .hero-image { max-width: 360px; }
+        .hero-sub { font-size: 0.95rem; }
       }
 
-      .vsl-wrapper {
-        --plyr-color-main: #2563eb;
-        --plyr-control-icon-size: 28px;
-        max-width: 620px;
-        width: 100%;
-        margin: 0 auto;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 0 0 4px #2563eb, 0 20px 60px rgba(37,99,235,0.18);
-        aspect-ratio: 16 / 9;
-        background: #000;
-        position: relative;
+      /* Module breakdown — numbered cards, mirrors the "Part 1 / Part 2" step pattern */
+      .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; }
+      .module-card { background: transparent; border: 2px solid rgba(255,255,255,0.35); border-radius: 16px; box-shadow: none; padding: 28px; text-align: left; }
+      .module-num { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; background: transparent; color: #fff; font-weight: 700; font-size: 1.05rem; margin-bottom: 18px; }
+      .module-card h3 { font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 10px; }
+      .module-card p { font-size: 0.95rem; color: rgba(255,255,255,0.78); line-height: 1.6; }
+
+      /* Testimonials placeholder — no fabricated names/quotes; swap this in once real
+         reviews come in after the first cohort. */
+
+      /* FAQ */
+      /* FAQ accordion — same styling/behavior as droparabia-webinar's FAQ.astro,
+         with its rgba(0,0,0,..) borders/hover glow swapped for the site's blue. */
+      .faq-list { display: flex; flex-direction: column; gap: 1rem; }
+      .faq-card {
+        background: #fff;
+        border: 2px solid rgba(0,0,0,0.1);
+        border-radius: 1rem;
+        padding: 1.25rem 1.5rem;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+        cursor: pointer;
+      }
+      .faq-card:hover {
+        border-color: rgba(37,99,235,0.5);
+        box-shadow: 0 6px 24px rgba(0,0,0,0.12), 0 0 0 4px rgba(37,99,235,0.08);
+      }
+      .faq-card.open {
+        border-color: rgba(37,99,235,0.65);
+        background: rgba(37,99,235,0.06);
+        box-shadow: 0 6px 28px rgba(0,0,0,0.14), 0 0 0 4px rgba(37,99,235,0.1);
+      }
+      .faq-btn { width: 100%; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; text-align: left; background: none; border: none; padding: 0; cursor: pointer; font: inherit; }
+      .faq-btn span { font-weight: 700; font-size: 1rem; line-height: 1.4; color: #111827; padding-top: 0.125rem; }
+      .faq-answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s ease; overflow: hidden; }
+      .faq-answer.open { grid-template-rows: 1fr; }
+      .faq-answer > p { overflow: hidden; font-size: 0.92rem; color: #4B5563; line-height: 1.6; padding-top: 0.75rem; }
+      .faq-icon { flex-shrink: 0; margin-top: 0.125rem; color: #2563EB; transition: transform 0.3s ease; }
+      .faq-icon.open { transform: rotate(180deg); }
+
+      /* Footer — same as the homepage's. */
+      .footer { background: #f0f0f0; color: #0b1230; padding: 40px 0 0; box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.16); }
+      .footer-inner { max-width: 1040px; margin: 0 auto; padding: 0 20px 32px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 28px; }
+      .footer-logo-link { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+      .footer-logo-img { width: 34px; height: 34px; object-fit: contain; }
+      .footer-logo-name { font-family: 'IBrand', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 1.4rem; color: #0b1230; }
+      .footer-links-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #7b8098; margin-bottom: 10px; }
+      .footer-compliance { display: grid; gap: 7px; }
+      .footer-compliance-link { font-size: 0.88rem; color: #4a5170; text-decoration: none; transition: color 0.2s ease; }
+      .footer-compliance-link:hover { color: #0b1230; }
+      .footer-socials { display: flex; gap: 10px; }
+      .footer-social-link { width: 34px; height: 34px; border-radius: 50%; background: #dcdbd9; color: #4a5170; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease, color 0.2s ease; }
+      .footer-social-link:hover { background: #001eff; color: #fff; }
+      .footer-social-link svg { width: 17px; height: 17px; }
+      .footer-bottom { border-top: 1px solid #dcdbd9; padding: 16px 20px; text-align: center; }
+      .footer-bottom p { font-size: 0.8rem; color: #7b8098; }
+
+      /* Social-proof grid — 2 columns on desktop, 1 on mobile. */
+      .proof-grid-container { max-width: 860px; margin: 40px auto 0; padding: 0 24px; }
+      .proof-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+      .proof-grid img { display: block; width: 100%; height: auto; border-radius: 16px; box-shadow: 0 14px 32px -8px rgba(0, 0, 0, 0.32); }
+      .proof-heading { font-size: 1.4rem; }
+      @media (max-width: 768px) {
+        #reviews { padding-left: 0; padding-right: 0; }
+        #reviews .section-inner { padding: 0 20px; }
+        .proof-heading { font-size: 1.1rem; }
+        .proof-grid-container { padding: 0 6px; }
+        .proof-grid { gap: 16px; }
       }
 
-      .vsl-wrapper .plyr,
-      .vsl-wrapper .plyr__video-wrapper {
-        width: 100%;
-        height: 100%;
+      /* Social-proof carousel — same setup as the homepage's case-studies swiper. */
+      .carousel-container { position: relative; max-width: 1152px; margin: 40px auto 0; padding: 0 24px; }
+      .testimonials-swiper { overflow: hidden; }
+      .swiper-slide { overflow: hidden; border-radius: 16px; box-shadow: 0 14px 32px -8px rgba(0, 0, 0, 0.32); }
+      .swiper-slide img { display: block; width: 100%; height: auto; }
+      .case-carousel-nav {
         position: absolute;
-        inset: 0;
+        top: 50%;
+        z-index: 10;
+        width: 44px;
+        height: 44px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        background: linear-gradient(135deg, #2745ff, #001eff 45%, #000c66);
+        box-shadow: 0 6px 16px -6px rgba(0, 30, 255, 0.35);
+        transition: transform 0.15s ease-out;
       }
-
-      .vsl-wrapper video {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-
-      .vsl-wrapper .plyr__control--overlaid {
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        margin: 0 !important;
+      .case-carousel-prev { left: 0; transform: translate(-50%, -50%); }
+      .case-carousel-next { right: 0; transform: translate(50%, -50%); }
+      .case-carousel-prev:hover { transform: translate(-50%, -50%) scale(1.1); }
+      .case-carousel-next:hover { transform: translate(50%, -50%) scale(1.1); }
+      /* Arrows sit inside the screen on mobile — hanging half off-edge made the page scroll sideways. */
+      @media (max-width: 768px) {
+        .carousel-container { padding: 0 48px; overflow-x: clip; }
+        .case-carousel-nav { width: 36px; height: 36px; }
+        .case-carousel-prev, .case-carousel-prev:hover { left: 6px; transform: translateY(-50%); }
+        .case-carousel-next, .case-carousel-next:hover { right: 6px; transform: translateY(-50%); }
       }
     </style>
   </head>
 
-  <body style="background:#e0e0e0; min-height:100vh;">
+  <body>
 
     <!-- Shown if no valid token -->
     <div id="no-access" style="display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem; text-align:center; min-height:100vh;">
@@ -122,54 +241,282 @@
     </div>
 
     <div id="main-content" style="display:none;">
-    <div class="flex items-center justify-center p-6 min-h-screen">
-      <div class="w-full max-w-4xl space-y-6">
 
-        <!-- Header -->
-        <div class="text-center space-y-2">
-          <h1 class="text-3xl font-bold text-gray-900">Based on your answers, it seems now is not the right time for you</h1>
-          <p class="text-gray-500 text-lg">
-            But don't worry!<br />
-            Here's a <span style="color:#F97316; font-weight:700;">FREE</span> tutorial which can help you learn more about Local Dropshipping (the stuff they usually sell you in a course 🤫)
+      <!-- ═══════════ SITE HEADER ═══════════ -->
+      <header class="site-header">
+        <div class="site-header-inner">
+          <a href="/" class="corner-brand" aria-label="Droparabia">
+            <img src="/Droparabia.png" alt="" class="corner-brand-logo" width="36" height="36" />
+            <span class="corner-brand-name">Droparabia</span>
+          </a>
+          <nav class="site-header-nav">
+            <a href="#faq" class="site-header-link">FAQ</a>
+            <a href="#reviews" class="site-header-link">Reviews</a>
+          </nav>
+        </div>
+      </header>
+
+      <!-- ═══════════ HERO ═══════════ -->
+      <section class="hero-dark">
+        <div class="hero-attention-block">
+          <h1 class="hero-kicker">
+            Based on your answers, it seems now is not the right time for you to join Droparabia
+          </h1>
+          <p class="hero-attention">
+            But we've got something suitable for you at the moment
           </p>
         </div>
 
-        <!-- VSL Video -->
-        <div class="vsl-wrapper">
-          <video id="vsl-player" playsinline preload="auto">
-            <source src="/vsl.mp4" type="video/mp4" />
-          </video>
-        </div>
-
-        <!-- Content -->
-        <div class="flex flex-col items-center justify-center gap-4 pt-2">
-          <div class="flex flex-col gap-4 max-w-lg content-text">
-            <p class="text-center content-text text-gray-700 leading-relaxed">
-              In the meantime, we highly recommend you follow us on Instagram for more engaging content,
-              free knowledge and further announcements!
+        <div class="hero-dark-inner">
+          <div class="hero-dark-left">
+            <h2 class="hero-headline">
+              Learn a remote high-income skill that every business will pay you for
+            </h2>
+            <p class="hero-sub">
+              Inside The Ultimate Copy Program, you'll learn about a high-valuable, high income skill
+              called copywriting, the skill that builds every business's advertisements and marketing campaigns.
             </p>
 
-            <a
-              href="https://www.instagram.com/mjbusinessofficial?igsh=ZG44cXRja2l4dGdk"
-              target="_blank"
-              rel="noopener"
-              class="unq-btn"
-              style="background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); box-shadow: 0 4px 14px rgba(131,58,180,0.3);"
-            >
-              <!-- Instagram icon -->
+            <p class="hero-price">
+              Only <span class="price-now">$97</span> <span class="price-was">$197</span>
+            </p>
+
+            <a href="https://wa.me/96181911206?text=Hi%2C%20I%20want%20to%20get%20The%20Ultimate%20Copy%20Program!" target="_blank" rel="noopener" class="unq-btn" data-buy-cta>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="36" height="36" style="flex-shrink:0;">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
               </svg>
               <div>
-                <p class="unq-btn-txt1">Follow our Instagram!</p>
-                <p class="unq-btn-txt2">For more content & announcements!</p>
+                <p class="unq-btn-txt1">Get Instant access to the Ultimate Copy Program!</p>
               </div>
             </a>
           </div>
+
+          <div class="hero-dark-right">
+            <img
+              loading="lazy"
+              src="/copy-program.png"
+              alt="The Ultimate Copy Program, A DropVault Masterclass"
+              class="hero-image"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════ WHAT'S INSIDE ═══════════ -->
+      <section class="section section--blue">
+        <div class="section-inner">
+          <h2 class="section-heading">What's Inside The Ultimate Copy Program</h2>
+          <div class="module-grid">
+            <div class="module-card">
+              <span class="module-num">01</span>
+              <h3>Pre-recorded coaching sessions</h3>
+              <p>4 pre-recorded sessions that teaches everything about copywriting from A to Z.</p>
+            </div>
+            <div class="module-card">
+              <span class="module-num">02</span>
+              <h3>Exclusive sessions with industry experts</h3>
+              <p>Access to exclusive coaching sessions with experts in advertisement creation and scriptwriting industry.</p>
+            </div>
+            <div class="module-card">
+              <span class="module-num">03</span>
+              <h3>Support whenever you need it</h3>
+              <p>You'll gain access to a Skool community where you can reach out for guidance and answers to your questions.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════ SOCIAL PROOF ═══════════ -->
+      <section class="section" id="reviews">
+        <div class="section-inner">
+          <p class="text-center proof-heading" style="margin-top:0; margin-bottom:32px; font-weight:700; color:#111827;">
+            This program can teach you high-income skills you can sell like these guys
+          </p>
         </div>
 
-      </div>
-    </div>
+        <!-- Sibling to .section-inner, not nested inside it — same as the homepage's
+             carousel, so its own 1152px max-width isn't choked down by the narrower
+             text column above it. -->
+        <div class="proof-grid-container">
+          <div class="proof-grid">
+            <img src="/copy-program/Ibrahim.png" alt="Testimonial" loading="lazy" />
+            <img src="/copy-program/Marie.png" alt="Testimonial" loading="lazy" />
+            <img src="/copy-program/al%20ghoche.png" alt="Testimonial" loading="lazy" />
+            <img src="/copy-program/alex.png" alt="Testimonial" loading="lazy" />
+            <img src="/copy-program/aly.png" alt="Testimonial" loading="lazy" />
+            <img src="/copy-program/elie.png" alt="Testimonial" loading="lazy" />
+            <img src="/copy-program/mahoumd.png" alt="Testimonial" loading="lazy" />
+          </div>
+        </div>
+
+        <p class="text-center proof-heading" style="margin-top:56px; margin-bottom:0; font-weight:700; color:#111827;">
+          Even Droparabia sellers used it to craft their own high-selling ads!
+        </p>
+
+        <!-- Curated to only the case studies/testimonials that call out ad spend,
+             since this page needs proof the ad-buying skill works. -->
+        <div class="carousel-container">
+            <div class="swiper testimonials-swiper">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-1.png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
+                <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-2.png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
+                <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-3.png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
+                <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/1.png?tr=w-900,q-70,f-webp" alt="Case Study" loading="lazy" /></div>
+                <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/5.png?tr=w-900,q-70,f-webp" alt="Case Study" loading="lazy" /></div>
+                <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/6.png?tr=w-900,q-70,f-webp" alt="Case Study" loading="lazy" /></div>
+                <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(1).png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
+              </div>
+            </div>
+
+            <button type="button" class="case-carousel-nav case-carousel-prev" aria-label="Previous">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            </button>
+            <button type="button" class="case-carousel-nav case-carousel-next" aria-label="Next">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </button>
+        </div>
+      </section>
+
+      <!-- ═══════════ FAQ ═══════════ -->
+      <section class="section" id="faq">
+        <div class="section-inner section-inner--narrow">
+          <h2 class="section-heading faq-heading">Frequently Asked <span class="gradient-text">Questions</span></h2>
+
+          <div class="faq-list">
+            <div class="faq-card" id="faq-card-0">
+              <button class="faq-btn" data-faq="0" aria-expanded="false">
+                <span>Who is this program for?</span>
+                <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="faq-answer" id="faq-answer-0">
+                <p>This is for individuals seeking a high-income skill that requires no upfront investment, or for people looking to get into the copywriting industry.</p>
+              </div>
+            </div>
+
+            <div class="faq-card" id="faq-card-1">
+              <button class="faq-btn" data-faq="1" aria-expanded="false">
+                <span>What will I learn from it?</span>
+                <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="faq-answer" id="faq-answer-1">
+                <p>You'll learn what copywriting is exactly, what kind of services you can offer to business owners and e-commerce brands, how to practice and get good at it, and where to find clients who currently need this service.</p>
+              </div>
+            </div>
+
+            <div class="faq-card" id="faq-card-2">
+              <button class="faq-btn" data-faq="2" aria-expanded="false">
+                <span>What is copywriting?</span>
+                <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="faq-answer" id="faq-answer-2">
+                <p>Copywriting is the art of selling and persuasion. It's used in every piece of advertising you see on a daily basis: the ads on social media, websites, emails, billboards, the news, the YouTube and Instagram content you consume, and even this website.</p>
+              </div>
+            </div>
+
+            <div class="faq-card" id="faq-card-3">
+              <button class="faq-btn" data-faq="3" aria-expanded="false">
+                <span>Will there be someone for me to ask in case I have any questions?</span>
+                <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="faq-answer" id="faq-answer-3">
+                <p>Yes. In addition to this course, you'll get access to a community where you can communicate with experts who'll answer your questions and provide guidance whenever you need it.</p>
+              </div>
+            </div>
+
+            <div class="faq-card" id="faq-card-4">
+              <button class="faq-btn" data-faq="4" aria-expanded="false">
+                <span>How can copywriting help me earn income online?</span>
+                <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="faq-answer" id="faq-answer-4">
+                <p>Once you become good at copywriting, you can use it to sell your services to business owners, or use your own copywriting skills to build your own business without relying on anyone.</p>
+              </div>
+            </div>
+
+            <div class="faq-card" id="faq-card-5">
+              <button class="faq-btn" data-faq="5" aria-expanded="false">
+                <span>How fast can I start earning from copywriting?</span>
+                <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="faq-answer" id="faq-answer-5">
+                <p>This is a legitimate skill that requires practice and patience, not a get-rich-quick scheme. We recommend taking this course at a normal pace so you can properly absorb the knowledge and get better at it before offering your services to clients.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════ FINAL CTA ═══════════ -->
+      <section class="section section--tint">
+        <div class="section-inner text-center">
+          <h2 class="section-heading" style="margin-bottom:28px; font-size:clamp(1.05rem, 2.6vw, 1.7rem);">
+            With this program, you'll be armed with the exact skillset that businesses and
+            e-commerce brands constantly pay for
+          </h2>
+          <p class="price-line">
+            Only <span class="price-now">$97</span> <span class="price-was">$197</span>
+          </p>
+          <a href="https://wa.me/96181911206?text=Hi%2C%20I%20want%20to%20get%20The%20Ultimate%20Copy%20Program!" target="_blank" rel="noopener" class="unq-btn" data-buy-cta>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="36" height="36" style="flex-shrink:0;">
+              <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+            <div>
+              <p class="unq-btn-txt1">Get Instant access to the Ultimate Copy Program!</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- ═══════════ FOOTER ═══════════ -->
+      <footer class="footer">
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <a href="/" class="footer-logo-link">
+              <img src="/Droparabia.png" alt="Droparabia logo" class="footer-logo-img" />
+              <span class="footer-logo-name">Droparabia</span>
+            </a>
+          </div>
+
+          <div class="footer-links">
+            <p class="footer-links-label">Legal</p>
+            <div class="footer-compliance">
+              <a href="/privacy-policy" class="footer-compliance-link">Privacy Policy</a>
+              <a href="/terms" class="footer-compliance-link">Terms &amp; Conditions</a>
+            </div>
+          </div>
+
+          <div class="footer-links">
+            <p class="footer-links-label">Follow us</p>
+            <div class="footer-socials">
+              <a href="https://www.instagram.com/mjbusinessofficial?igsh=Mm5jdmFjMTljbm0x" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siInstagram.path}/></svg>
+              </a>
+              <a href="https://www.threads.com/@mjbusinessofficial" target="_blank" rel="noopener" class="footer-social-link" aria-label="Threads">
+                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siThreads.path}/></svg>
+              </a>
+              <a href="https://www.youtube.com/@MJ.biznes" target="_blank" rel="noopener" class="footer-social-link" aria-label="YouTube">
+                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siYoutube.path}/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2026 Droparabia. All rights reserved.</p>
+        </div>
+      </footer>
+
     </div> <!-- /main-content -->
 
     <!-- Token check -->
@@ -177,7 +524,11 @@
       (function() {
         try {
           const tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
-          if (tokens.unqualified) {
+          // ?preview=1 skips the survey-qualification gate — same escape hatch as
+          // choose-schedule.astro, for checking the page itself without a real
+          // unqualified session. Not documented/linked anywhere.
+          const isPreview = new URLSearchParams(location.search).get('preview') === '1';
+          if (tokens.unqualified || isPreview) {
             document.getElementById('main-content').style.display = 'block';
           } else {
             document.getElementById('no-access').style.display = 'flex';
@@ -189,12 +540,100 @@
     </script>
 
     <script>
-      import Plyr from 'plyr';
-      import 'plyr/dist/plyr.css';
+      import Swiper from 'swiper';
+      import { Navigation } from 'swiper/modules';
+      import 'swiper/css';
+      import 'swiper/css/navigation';
 
-      new Plyr('#vsl-player', {
-        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-        resetOnEnd: false,
+      document.querySelectorAll('.testimonials-swiper').forEach((swiperEl) => {
+        const container = swiperEl.closest('.carousel-container');
+        if (!container) return;
+        new Swiper(swiperEl as HTMLElement, {
+          modules: [Navigation],
+          slidesPerView: 1,
+          spaceBetween: 16,
+          breakpoints: {
+            600: { slidesPerView: 2, spaceBetween: 20 },
+            1024: { slidesPerView: 3, spaceBetween: 24 },
+          },
+          loop: true,
+          navigation: {
+            nextEl: container.querySelector('.case-carousel-next') as HTMLElement,
+            prevEl: container.querySelector('.case-carousel-prev') as HTMLElement,
+          },
+          pagination: false,
+        });
+      });
+    </script>
+
+    <script>
+      document.querySelectorAll<HTMLButtonElement>('.faq-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = btn.dataset.faq!;
+          const answer = document.getElementById(`faq-answer-${idx}`)!;
+          const card = document.getElementById(`faq-card-${idx}`)!;
+          const icon = btn.querySelector('.faq-icon')!;
+          const isOpen = card.classList.contains('open');
+
+          document.querySelectorAll('.faq-answer').forEach((a) => a.classList.remove('open'));
+          document.querySelectorAll('.faq-card').forEach((c) => c.classList.remove('open'));
+          document.querySelectorAll('.faq-icon').forEach((ic) => ic.classList.remove('open'));
+          document.querySelectorAll('.faq-btn').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+
+          if (!isOpen) {
+            answer.classList.add('open');
+            card.classList.add('open');
+            icon.classList.add('open');
+            btn.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      // Clicking a buy CTA opens WhatsApp (the link itself) and moves the lead from the
+      // unqualified list to the went-to-buy sheet. keepalive lets the request finish even
+      // if the browser is backgrounded while the WhatsApp app opens.
+      document.querySelectorAll<HTMLAnchorElement>('[data-buy-cta]').forEach((cta) => {
+        cta.addEventListener('click', () => {
+          try {
+            if (sessionStorage.getItem('da_went_to_buy')) return;
+            const user = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            if (!user.email) return;
+            sessionStorage.setItem('da_went_to_buy', '1');
+
+            const utms: Record<string, string> = {};
+            ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach((k) => {
+              const v = sessionStorage.getItem(k);
+              if (v) utms[k] = v;
+            });
+            let vsl: { watched?: number; furthest?: number; duration?: number } = {};
+            try { vsl = JSON.parse(sessionStorage.getItem('da_vsl_at_survey') || '{}'); } catch {}
+
+            fetch('/api/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              keepalive: true,
+              body: JSON.stringify({
+                name: user.name || '', email: user.email, phone: user.phone || '',
+                list: 'went_to_buy_course',
+                referrer: sessionStorage.getItem('da_referrer') || '',
+                cta_popup: sessionStorage.getItem('da_cta_popup') || '',
+                headline: sessionStorage.getItem('da_headline_variant') || '',
+                vsl_watched_seconds: vsl.watched || 0,
+                vsl_furthest_seconds: vsl.furthest || 0,
+                vsl_duration_seconds: vsl.duration || 0,
+                ...utms,
+              }),
+            }).catch(() => {});
+          } catch {}
+        });
+      });
+
+      document.querySelectorAll<HTMLElement>('.faq-card').forEach((card) => {
+        card.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          if (target.closest('.faq-btn') || target.closest('.faq-answer')) return;
+          card.querySelector<HTMLButtonElement>('.faq-btn')!.click();
+        });
       });
     </script>
 

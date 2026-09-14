@@ -24,9 +24,14 @@ function getSheetId(list: string): string | null {
     case 'qualified_no_book': return import.meta.env.GOOGLE_SHEET_QUALIFIED_NO_BOOK  || null;
     case 'unqualified':       return import.meta.env.GOOGLE_SHEET_UNQUALIFIED        || null;
     case 'booked':            return import.meta.env.GOOGLE_SHEET_BOOKED             || null;
+    case 'went_to_buy_course': return import.meta.env.GOOGLE_SHEET_WENT_TO_BUY_COURSE || null;
     default:                  return null;
   }
 }
+
+// Lists that exist only as a sheet. There's no Brevo list to add them to, so on Brevo
+// they're just unlinked from every other list (e.g. dropped from unqualified).
+const SHEET_ONLY_LISTS = new Set(['went_to_buy_course']);
 
 function getUnlinkListIds(list: string): number[] {
   const all: Record<string, number> = {
@@ -196,6 +201,7 @@ async function removeEmailFromAllSheets(email: string, token: string): Promise<v
     import.meta.env.GOOGLE_SHEET_QUALIFIED_NO_BOOK,
     import.meta.env.GOOGLE_SHEET_UNQUALIFIED,
     import.meta.env.GOOGLE_SHEET_BOOKED,
+    import.meta.env.GOOGLE_SHEET_WENT_TO_BUY_COURSE,
   ].filter(Boolean) as string[];
   await Promise.all(ids.map(id => removeEmailFromSheet(id, email, token)));
 }
@@ -278,7 +284,8 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const listId = getListId(list);
-    if (!listId) {
+    const sheetOnly = SHEET_ONLY_LISTS.has(list) && !!getSheetId(list);
+    if (!listId && !sheetOnly) {
       return json({ success: false, error: `Unknown or unconfigured list: ${list}` }, 400);
     }
 
@@ -302,9 +309,9 @@ export const POST: APIRoute = async ({ request }) => {
         LASTNAME:  lastName,
         SMS: normalizedPhone ? '+961' + normalizedPhone : '',
       },
-      listIds: [listId],
       updateEnabled: true,
     };
+    if (listId) brevoBody.listIds = [listId];
     if (unlinkListIds.length > 0) brevoBody.unlinkListIds = unlinkListIds;
 
     function postContact(body: Record<string, unknown>) {

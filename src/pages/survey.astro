@@ -19,7 +19,7 @@
     <style>
       @font-face { font-family: 'IBrand'; src: url('/fonts/ibrand.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      body { font-family: 'Inter', sans-serif; background: #F1F5F9; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+      body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #F1F5F9; min-height: 100vh; -webkit-font-smoothing: antialiased; }
       .survey-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.25rem 1rem; min-height: 100svh; }
       .survey-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 1.75rem; width: 100%; max-width: 680px; }
       .survey-title { color: #2563EB; font-size: 0.95rem; font-weight: 700; text-align: center; line-height: 1.5; margin-bottom: 1.25rem; }
@@ -33,7 +33,7 @@
       .survey-option.selected { border-color: #2563EB; background: #EFF6FF; box-shadow: 0 2px 8px rgba(37,99,235,0.12); }
       .survey-error { color: #DC2626; font-size: 0.85rem; background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 8px; padding: 0.5rem 0.75rem; margin-top: 0.75rem; display: none; }
       .survey-nav { display: flex; gap: 0.75rem; margin-top: 1.75rem; }
-      .survey-btn { padding: 0.75rem 1.75rem; background: linear-gradient(135deg, #2563EB, #3B82F6); color: #fff; font-weight: 700; border-radius: 10px; border: none; cursor: pointer; font-size: 1rem; font-family: 'Inter', sans-serif; box-shadow: 0 4px 12px rgba(37,99,235,0.25); transition: transform 0.15s, box-shadow 0.15s; }
+      .survey-btn { padding: 0.75rem 1.75rem; background: linear-gradient(135deg, #2563EB, #3B82F6); color: #fff; font-weight: 700; border-radius: 10px; border: none; cursor: pointer; font-size: 1rem; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-shadow: 0 4px 12px rgba(37,99,235,0.25); transition: transform 0.15s, box-shadow 0.15s; }
       .survey-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37,99,235,0.3); }
       .survey-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
       .survey-btn-secondary { background: #fff; color: #2563EB; border: 2px solid #2563EB; box-shadow: none; }
@@ -55,7 +55,7 @@
     <!-- Loading overlay while subscribing -->
     <div id="survey-loader" style="display:flex; position:fixed; inset:0; background:#F1F5F9; z-index:999; flex-direction:column; align-items:center; justify-content:center; gap:1rem;">
       <div style="width:44px; height:44px; border:4px solid #E2E8F0; border-top-color:#2563EB; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
-      <p style="color:#6B7280; font-family:'Inter',sans-serif; font-size:1rem;">Just a moment...</p>
+      <p style="color:#6B7280; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:1rem;">Just a moment...</p>
     </div>
     <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 
