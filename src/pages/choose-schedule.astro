@@ -88,7 +88,12 @@
       (function() {
         try {
           const tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
-          if (tokens.qualified) {
+          // ?preview=1 skips the survey-qualification gate — for checking the page
+          // itself (e.g. the Calendly widget) without needing a real qualified
+          // session. Not documented/linked anywhere; only works if you already know
+          // the param.
+          const isPreview = new URLSearchParams(location.search).get('preview') === '1';
+          if (tokens.qualified || isPreview) {
             document.getElementById('main-content').style.display = 'block';
 
             var userData = {};
