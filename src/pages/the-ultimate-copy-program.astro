@@ -231,16 +231,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 
   <body>
 
-    <!-- Shown if no valid token -->
-    <div id="no-access" style="display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem; text-align:center; min-height:100vh;">
-      <h1 style="font-size:1.75rem; font-weight:700; color:#111827;">No cheating allowed! 😏</h1>
-      <p style="font-size:1.1rem; color:#374151;">Please go back and finish the survey first.</p>
-      <button onclick="window.location.href='/survey'" style="margin-top:1rem; padding:0.75rem 2rem; background:linear-gradient(135deg,#2563EB,#3B82F6); color:#fff; font-weight:700; border:none; border-radius:10px; font-size:1rem; cursor:pointer;">
-        Go Back
-      </button>
-    </div>
-
-    <div id="main-content" style="display:none;">
+    <div id="main-content">
 
       <!-- ═══════════ SITE HEADER ═══════════ -->
       <header class="site-header">
@@ -258,20 +249,31 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 
       <!-- ═══════════ HERO ═══════════ -->
       <section class="hero-dark">
-        <div class="hero-attention-block">
-          <h1 class="hero-kicker">
+        <div class="hero-attention-block" id="unqualified-attention" hidden>
+          <p class="hero-kicker">
             Based on your answers, it seems now is not the right time for you to join Droparabia
-          </h1>
+          </p>
           <p class="hero-attention">
             But we've got something suitable for you at the moment
           </p>
         </div>
+        <!-- The page is open to everyone; only leads the survey routed here as unqualified
+             see the "based on your answers" lines. Runs inline so they don't flash in.
+             ?preview=1 shows them without a real survey session. -->
+        <script is:inline>
+          try {
+            var t = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
+            if (t.unqualified || new URLSearchParams(location.search).get('preview') === '1') {
+              document.getElementById('unqualified-attention').hidden = false;
+            }
+          } catch (_) {}
+        </script>
 
         <div class="hero-dark-inner">
           <div class="hero-dark-left">
-            <h2 class="hero-headline">
+            <h1 class="hero-headline">
               Learn a remote high-income skill that every business will pay you for
-            </h2>
+            </h1>
             <p class="hero-sub">
               Inside The Ultimate Copy Program, you'll learn about a high-valuable, high income skill
               called copywriting, the skill that builds every business's advertisements and marketing campaigns.
@@ -519,26 +521,6 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 
     </div> <!-- /main-content -->
 
-    <!-- Token check -->
-    <script is:inline>
-      (function() {
-        try {
-          const tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
-          // ?preview=1 skips the survey-qualification gate — same escape hatch as
-          // choose-schedule.astro, for checking the page itself without a real
-          // unqualified session. Not documented/linked anywhere.
-          const isPreview = new URLSearchParams(location.search).get('preview') === '1';
-          if (tokens.unqualified || isPreview) {
-            document.getElementById('main-content').style.display = 'block';
-          } else {
-            document.getElementById('no-access').style.display = 'flex';
-          }
-        } catch(_) {
-          document.getElementById('no-access').style.display = 'flex';
-        }
-      })();
-    </script>
-
     <script>
       import Swiper from 'swiper';
       import { Navigation } from 'swiper/modules';
@@ -598,6 +580,9 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
             if (sessionStorage.getItem('da_went_to_buy')) return;
             const user = JSON.parse(sessionStorage.getItem('userData') || '{}');
             if (!user.email) return;
+            // A qualified lead stays on the booking follow-up list.
+            const tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
+            if (tokens.qualified && !tokens.unqualified) return;
             sessionStorage.setItem('da_went_to_buy', '1');
 
             const utms: Record<string, string> = {};

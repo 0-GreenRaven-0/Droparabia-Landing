@@ -7,6 +7,9 @@ export default defineConfig({
   devToolbar: { enabled: false },
   site: 'https://droparabia.com',
   output: 'static',
+  redirects: {
+    '/get-free-program': '/the-ultimate-copy-program',
+  },
   adapter: cloudflare(),
   integrations: [react()],
   build: {

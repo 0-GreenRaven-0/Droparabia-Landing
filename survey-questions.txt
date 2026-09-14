@@ -84,7 +84,7 @@ Only the budget answer (Step 5) decides qualification:
 - Qualified            -> redirected to /choose-schedule
                           (Brevo list: qualified_no_book)
 - Not qualified (budget = "No I don't have the funds :(")
-                          -> redirected to /get-free-program
+                          -> redirected to /the-ultimate-copy-program
                           (Brevo list: unqualified)
 
 Steps 1-4 (stopped, courses, goalIncome, effort) are collected
