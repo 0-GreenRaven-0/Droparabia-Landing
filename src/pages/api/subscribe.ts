@@ -279,6 +279,33 @@ export const POST: APIRoute = async ({ request }) => {
     const { name, email, phone, list, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, cta_popup, prev_email,
             headline, vsl_watched_seconds, vsl_furthest_seconds, vsl_duration_seconds } = body;
 
+    // Visitors who reach the sales page without going through the VSL/survey have no
+    // contact info. Their buy click is still logged on the sheet as "Anonymous" with
+    // its traffic source; there's no email, so Brevo and the de-dupe pass are skipped.
+    if (body.anonymous === true && SHEET_ONLY_LISTS.has(list)) {
+      const sheetId   = getSheetId(list);
+      const credsJson = import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+      if (!sheetId) {
+        return json({ success: false, error: `Unknown or unconfigured list: ${list}` }, 400);
+      }
+      if (credsJson) {
+        const isPaid = (utm_medium || '').toLowerCase().trim() === 'paid';
+        const row = [
+          'Anonymous', '', '', new Date().toLocaleDateString('en-GB'),
+          buildTrafficSource(utm_source || '', utm_medium || '', referrer || ''),
+          isPaid ? (utm_campaign || '') : '',
+          isPaid ? (utm_content  || '') : '',
+          isPaid ? (utm_term     || '') : '',
+          '', typeof headline === 'string' ? headline : '', '', '',
+        ];
+        await (async () => {
+          const token = await getGoogleAccessToken(credsJson);
+          await appendToSheet(sheetId, row, token);
+        })().catch(() => {});
+      }
+      return json({ success: true }, 200);
+    }
+
     if (!email || !list) {
       return json({ success: false, error: 'Missing email or list' }, 400);
     }

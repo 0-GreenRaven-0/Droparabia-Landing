@@ -153,6 +153,11 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       .bonus-card h4 { font-size: 1.35rem; font-weight: 700; color: #111827; line-height: 1.35; margin-bottom: 8px; }
       .bonus-card p { font-size: 0.92rem; color: #4B5563; line-height: 1.55; }
       .inside-cta { margin-top: 48px; text-align: center; }
+      /* Trust badges under the price: four equal columns, icon above a short label. */
+      .price-badges { list-style: none; max-width: 920px; margin: 20px auto 40px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+      .price-badges li { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; line-height: 1.45; text-transform: uppercase; color: #111827; text-align: center; }
+      .price-badges .badge-icon { display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #2563EB, #3B82F6); color: #fff; box-shadow: 0 4px 14px rgba(37,99,235,0.28); }
+      .price-badges svg { width: 26px; height: 26px; }
       @media (max-width: 900px) {
         .inside-row { grid-template-columns: 1fr; gap: 28px; margin-top: 48px; }
         .inside-image { max-width: 260px; }
@@ -163,6 +168,10 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         .bonus-card p { font-size: 0.84rem; line-height: 1.5; }
         .bonus-card { gap: 6px; }
         .bonus-image { flex-basis: 130px; width: 130px; }
+        .price-badges { grid-template-columns: 1fr 1fr; max-width: 420px; gap: 24px 16px; margin: 16px auto 32px; }
+        .price-badges li { font-size: 0.7rem; letter-spacing: 0.04em; gap: 8px; }
+        .price-badges .badge-icon { width: 44px; height: 44px; }
+        .price-badges svg { width: 22px; height: 22px; }
       }
 
       /* Testimonials placeholder — no fabricated names/quotes; swap this in once real
@@ -459,7 +468,25 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
             Get them all for only
             <span class="price-row"><span class="price-now">$97</span> <span class="price-was">$882</span></span>
           </p>
-          <a href="https://wa.me/96181911206?text=Hi%2C%20I%20want%20to%20get%20The%20Ultimate%20Copy%20Program!" target="_blank" rel="noopener" class="unq-btn" data-buy-cta>
+          <ul class="price-badges">
+            <li>
+              <span class="badge-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.6 6.62c-1.44 0-2.8.56-3.77 1.53L12 10.66 10.48 12h.01L7.8 14.39c-.64.64-1.49.99-2.4.99-1.87 0-3.39-1.51-3.39-3.38S3.53 8.62 5.4 8.62c.91 0 1.76.35 2.44 1.03l1.13 1 1.51-1.34L9.22 8.2C8.2 7.18 6.84 6.62 5.4 6.62 2.42 6.62 0 9.04 0 12s2.42 5.38 5.4 5.38c1.44 0 2.8-.56 3.77-1.53l2.83-2.5.01.01L13.52 12h-.01l2.69-2.39c.64-.64 1.49-.99 2.4-.99 1.87 0 3.39 1.51 3.39 3.38s-1.52 3.38-3.39 3.38c-.9 0-1.76-.35-2.44-1.03l-1.14-1.01-1.51 1.34 1.27 1.12c1.02 1.01 2.37 1.57 3.82 1.57 2.98 0 5.4-2.41 5.4-5.38s-2.42-5.37-5.4-5.37z"/></svg></span>
+              <span>Lifetime access to replays and resources</span>
+            </li>
+            <li>
+              <span class="badge-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></span>
+              <span>Proven system used by freelancers, agency owners &amp; Droparabia sellers</span>
+            </li>
+            <li>
+              <span class="badge-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></span>
+              <span>Secure payment through Whish or OMT</span>
+            </li>
+            <li>
+              <span class="badge-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h4v1h-7v2h6c1.66 0 3-1.34 3-3V10c0-4.97-4.03-9-9-9z"/></svg></span>
+              <span>Support and guidance whenever you need it</span>
+            </li>
+          </ul>
+          <ahref="https://wa.me/96181911206?text=Hi%2C%20I%20want%20to%20get%20The%20Ultimate%20Copy%20Program!" target="_blank" rel="noopener" class="unq-btn" data-buy-cta>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="36" height="36" style="flex-shrink:0;">
               <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
             </svg>
@@ -681,17 +708,35 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
           try {
             if (sessionStorage.getItem('da_went_to_buy')) return;
             const user = JSON.parse(sessionStorage.getItem('userData') || '{}');
-            if (!user.email) return;
             // A qualified lead stays on the booking follow-up list.
             const tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
-            if (tokens.qualified && !tokens.unqualified) return;
+            if (user.email && tokens.qualified && !tokens.unqualified) return;
             sessionStorage.setItem('da_went_to_buy', '1');
 
+            // UTMs saved earlier in the funnel win; a visitor who landed straight on this
+            // page carries them in the URL instead.
+            const params = new URLSearchParams(window.location.search);
             const utms: Record<string, string> = {};
             ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach((k) => {
-              const v = sessionStorage.getItem(k);
+              const v = sessionStorage.getItem(k) || params.get(k);
               if (v) utms[k] = v;
             });
+            let referrer = sessionStorage.getItem('da_referrer') || '';
+            if (!referrer && document.referrer) {
+              try { if (new URL(document.referrer).hostname !== window.location.hostname) referrer = document.referrer; } catch {}
+            }
+
+            // Not a VSL/survey lead: no contact info, so log the click as Anonymous with
+            // its traffic source.
+            if (!user.email) {
+              fetch('/api/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                keepalive: true,
+                body: JSON.stringify({ anonymous: true, list: 'went_to_buy_course', referrer, ...utms }),
+              }).catch(() => {});
+              return;
+            }
             let vsl: { watched?: number; furthest?: number; duration?: number } = {};
             try { vsl = JSON.parse(sessionStorage.getItem('da_vsl_at_survey') || '{}'); } catch {}
 
@@ -702,7 +747,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
               body: JSON.stringify({
                 name: user.name || '', email: user.email, phone: user.phone || '',
                 list: 'went_to_buy_course',
-                referrer: sessionStorage.getItem('da_referrer') || '',
+                referrer,
                 cta_popup: sessionStorage.getItem('da_cta_popup') || '',
                 headline: sessionStorage.getItem('da_headline_variant') || '',
                 vsl_watched_seconds: vsl.watched || 0,
