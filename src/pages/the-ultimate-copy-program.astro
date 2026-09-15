@@ -36,8 +36,6 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 
       .section { padding: 56px 24px; }
       .section--tint { background: #F8FAFC; }
-      .section--blue { background: linear-gradient(135deg, #0B1D42 0%, #16326B 50%, #1E3E7E 100%); }
-      .section--blue .section-heading { color: #fff; }
       .section-inner { max-width: 880px; margin: 0 auto; }
       .section-inner--narrow { max-width: 680px; }
       /* Headings break out of their (narrower) content column, centered, up to 1100px. */
@@ -91,44 +89,81 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       .unq-btn-txt1 { font-size: 1rem; font-weight: 700; margin: 0; }
 
       .price-line { font-size: 1.6rem; font-weight: 800; color: #111827; text-align: center; margin-bottom: 18px; }
-      .price-line .price-now, .hero-price .price-now { color: #16A34A; }
-      .price-line .price-was, .hero-price .price-was { font-size: 1.4rem; font-weight: 600; color: #111827; text-decoration: line-through; }
+      .price-line .price-row { display: flex; justify-content: center; align-items: baseline; gap: 20px; margin-top: 6px; line-height: 1; }
+      .price-line .price-now { font-size: clamp(3.5rem, 9vw, 5.5rem); font-weight: 900; color: #16A34A; }
+      .price-line .price-was { font-size: clamp(2.2rem, 5.5vw, 3.4rem); font-weight: 700; color: #6B7280; text-decoration: line-through; }
 
-      /* Dark, two-column hero — headline/CTA left, product mockup right. */
-      .hero-dark { background: #fff; padding: 28px 48px 72px; }
       .hero-attention-block { max-width: 1400px; margin: 0 auto 44px; text-align: center; }
-      .hero-dark-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 48px; }
-      .hero-dark-left { flex: 1 1 480px; }
-      .hero-dark-right { flex: 1 1 440px; display: flex; justify-content: center; }
       .hero-kicker { font-size: 0.9rem; font-weight: 700; color: #111827; line-height: 1.4; margin-bottom: 10px; }
       .hero-attention { font-size: 0.85rem; font-weight: 700; color: #2563EB; }
       .hero-headline { font-family: 'IBrand', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: clamp(1.85rem, 3.7vw, 2.9rem); font-weight: 400; color: #111827; line-height: 1.15; margin-bottom: 20px; }
-      .hero-sub { font-size: 1.1rem; color: #111827; line-height: 1.6; margin-bottom: 28px; }
-      .hero-price { font-size: 2rem; font-weight: 800; color: #111827; margin-bottom: 24px; }
-      .hero-image { width: 100%; height: auto; align-self: center; max-width: 540px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.45)); }
-      .hero-dark-left .unq-btn { margin: 0; }
+      .hero-headline--top { text-align: center; max-width: 900px; margin: 0 auto 36px; }
 
-      @media (max-width: 768px) {
-        .hero-dark { padding-left: 20px; padding-right: 20px; }
-        /* Left column dissolves so the image can slot between headline and subheadline. */
-        .hero-dark-inner { flex-direction: column; align-items: stretch; gap: 0; text-align: center; }
-        .hero-dark-left { display: contents; }
-        .hero-dark-right { flex: 0 0 auto; width: 100%; margin-bottom: 24px; }
-        .hero-headline { order: 1; }
-        .hero-dark-right { order: 2; }
-        .hero-sub { order: 3; }
-        .hero-price { order: 4; }
-        .hero-dark-left .unq-btn { order: 5; margin: 0 auto; }
-        .hero-image { max-width: 360px; }
-        .hero-sub { font-size: 0.95rem; }
+      /* Sessions — cards scroll on the left while the laptop stays pinned on the right. */
+      .sessions { background: linear-gradient(135deg, #0B1D42 0%, #16326B 50%, #1E3E7E 100%); padding: 88px 24px; }
+      .sessions-row { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: start; }
+      .sessions-list { display: flex; flex-direction: column; }
+      .session-card { padding: 36px 0; border-bottom: 1px solid rgba(255,255,255,0.25); }
+      .session-card:first-child { padding-top: 0; }
+      .session-card:last-child { border-bottom: none; padding-bottom: 0; }
+      .session-card h3 { font-family: 'IBrand', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 2.1rem; font-weight: 400; color: #fff; line-height: 1.2; margin-bottom: 14px; }
+      .session-desc { font-size: 1rem; color: rgba(255,255,255,0.8); line-height: 1.6; margin-bottom: 16px; }
+      .session-card ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+      .session-card li { position: relative; padding-left: 26px; font-size: 0.97rem; color: #fff; line-height: 1.5; }
+      .session-card li::before { content: ''; position: absolute; left: 0; top: 0.3em; width: 14px; height: 14px; border-radius: 50%; background: #60A5FA; box-shadow: inset 0 0 0 4px rgba(255,255,255,0.35); }
+      .sessions-media { position: sticky; top: max(24px, calc(50vh - 200px)); }
+      .sessions-media img { display: block; width: 100%; height: auto; }
+      @media (max-width: 900px) {
+        .sessions { padding: 56px 20px; }
+        .sessions-row { grid-template-columns: 1fr; gap: 28px; }
+        .sessions-media { position: static; order: -1; }
+        .session-card { padding: 28px 0; }
+        .session-card h3 { font-size: 1.35rem; }
       }
 
-      /* Module breakdown — numbered cards, mirrors the "Part 1 / Part 2" step pattern */
-      .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; }
-      .module-card { background: transparent; border: 2px solid rgba(255,255,255,0.35); border-radius: 16px; box-shadow: none; padding: 28px; text-align: left; }
-      .module-num { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; background: transparent; color: #fff; font-weight: 700; font-size: 1.05rem; margin-bottom: 18px; }
-      .module-card h3 { font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 10px; }
-      .module-card p { font-size: 0.95rem; color: rgba(255,255,255,0.78); line-height: 1.6; }
+      /* Offer — single centered column: name, book, pitch. */
+      .offer { background: #fff; padding: 72px 24px; }
+      .offer-inner { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; }
+      .offer-heading { font-family: 'IBrand', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; color: #111827; line-height: 1.15; margin-bottom: 28px; }
+      .hero-image { display: block; width: 100%; height: auto; max-width: 540px; margin-bottom: 32px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.45)); }
+      .hero-sub { font-size: 1.4rem; font-weight: 700; color: #111827; line-height: 1.5; }
+
+      @media (max-width: 768px) {
+        .offer { padding: 56px 20px; }
+        .hero-image { max-width: 360px; }
+        .hero-sub { font-size: 1rem; }
+      }
+
+      /* What's inside — priced list of included items beside the book, bonuses and CTA underneath. */
+      .inside-row { max-width: 1240px; margin: 64px auto 0; display: grid; grid-template-columns: 1.5fr 1fr; gap: 32px; align-items: center; }
+      .inside-row .included-card { order: -1; }
+      /* Same transparent-margin crop as the bonus covers. */
+      .inside-image { display: block; width: 100%; max-width: 380px; height: auto; margin: 0 auto; }
+      .included-card { text-align: left; }
+      .included-list { list-style: none; }
+      .included-list li { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; padding: 14px 0; border-bottom: 1px solid rgba(0,0,0,0.14); font-size: 1.12rem; font-weight: 600; color: #111827; line-height: 1.45; }
+      .included-list li:first-child { padding-top: 0; }
+      .included-list li:last-child { border-bottom: none; padding-bottom: 0; }
+      .included-price { flex-shrink: 0; font-size: 1.25rem; font-weight: 800; color: #6B7280; text-decoration: line-through; }
+      .bonus-heading { max-width: 1240px; margin: 96px auto 24px; text-align: center; font-size: clamp(1.3rem, 2.6vw, 1.6rem); font-weight: 800; color: #111827; }
+      .bonus-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+      .bonus-card { display: flex; align-items: center; gap: 8px; text-align: left; }
+      /* The cover PNGs have wide transparent margins; a tall, slightly left-of-center cover crop keeps just the book. */
+      .bonus-image { flex: 0 0 200px; width: 200px; aspect-ratio: 0.57; object-fit: cover; object-position: 47% 50%; }
+      .bonus-card h4 { font-size: 1.35rem; font-weight: 700; color: #111827; line-height: 1.35; margin-bottom: 8px; }
+      .bonus-card p { font-size: 0.92rem; color: #4B5563; line-height: 1.55; }
+      .inside-cta { margin-top: 48px; text-align: center; }
+      @media (max-width: 900px) {
+        .inside-row { grid-template-columns: 1fr; gap: 28px; margin-top: 48px; }
+        .inside-image { max-width: 260px; }
+        .inside-row .included-card { order: 0; }
+        .bonus-heading { margin-top: 64px; }
+        .bonus-grid { grid-template-columns: 1fr; gap: 16px; }
+        .bonus-card h4 { font-size: 1.15rem; }
+        .bonus-card p { font-size: 0.84rem; line-height: 1.5; }
+        .bonus-card { gap: 6px; }
+        .bonus-image { flex-basis: 130px; width: 130px; }
+      }
 
       /* Testimonials placeholder — no fabricated names/quotes; swap this in once real
          reviews come in after the first cohort. */
@@ -185,9 +220,10 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       .proof-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
       .proof-grid img { display: block; width: 100%; height: auto; border-radius: 16px; box-shadow: 0 14px 32px -8px rgba(0, 0, 0, 0.32); }
       .proof-heading { font-size: 1.4rem; }
+      .hero-proof { padding-top: 28px; }
       @media (max-width: 768px) {
-        #reviews { padding-left: 0; padding-right: 0; }
-        #reviews .section-inner { padding: 0 20px; }
+        .hero-proof { padding-top: 20px; padding-left: 0; padding-right: 0; }
+        .hero-proof .section-inner, .hero-proof .hero-attention-block { padding: 0 20px; }
         .proof-heading { font-size: 1.1rem; }
         .proof-grid-container { padding: 0 6px; }
         .proof-grid { gap: 16px; }
@@ -247,9 +283,9 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         </div>
       </header>
 
-      <!-- ═══════════ HERO ═══════════ -->
-      <section class="hero-dark">
-        <div class="hero-attention-block" id="unqualified-attention" hidden>
+      <!-- ═══════════ HERO — COPY PROGRAM TESTIMONIALS ═══════════ -->
+      <section class="section hero-proof">
+        <div class="hero-attention-block">
           <p class="hero-kicker">
             Based on your answers, it seems now is not the right time for you to join Droparabia
           </p>
@@ -257,88 +293,14 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
             But we've got something suitable for you at the moment
           </p>
         </div>
-        <!-- The page is open to everyone; only leads the survey routed here as unqualified
-             see the "based on your answers" lines. Runs inline so they don't flash in.
-             ?preview=1 shows them without a real survey session. -->
-        <script is:inline>
-          try {
-            var t = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
-            if (t.unqualified || new URLSearchParams(location.search).get('preview') === '1') {
-              document.getElementById('unqualified-attention').hidden = false;
-            }
-          } catch (_) {}
-        </script>
 
-        <div class="hero-dark-inner">
-          <div class="hero-dark-left">
-            <h1 class="hero-headline">
-              Learn a remote high-income skill that every business will pay you for
-            </h1>
-            <p class="hero-sub">
-              Inside The Ultimate Copy Program, you'll learn about a high-valuable, high income skill
-              called copywriting, the skill that builds every business's advertisements and marketing campaigns.
-            </p>
-
-            <p class="hero-price">
-              Only <span class="price-now">$97</span> <span class="price-was">$197</span>
-            </p>
-
-            <a href="https://wa.me/96181911206?text=Hi%2C%20I%20want%20to%20get%20The%20Ultimate%20Copy%20Program!" target="_blank" rel="noopener" class="unq-btn" data-buy-cta>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="36" height="36" style="flex-shrink:0;">
-                <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-              </svg>
-              <div>
-                <p class="unq-btn-txt1">Get Instant access to the Ultimate Copy Program!</p>
-              </div>
-            </a>
-          </div>
-
-          <div class="hero-dark-right">
-            <img
-              loading="lazy"
-              src="/copy-program.png"
-              alt="The Ultimate Copy Program, A DropVault Masterclass"
-              class="hero-image"
-            />
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════ WHAT'S INSIDE ═══════════ -->
-      <section class="section section--blue">
         <div class="section-inner">
-          <h2 class="section-heading">What's Inside The Ultimate Copy Program</h2>
-          <div class="module-grid">
-            <div class="module-card">
-              <span class="module-num">01</span>
-              <h3>Pre-recorded coaching sessions</h3>
-              <p>4 pre-recorded sessions that teaches everything about copywriting from A to Z.</p>
-            </div>
-            <div class="module-card">
-              <span class="module-num">02</span>
-              <h3>Exclusive sessions with industry experts</h3>
-              <p>Access to exclusive coaching sessions with experts in advertisement creation and scriptwriting industry.</p>
-            </div>
-            <div class="module-card">
-              <span class="module-num">03</span>
-              <h3>Support whenever you need it</h3>
-              <p>You'll gain access to a Skool community where you can reach out for guidance and answers to your questions.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════ SOCIAL PROOF ═══════════ -->
-      <section class="section" id="reviews">
-        <div class="section-inner">
-          <p class="text-center proof-heading" style="margin-top:0; margin-bottom:32px; font-weight:700; color:#111827;">
-            This program can teach you high-income skills you can sell like these guys
-          </p>
+          <h1 class="hero-headline hero-headline--top">
+            Learn a remote high-income skill that every business will pay you for
+          </h1>
         </div>
 
-        <!-- Sibling to .section-inner, not nested inside it — same as the homepage's
-             carousel, so its own 1152px max-width isn't choked down by the narrower
-             text column above it. -->
+        <!-- Sibling to .section-inner so the grid's own max-width isn't choked by it. -->
         <div class="proof-grid-container">
           <div class="proof-grid">
             <img src="/copy-program/Ibrahim.png" alt="Testimonial" loading="lazy" />
@@ -350,10 +312,157 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
             <img src="/copy-program/mahoumd.png" alt="Testimonial" loading="lazy" />
           </div>
         </div>
+      </section>
 
-        <p class="text-center proof-heading" style="margin-top:56px; margin-bottom:0; font-weight:700; color:#111827;">
-          Even Droparabia sellers used it to craft their own high-selling ads!
-        </p>
+      <!-- ═══════════ OFFER ═══════════ -->
+      <section class="offer">
+        <div class="offer-inner">
+          <h2 class="offer-heading">The Ultimate Copy Program</h2>
+
+          <img
+            loading="lazy"
+            src="/copy-program.png"
+            alt="The Ultimate Copy Program, A DropVault Masterclass"
+            class="hero-image"
+          />
+
+          <p class="hero-sub">
+            Inside The Ultimate Copy Program, you'll learn about a high-valuable, high income skill
+            called copywriting, the skill that builds every business's advertisements and marketing campaigns.
+          </p>
+        </div>
+      </section>
+
+      <!-- ═══════════ SESSIONS ═══════════ -->
+      <section class="sessions">
+        <div class="sessions-row">
+          <div class="sessions-list">
+            <article class="session-card">
+              <h3>Session 1: What is copywriting</h3>
+              <p class="session-desc">You'll learn what copywriting is exactly, how this craft is used in marketing campaigns that build huge businesses from scratch, and how to learn it.</p>
+              <ul>
+                <li>Features vs. benefits</li>
+                <li>How to speak directly to your ideal target customer</li>
+                <li>The three things every piece of copy must do: get attention, hold it, ask for action</li>
+                <li>Where copy shows up: ads, emails, sales pages, product descriptions</li>
+              </ul>
+            </article>
+
+            <article class="session-card">
+              <h3>Session 2: Researching and studying the market</h3>
+              <p class="session-desc">How a copywriter researches his competitors and his ideal target audience in order to gather materials to craft persuasive marketing campaigns.</p>
+              <ul>
+                <li>Mining reviews, comments, and DMs for the customer's own words</li>
+                <li>Awareness levels and why the same offer needs different copy for different readers</li>
+                <li>Building a swipe file and how to use it without copying</li>
+                <li>The one-page research brief to fill before writing anything</li>
+              </ul>
+            </article>
+
+            <article class="session-card">
+              <h3>Session 3: Writing powerful and high-selling messages</h3>
+              <p class="session-desc">This is where you'll start learning how to write compelling and persuasive copy in different formats.</p>
+              <ul>
+                <li>Headline formulas that work and why</li>
+                <li>Hooks for short-form video and ads</li>
+                <li>A proven sales page structure, section by section</li>
+                <li>The CTA: making the next step obvious and easy</li>
+                <li>Editing: cutting 30% without losing meaning</li>
+              </ul>
+            </article>
+
+            <article class="session-card">
+              <h3>Session 4: Hunting for clients</h3>
+              <p class="session-desc">You'll learn how to find clients, how to pitch them great offers, and how to optimize your social media accounts.</p>
+              <ul>
+                <li>What to charge as a beginner and how to raise it</li>
+                <li>Building a portfolio with zero clients (spec work)</li>
+                <li>Where the clients actually are</li>
+                <li>How to run the first call and scope the job</li>
+                <li>Delivering work so they hire you again</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="sessions-media">
+            <img
+              loading="lazy"
+              src="/laptop.png"
+              width="1388"
+              height="904"
+              alt="A live copywriting coaching session inside The Ultimate Copy Program"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════ WHAT'S INSIDE ═══════════ -->
+      <section class="section">
+        <div class="section-inner">
+          <h2 class="section-heading">What's Inside The Ultimate Copy Program</h2>
+        </div>
+
+        <div class="inside-row">
+          <img
+            loading="lazy"
+            src="/singlebook.png"
+            alt="The Ultimate Copy Program book"
+            class="inside-image"
+          />
+
+          <div class="included-card">
+            <ul class="included-list">
+              <li><span>4 pre-recorded exclusive sessions about copywriting</span><span class="included-price">$197</span></li>
+              <li><span>Interactive homework for you to complete and improve your skills</span><span class="included-price">$97</span></li>
+              <li><span>Branding + outreach strategies to land clients</span><span class="included-price">$147</span></li>
+              <li><span>Pre-recorded masterclasses with expert marketers &amp; scriptwriters</span><span class="included-price">$197</span></li>
+              <li><span>Shopify website optimization pre-recorded guide</span><span class="included-price">$97</span></li>
+              <li><span>Access to a community for guidance and support whenever you need it</span><span class="included-price">$147</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="bonus-heading">Along with 2 bonus courses</h3>
+        <div class="bonus-grid">
+          <div class="bonus-card">
+            <img loading="lazy" src="/zero-startup-blueprint.png" alt="The $0 Startup Blueprint" class="bonus-image" />
+            <div>
+              <h4>The $0 Startup Blueprint</h4>
+              <p>Build a personal brand from zero and turn it into income. Pick your niche, set up the page, build the offer, and run the content that fills your calendar with qualified calls.</p>
+            </div>
+          </div>
+          <div class="bonus-card">
+            <img loading="lazy" src="/branded%20dropshipping%20course.png" alt="Behind the Scenes of a Branded Dropshipping Business" class="bonus-image" />
+            <div>
+              <h4>Behind the Scenes of a Branded Dropshipping Business</h4>
+              <p>Behind the scenes of how to build a successful &amp; high-earning branded dropshipping business, explained in pre-recorded guides.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="inside-cta">
+          <p class="price-line">
+            Get them all for only
+            <span class="price-row"><span class="price-now">$97</span> <span class="price-was">$882</span></span>
+          </p>
+          <a href="https://wa.me/96181911206?text=Hi%2C%20I%20want%20to%20get%20The%20Ultimate%20Copy%20Program!" target="_blank" rel="noopener" class="unq-btn" data-buy-cta>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="36" height="36" style="flex-shrink:0;">
+              <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+            <div>
+              <p class="unq-btn-txt1">Get Instant access to the Ultimate Copy Program!</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- ═══════════ DROPARABIA SELLERS PROOF ═══════════ -->
+      <section class="section" id="reviews">
+        <div class="section-inner">
+          <h2 class="text-center proof-heading" style="margin-top:0; margin-bottom:0; font-weight:700; color:#111827;">
+            Even Droparabia sellers used it to craft their own high-selling ads!
+          </h2>
+        </div>
 
         <!-- Curated to only the case studies/testimonials that call out ad spend,
              since this page needs proof the ad-buying skill works. -->
@@ -457,27 +566,6 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <!-- ═══════════ FINAL CTA ═══════════ -->
-      <section class="section section--tint">
-        <div class="section-inner text-center">
-          <h2 class="section-heading" style="margin-bottom:28px; font-size:clamp(1.05rem, 2.6vw, 1.7rem);">
-            With this program, you'll be armed with the exact skillset that businesses and
-            e-commerce brands constantly pay for
-          </h2>
-          <p class="price-line">
-            Only <span class="price-now">$97</span> <span class="price-was">$197</span>
-          </p>
-          <a href="https://wa.me/96181911206?text=Hi%2C%20I%20want%20to%20get%20The%20Ultimate%20Copy%20Program!" target="_blank" rel="noopener" class="unq-btn" data-buy-cta>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="36" height="36" style="flex-shrink:0;">
-              <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-            </svg>
-            <div>
-              <p class="unq-btn-txt1">Get Instant access to the Ultimate Copy Program!</p>
-            </div>
-          </a>
         </div>
       </section>
 
