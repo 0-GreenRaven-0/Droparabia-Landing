@@ -285,7 +285,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 
       <!-- ═══════════ HERO — COPY PROGRAM TESTIMONIALS ═══════════ -->
       <section class="section hero-proof">
-        <div class="hero-attention-block">
+        <div class="hero-attention-block" id="hero-attention-block" hidden>
           <p class="hero-kicker">
             Based on your answers, it seems now is not the right time for you to join Droparabia
           </p>
@@ -293,6 +293,20 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
             But we've got something suitable for you at the moment
           </p>
         </div>
+        <script is:inline>
+          // Only unqualified leads routed here by the survey (?unq=<token>) see the
+          // attention line. If this tab also holds the survey's token, they must match.
+          (function () {
+            try {
+              var unq = new URLSearchParams(window.location.search).get('unq');
+              if (!unq || !/^[a-z0-9]{8,40}$/.test(unq)) return;
+              var stored = '';
+              try { stored = (JSON.parse(sessionStorage.getItem('userTokens') || '{}') || {}).unqualified || ''; } catch (_) {}
+              if (stored && stored !== unq) return;
+              document.getElementById('hero-attention-block').hidden = false;
+            } catch (_) {}
+          })();
+        </script>
 
         <div class="section-inner">
           <h1 class="hero-headline hero-headline--top">

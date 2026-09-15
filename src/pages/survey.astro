@@ -275,7 +275,11 @@
         tokens[qualified ? 'qualified' : 'unqualified'] = token;
         sessionStorage.setItem('userTokens', JSON.stringify(tokens));
 
-        var dest = qualified ? '/choose-schedule' : '/the-ultimate-copy-program';
+        // Unqualified leads carry their token in the URL so the sales page can show
+        // them the "not the right time" attention line.
+        var dest = qualified
+          ? '/choose-schedule'
+          : '/the-ultimate-copy-program?unq=' + encodeURIComponent(token);
 
         // No stored contact info (they somehow reached the survey without the VSL
         // gate) — nothing to subscribe with, so just route them.
