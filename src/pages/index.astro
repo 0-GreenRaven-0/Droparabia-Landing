@@ -1212,6 +1212,12 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       sessionStorage.setItem('userData', JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal }));
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: 'subscription_success_modal' });
+      // Meta Pixel Lead: only reached after the API confirms the subscription. Wrapped so
+      // a blocked or broken pixel can't drop them into the error path below.
+      try {
+        const fbq = (window as any).fbq;
+        if (typeof fbq === 'function') fbq('track', 'Lead');
+      } catch {}
 
       successEl.style.display = 'block';
       btn.textContent = 'Starting video...';

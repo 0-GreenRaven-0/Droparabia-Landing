@@ -29,6 +29,51 @@
       .font-bold { font-weight: 700; } .font-semibold { font-weight: 600; }
       .input--hidden { display: none !important; }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" />
+    <style>
+      /* Thank-you view, adapted from the droparabia-thank-you project. Shown in place of
+         the Calendly embed once a booking is confirmed; everything is scoped to it. */
+      @font-face { font-family: 'IBrand'; src: url('/fonts/ibrand.woff2') format('woff2'), url('/fonts/ibrand.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+      #thank-you-view {
+        --blue-start: #2563eb; --blue-end: #29b6f6; --bg-card: #f0f0f0; --text: #111118; --text-muted: #55556a;
+        --border: rgba(37, 99, 235, 0.22); --radius-lg: 1.25rem; --radius-xl: 1.75rem;
+        color: var(--text); font-family: 'DM Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 1rem; line-height: 1.65;
+      }
+      #thank-you-view .hl { font-family: 'IBrand', sans-serif; background: linear-gradient(90deg, var(--blue-start), var(--blue-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+      #thank-you-view .page-wrap { max-width: 760px; margin: 0 auto; padding: 0 1.25rem; }
+      #thank-you-view .confirm-section { padding: 2.5rem 0 1.5rem; text-align: center; position: relative; overflow: hidden; }
+      #thank-you-view .confirm-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(37,99,235,0.10) 0%, transparent 70%); pointer-events: none; }
+      #thank-you-view .confirm-headline { font-family: 'IBrand', sans-serif; font-weight: normal; font-size: clamp(2.5rem, 7vw, 4.5rem); line-height: 1.05; letter-spacing: 0.01em; color: var(--text); margin-bottom: 0.4rem; }
+      #thank-you-view .confirm-sub { font-size: clamp(1rem, 2.5vw, 1.2rem); color: var(--text-muted); font-weight: 400; }
+      #thank-you-view .video-section { padding: 1rem 0 2rem; }
+      #thank-you-view .section-label { text-align: center; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.6rem; }
+      #thank-you-view .video-headline, #thank-you-view .faq-headline, #thank-you-view .step3-headline { font-family: 'IBrand', sans-serif; font-weight: normal; font-size: clamp(2rem, 5.5vw, 3.2rem); line-height: 1.1; text-align: center; }
+      #thank-you-view .video-headline { margin-bottom: 1rem; }
+      #thank-you-view .video-wrap { border-radius: var(--radius-xl); overflow: hidden; border: 2px solid #2563eb; box-shadow: 0 0 18px rgba(37,99,235,0.5), 0 0 40px rgba(37,99,235,0.2); background: #000; aspect-ratio: 16 / 9; }
+      #thank-you-view .video-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
+      #thank-you-view .faq-section { padding: 0 0 2.5rem; }
+      #thank-you-view .faq-headline { margin-bottom: 1.25rem; }
+      #thank-you-view .faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
+      #thank-you-view .faq-item { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color 0.2s; will-change: height; }
+      #thank-you-view .faq-item[open] { border-color: rgba(37, 99, 235, 0.5); }
+      #thank-you-view .faq-item summary { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: 1.2rem 1.4rem 1.6rem; font-size: 1rem; font-weight: 600; cursor: pointer; list-style: none; user-select: none; color: var(--text); }
+      #thank-you-view .faq-item summary::-webkit-details-marker { display: none; }
+      #thank-you-view .faq-arrow { flex-shrink: 0; width: 1.2rem; height: 1.2rem; color: var(--text-muted); transition: transform 0.25s ease; }
+      #thank-you-view .faq-item[open] .faq-arrow { transform: rotate(180deg); }
+      #thank-you-view .faq-body { padding: 1rem 1.4rem 1.3rem; color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; border-top: 1px solid var(--border); }
+      #thank-you-view .step3-section { padding: 0 0 3rem; text-align: center; }
+      #thank-you-view .step3-headline { margin-bottom: 0.6rem; }
+      #thank-you-view .step3-sub { font-size: 1rem; color: var(--text-muted); max-width: 480px; margin: 0 auto 0.6rem; line-height: 1.6; }
+      @media (max-width: 480px) {
+        #thank-you-view .page-wrap { padding: 0 1rem; }
+        #thank-you-view .confirm-section { padding-top: 1.75rem; }
+        #thank-you-view .faq-item summary { padding: 1rem 1.1rem 1.3rem; font-size: 0.95rem; }
+        #thank-you-view .faq-body { padding: 0.85rem 1.1rem 1.1rem; }
+        #thank-you-view .video-wrap { border-radius: 1rem; }
+      }
+    </style>
     <!-- Meta Pixel Code -->
     <script is:inline>
     !function(f,b,e,v,n,t,s)
@@ -98,6 +143,133 @@
       </div>
     </div>
     </div> <!-- /main-content -->
+
+    <!-- Thank-you view: hidden until Calendly confirms a booking (see the booking listener below) -->
+    <div id="thank-you-view" hidden>
+      <section class="confirm-section">
+        <div class="page-wrap">
+          <h1 class="confirm-headline">Your Call has been Booked!</h1>
+          <h2 class="confirm-sub">Be sure to check your email for confirmation</h2>
+          <p class="confirm-sub">You'll be contacted by one of our team before the meeting starts</p>
+        </div>
+      </section>
+
+      <section class="video-section">
+        <div class="page-wrap">
+          <p class="section-label">Here's what to do in the meanwhile</p>
+          <h2 class="video-headline">Step 1: <span class="hl">Watch this video</span></h2>
+          <div class="video-wrap">
+            <!-- src is set when the view is shown, so the video doesn't load for visitors who only see the calendar -->
+            <iframe
+              data-src="https://www.youtube.com/embed/hh5GMS3jHZI"
+              title="Droparabia VSL"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="faq-section">
+        <div class="page-wrap">
+          <h2 class="faq-headline">Step 2: Check out the <span class="hl">Frequently Asked Questions</span></h2>
+          <div class="faq-list">
+                  <details class="faq-item">
+                    <summary>
+                      Do I need a big investment to start dropshipping?
+                      <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </summary>
+                    <p class="faq-body">
+                     Droparabia's main purpose allows you to start your dropshipping or ecommerce business with a tiny budget of $500 minimum without wasting your money on bulk inventories that might not sell, renting warehouses or paying for shipment and import fees.
+                    </p>
+                  </details>
+                  <details class="faq-item">
+                    <summary>
+                      Does dropshipping actually work in Lebanon?
+                      <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </summary>
+                    <p class="faq-body">
+                      When lots of people on the internet were saying that "Dropshipping is dead" or "doesn't work in any arab country", they meant the old dropshipping model where you have to gamble with your money on products hoping they might sell while paying huge fees.
+        
+                      With Droparabia however, the game has changed. Now all you need is a small budget to run your ads campaign and droparabia will take care of sourcing hundreds of different products for you and handle order fulfillment while you focus on scaling your business and making the decisions
+                    </p>
+                  </details>
+                  <details class="faq-item">
+                    <summary>
+                      Dropshipping can be competitive, how do I succeed?
+                      <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </summary>
+                    <p class="faq-body">
+                      Every single business model has competition, in order to succeed, you need to stand out as a whole unique brand, which very soon Droparabia will be able to help with that through its laser machine that allows you to rebrand the products you sell.
+                    </p>
+                  </details>
+                  <details class="faq-item">
+                    <summary>
+                      Isn't it better to just start traditional e-commerce?
+                      <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </summary>
+                    <p class="faq-body">
+                     A traditional e-commerce business requires at least $3000 to get started, not to mention searching for hours on ali baba, buying a shipment of products you're not certain if they'll sell or not, renting warehouses, paying fees... and you haven't even started selling yet. That's not the case with Droparabia, it does the research and product sourcing for you, you pay for each product you sell and keep the profit without managing any inventory all that with a small budget of $500.
+                    </p>
+                  </details>
+                  <details class="faq-item">
+                    <summary>
+                      How much money can I make with Droparabia?
+                      <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </summary>
+                    <p class="faq-body">
+                      It all depends on how much time and effort you're willing to invest into your own business (even if you fail at first). You're getting the same tools, guides and support as our +500 lebanese users. Some are making 1k per month, some $700 in 2 weeks. How much you give to your business is how much you get.
+                    </p>
+                  </details>
+                  <details class="faq-item">
+                    <summary>
+                      How long will it take to get started with my dropshipping business?
+                      <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </summary>
+                    <p class="faq-body">
+                     Droparabia is designed to get you started in less than 30 days without all the headaches of researching and learning everything from scratch with a plug-and-play infrastructure to get your business launched as soon as possible.
+                    </p>
+                  </details>
+                  <details class="faq-item">
+                    <summary>
+                      I don't have any technical skills or marketing experience, can I succeed?
+                      <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </summary>
+                    <p class="faq-body">
+                      That's exactly why we have a 5-day support team of advisors, MajdGBT our own AI assistant and lots of free courses and recorded tutorials for!
+                      We will build the website for you, teach you how to run ads and scale them, what tools to use to create your logo, how to use AI for content creation... Most of our users have barely any technical skills let alone marketing experience and still manage to make the best use out of droparabia!
+                    </p>
+                  </details>
+                  <details class="faq-item">
+                    <summary>
+                      What if I don't get results?
+                      <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </summary>
+                    <p class="faq-body">
+                     That's why we have a 90 days Money-Back-Guarantee, Droparabia's main purpose is to make this whole process as low risk as possible for everyone. If you use Droparabia correctly and follow our instructions and still didn't make a single sale in 90 days, you will get a full refund (after providing proof of your commitment to the platform and implementing instructions)
+                    </p>
+                  </details>
+                  <details class="faq-item">
+                    <summary>
+                      Why should I start a dropshipping business under Lebanon's gruesome war?
+                      <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </summary>
+                    <p class="faq-body">
+                      Droparabia's logistic network is located in a safe area away from the danger zone, meaning it's always taking orders and fulfilling them. Plus Droparabia doesn't only source from a trusted supplier outside of Lebanon but from local suppliers as well to make sure you always have something to sell.
+                    </p>
+                  </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="step3-section">
+        <div class="page-wrap">
+          <h2 class="step3-headline">Step 3: Still have <span class="hl">more questions?</span></h2>
+          <p class="step3-sub">Write all your questions down and our team will answer them for you during the call.</p>
+          <p class="step3-sub">Be sure to attend the meeting call in a quiet place with proper internet connection for the best experience possible</p>
+        </div>
+      </section>
+    </div> <!-- /thank-you-view -->
 
 
     <!-- Token check + Calendly init -->
@@ -176,14 +348,44 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
       });
 
+      // A confirmed booking swaps the Calendly embed for the thank-you view on this page
+      // (no redirect) and fires the QualifiedBooking pixel event with the survey tier.
+      // The flags live on window so a second copy of this listener, or Calendly posting
+      // the event twice, can't fire the conversion or subscribe the lead again.
       var callBooked = false;
 
-      window.addEventListener('message', function(e) {
-        if (e.data && e.data.event === 'calendly.event_scheduled') {
-          if (callBooked) return;
+      function showThankYouView() {
+        var tier = 0;
+        try { tier = Number(sessionStorage.getItem('da_tier')) || 0; } catch(_) {}
+        try {
+          if (typeof window.fbq === 'function') {
+            if (tier) window.fbq('trackCustom', 'QualifiedBooking', { value: tier, currency: 'USD' });
+            else window.fbq('trackCustom', 'QualifiedBooking');
+          }
+        } catch(_) {}
+
+        var main = document.getElementById('main-content');
+        var view = document.getElementById('thank-you-view');
+        if (main) main.style.display = 'none';
+        if (view) {
+          var frame = view.querySelector('iframe[data-src]');
+          if (frame && !frame.getAttribute('src')) frame.setAttribute('src', frame.getAttribute('data-src'));
+          view.hidden = false;
+        }
+        window.scrollTo(0, 0);
+      }
+
+      if (!window.__daBookingListener) {
+        window.__daBookingListener = true;
+        window.addEventListener('message', function(e) {
+          if (e.origin !== 'https://calendly.com') return;
+          if (!(e.data && e.data.event === 'calendly.event_scheduled')) return;
+          if (callBooked || window.__daBookingHandled) return;
           callBooked = true;
+          window.__daBookingHandled = true;
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({ event: 'call_booked' });
+          showThankYouView();
 
           // Prefer Calendly payload (always available), fall back to sessionStorage
           var invitee = (e.data.payload && e.data.payload.invitee) || {};
@@ -228,20 +430,40 @@ document.addEventListener('DOMContentLoaded', function() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(Object.assign(payload, utms)),
               keepalive: true,
-            }).finally(function() {
-              window.location.href = 'https://thank-you.droparabia.com';
-            });
-          } else {
-            window.location.href = 'https://thank-you.droparabia.com';
+            }).catch(function() {});
           }
-        }
-      });
+        });
+      }
 
       window.addEventListener('beforeunload', function() {
         if (!callBooked) {
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({ event: 'call_not_booked' });
         }
+      });
+    </script>
+
+    <!-- Thank-you view FAQ expand/collapse animation -->
+    <script is:inline>
+      document.querySelectorAll('#thank-you-view .faq-item').forEach(function(details) {
+        var summary = details.querySelector('summary');
+        summary.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (details.open) {
+            var anim = details.animate(
+              { height: [details.offsetHeight + 'px', summary.offsetHeight + 'px'] },
+              { duration: 280, easing: 'ease' }
+            );
+            anim.onfinish = function() { details.removeAttribute('open'); };
+          } else {
+            details.setAttribute('open', '');
+            var full = details.offsetHeight;
+            details.animate(
+              { height: [summary.offsetHeight + 'px', full + 'px'] },
+              { duration: 280, easing: 'ease' }
+            );
+          }
+        });
       });
     </script>
 

@@ -294,6 +294,14 @@
 
         // Unqualified leads carry their token in the URL so the sales page can show
         // them the "not the right time" attention line.
+        // Qualification tier from the budget answer, read by /choose-schedule as the
+        // value of the QualifiedBooking pixel event.
+        var tier = answers.budget === 'yes' ? 997 : answers.budget === 'partial' ? 697 : null;
+        try {
+          if (qualified && tier) sessionStorage.setItem('da_tier', String(tier));
+          else sessionStorage.removeItem('da_tier');
+        } catch(_) {}
+
         var dest = qualified
           ? '/choose-schedule'
           : '/the-ultimate-copy-program?unq=' + encodeURIComponent(token);
