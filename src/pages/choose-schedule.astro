@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
       // A confirmed booking swaps the Calendly embed for the thank-you view on this page
-      // (no redirect) and fires the QualifiedBooking pixel event with the survey tier.
+      // (no redirect) and fires the Meta Pixel Schedule event with the survey tier.
       // The flags live on window so a second copy of this listener, or Calendly posting
       // the event twice, can't fire the conversion or subscribe the lead again.
       var callBooked = false;
@@ -359,8 +359,8 @@ document.addEventListener('DOMContentLoaded', function() {
         try { tier = Number(sessionStorage.getItem('da_tier')) || 0; } catch(_) {}
         try {
           if (typeof window.fbq === 'function') {
-            if (tier) window.fbq('trackCustom', 'QualifiedBooking', { value: tier, currency: 'USD' });
-            else window.fbq('trackCustom', 'QualifiedBooking');
+            if (tier) window.fbq('track', 'Schedule', { value: tier, currency: 'USD' });
+            else window.fbq('track', 'Schedule');
           }
         } catch(_) {}
 
