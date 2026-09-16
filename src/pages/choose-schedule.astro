@@ -185,6 +185,15 @@ document.addEventListener('DOMContentLoaded', function() {
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({ event: 'call_booked' });
 
+          // Meta Pixel custom event. Guarded so a blocked pixel can't stop the redirect.
+          if (e.origin === 'https://calendly.com' && typeof window.fbq === 'function') {
+            try { window.fbq('trackCustom', 'CallBooked'); } catch(_) {}
+          }
+          // Give the pixel request a moment to leave before navigating away.
+          var goToThankYou = function() {
+            setTimeout(function() { window.location.href = 'https://thank-you.droparabia.com'; }, 600);
+          };
+
           // Prefer Calendly payload (always available), fall back to sessionStorage
           var invitee = (e.data.payload && e.data.payload.invitee) || {};
           var stored  = {};
@@ -228,11 +237,9 @@ document.addEventListener('DOMContentLoaded', function() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(Object.assign(payload, utms)),
               keepalive: true,
-            }).finally(function() {
-              window.location.href = 'https://thank-you.droparabia.com';
-            });
+            }).finally(goToThankYou);
           } else {
-            window.location.href = 'https://thank-you.droparabia.com';
+            goToThankYou();
           }
         }
       });
