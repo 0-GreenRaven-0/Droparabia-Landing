@@ -175,7 +175,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       .bonus-card p { font-size: 0.92rem; color: #4B5563; line-height: 1.55; }
       .inside-cta { margin-top: 48px; text-align: center; }
       /* Trust badges under the price: four equal columns, icon above a short label. */
-      .price-badges { list-style: none; max-width: 920px; margin: 20px auto 40px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+      .price-badges { list-style: none; max-width: 1100px; margin: 20px auto 40px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 28px; }
       .price-badges li { display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; line-height: 1.45; text-transform: uppercase; color: #111827; text-align: center; }
       .price-badges .badge-icon { display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #2563EB, #3B82F6); color: #fff; box-shadow: 0 4px 14px rgba(37,99,235,0.28); }
       .price-badges svg { width: 26px; height: 26px; }
@@ -193,6 +193,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         .price-badges li { font-size: 0.7rem; letter-spacing: 0.04em; gap: 8px; }
         .price-badges .badge-icon { width: 44px; height: 44px; }
         .price-badges svg { width: 22px; height: 22px; }
+        .price-badges li:last-child:nth-child(odd) { grid-column: 1 / -1; max-width: 50%; margin: 0 auto; }
       }
 
       /* Testimonials placeholder — no fabricated names/quotes; swap this in once real
@@ -522,6 +523,10 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
             <li>
               <span class="badge-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h4v1h-7v2h6c1.66 0 3-1.34 3-3V10c0-4.97-4.03-9-9-9z"/></svg></span>
               <span>Support and guidance whenever you need it</span>
+            </li>
+            <li>
+              <span class="badge-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg></span>
+              <span>60 days money back guarantee if you found no value at all</span>
             </li>
           </ul>
           <a href="https://ig.me/m/mjbusinessofficial" target="_blank" rel="noopener" class="unq-btn" data-buy-cta>
