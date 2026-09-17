@@ -1,6 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { siInstagram, siThreads, siYoutube } from 'simple-icons';
+
+// Real Trustpilot reviews, copied verbatim (newest first). Dates are the review dates
+// shown on Trustpilot; every one of these is 5 stars.
+const trustpilotReviews = [
+  { name: 'geo kazan', date: 'Aug 29, 2026', stars: 5, text: 'The system works if you stay consistent and put enough effort' },
+  { name: 'Karim Sabeh', date: 'Jul 27, 2026', stars: 5, text: 'I use it personally it is beginner friendly and you can make a living from it' },
+  { name: 'Karim Moghnieh', date: 'Jun 18, 2026', stars: 5, text: 'Professional, reliable, and knowledgeable team. Helped spark out my career in freelancing!' },
+  { name: 'Hhh Mmm', date: 'Jun 17, 2026', stars: 5, text: 'One of the best programs\nIt gave me a real opportunity to grow and to be financially independent\nVery professional team thank you for this helpful and easy program' },
+  { name: 'MD Tech', date: 'Jun 16, 2026', stars: 5, text: "It's a very successful system and provides professional courses and continuous feedback and support for students. High quality products, excellent storage and packaging and smooth money transactions.\n\nVery recommended for people who want to start a small e-com business with a small capitol" },
+  { name: 'Tarek', date: 'May 26, 2026', stars: 5, text: 'Smooth experience using this app. The platform is easy to use and order processing is simple. Definitely a useful app for anyone running a dropshipping business.' },
+];
 ---
 
 <Layout>
@@ -20,19 +31,16 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   <section class="hero">
     <div class="wrap">
 
-      <!-- Fallback content (no-JS / first paint) — a synchronous inline script right
-           below swaps this for one of the three A/B/C hook variants before the browser
-           has painted much of anything else on the page. -->
-      <h1 class="headline" id="headline">
-        You'll never burn your budget on Inventory, shipping fees or beginners mistakes ever again with <span class="grad-text">this system</span>
-      </h1>
+      <!-- Filled by the synchronous inline script right below with one of the three
+           A/B/C hook variants before the browser paints the rest of the page. -->
+      <h1 class="headline" id="headline"></h1>
 
       <script is:inline>
         (function () {
           var variants = {
-            pain: 'Stop wasting your <span class="mark">hard earned savings</span> on traditional e-commerce',
-            mechanism: 'Build your <span class="grad-text">high-earning e-com business</span> without spending <span class="mark">a dollar</span> on Inventory',
-            fomo: 'How <span class="mark">+800 Lebanese</span> built a <span class="grad-text">high-earning online store</span> without owning a single product',
+            pain: 'Never waste your savings on products that don\'t sell in the Lebanese market',
+            benefit: 'Build a successful &amp; high-earning online store without owning a single product',
+            fomo: 'How +800 Lebanese built a successful online store without owning a single product',
           };
           // sessionStorage, not localStorage: a fresh browser session gets a new random
           // pick each time, but stays on the same hook while navigating within that
@@ -52,23 +60,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
         })();
       </script>
 
-      <p class="headline-warning">This isn't the old dropshipping you're familiar with</p>
-
-      <!-- Social proof bar: active user count + Trustpilot rating -->
-      <div class="social-proof">
-        <span class="sp-users">Proven system used by +800 Lebanese</span>
-        <span class="sp-divider"></span>
-        <div class="sp-trust">
-          <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="sp-tp-logo" width="300" height="74" />
-          <div class="sp-stars">
-            <svg viewBox="0 2 23 23.3" class="sp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-            <svg viewBox="0 2 23 23.3" class="sp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-            <svg viewBox="0 2 23 23.3" class="sp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-            <svg viewBox="0 2 23 23.3" class="sp-star"><path fill="#00b67a" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-            <svg viewBox="0 2 23 23.3" class="sp-star"><path fill="#c8c8c8" d="M12 2l2.9 8.9H23l-7.5 5.5 2.9 8.9L12 19.8l-7.5 5.5 2.9-8.9L0 10.9h8.1z"/></svg>
-          </div>
-        </div>
-      </div>
+      <p class="headline-sub"><span class="headline-sub-red">This has nothing to do with the old Dropshipping</span>, it's a platform that finds you <strong>hundreds of high-selling products</strong> in the Lebanese market &amp; <strong>delivers them to your customer's doorstep</strong></p>
 
       <!-- VSL — plain Plyr play button; subscription is gated behind the play click itself -->
       <div class="vsl-wrapper">
@@ -92,10 +84,11 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
            subscribed this session) — see the "unlockVideo"-equivalent block in the
            Plyr script below. Starts locked (grey, inert) until 40% of the VSL has
            been watched. -->
-      <p class="book-cta-gate" id="book-cta-gate" style="display:none">Watch at least 40% of the tutorial to book a FREE discovery call</p>
+      <p class="book-cta-gate" id="book-cta-gate" style="display:none">Watch at least 40% of the tutorial to see if you qualify to access Droparabia</p>
       <a href="/survey" class="book-cta is-locked" id="book-cta" style="display:none" aria-disabled="true">
-        Book a FREE strategy call
-        <span class="book-cta-sub">Let's get your business started</span>
+        See if I Qualify
+        <!-- Replaced with the live count from /api/spots (15 per week, resets Monday 12 AM Beirut time) -->
+        <span class="book-cta-sub" id="book-cta-spots">Limited spots are available this week</span>
       </a>
 
     </div>
@@ -105,7 +98,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   <section class="proof-section" id="case-studies">
     <h2 class="section-heading">
       <svg class="heading-arrow" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad3)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad3" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#06a2d1"/><stop offset="100%" stop-color="#2745ff"/></linearGradient></defs></svg>
-      From our latest weekly case studies
+      +800 Lebanese are currently selling with Droparabia
       <svg class="heading-arrow" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad4)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad4" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#06a2d1"/><stop offset="100%" stop-color="#2745ff"/></linearGradient></defs></svg>
     </h2>
 
@@ -137,6 +130,44 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       <button type="button" class="case-carousel-nav case-carousel-next" aria-label="Next">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
       </button>
+    </div>
+  </section>
+
+  <!-- ═══════════ 3. TRUSTPILOT REVIEWS ═══════════ -->
+  <section class="tp-section" aria-labelledby="tp-heading">
+    <div class="tp-head">
+      <h2 class="tp-heading" id="tp-heading">What our users say on</h2>
+      <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="tp-head-logo" width="300" height="74" loading="lazy" />
+      <!-- Overall TrustScore as shown on Trustpilot (4.3): four full stars and a half star, like Trustpilot draws it -->
+      <span class="tp-rating" role="img" aria-label="Rated 4.3 out of 5 on Trustpilot">
+        <span class="tp-stars tp-stars--head">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <span class={i <= 4 ? 'tp-star' : 'tp-star tp-star--half'}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 3.5l2.47 5.7 6.18.54-4.68 4.07 1.4 6.05L12 16.66l-5.37 3.2 1.4-6.05L3.35 9.74l6.18-.54z"/></svg>
+            </span>
+          ))}
+        </span>
+        <span class="tp-score">4.3</span>
+      </span>
+    </div>
+
+    <div class="tp-grid">
+      {trustpilotReviews.map((review) => (
+        <article class="tp-card">
+          <div class="tp-card-top">
+            <span class="tp-name">{review.name}</span>
+            <span class="tp-date">{review.date}</span>
+          </div>
+          <div class="tp-stars" role="img" aria-label={`Rated ${review.stars} out of 5 stars`}>
+            {[1, 2, 3, 4, 5].map((i) => (
+              <span class={i <= review.stars ? 'tp-star' : 'tp-star tp-star--empty'}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 3.5l2.47 5.7 6.18.54-4.68 4.07 1.4 6.05L12 16.66l-5.37 3.2 1.4-6.05L3.35 9.74l6.18-.54z"/></svg>
+              </span>
+            ))}
+          </div>
+          <p class="tp-text">{review.text}</p>
+        </article>
+      ))}
     </div>
   </section>
 
@@ -379,13 +410,24 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
     text-wrap: balance;
   }
 
-  .headline-warning {
-    font-size: clamp(0.7rem, 1.5vw, 0.85rem);
-    font-weight: 800;
-    letter-spacing: 0.01em;
+  .headline-sub {
+    font-size: clamp(0.85rem, 1.45vw, 1rem);
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--da-ink-soft);
+    max-width: 860px;
+    margin: 0 auto 22px;
+    text-wrap: balance;
+  }
+
+  .headline-sub strong {
+    font-weight: 700;
+    color: var(--da-ink);
+  }
+
+  .headline-sub-red {
+    font-weight: 700;
     color: #dc2626;
-    text-transform: uppercase;
-    margin: 0 auto 18px;
   }
 
   /* ─── SOCIAL PROOF BAR ─── */
@@ -865,6 +907,143 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
   .case-carousel-prev:hover { transform: translate(-50%, -50%) scale(1.1); }
   .case-carousel-next:hover { transform: translate(50%, -50%) scale(1.1); }
 
+  /* ══════════════ 3. TRUSTPILOT REVIEWS ══════════════ */
+  .tp-section {
+    background: var(--da-bg);
+    padding: 64px 24px 72px;
+  }
+
+  .tp-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    margin-bottom: 36px;
+    text-align: center;
+  }
+
+  .tp-heading {
+    font-size: clamp(1.35rem, 3.6vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: #000;
+    /* Nudged down so the text sits on the same line as the Trustpilot wordmark,
+       whose star makes the logo image taller than the lettering. */
+    position: relative;
+    top: 0.14em;
+  }
+
+  .tp-head-logo {
+    height: clamp(30px, 4.4vw, 42px);
+    width: auto;
+  }
+
+  .tp-grid {
+    max-width: 1152px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .tp-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    top: 0.14em; /* same nudge as the heading text, to sit on the wordmark's line */
+  }
+
+  .tp-stars.tp-stars--head { margin-bottom: 0; }
+
+  .tp-stars--head .tp-star {
+    width: clamp(24px, 3vw, 30px);
+    height: clamp(24px, 3vw, 30px);
+  }
+
+  .tp-stars--head .tp-star svg {
+    width: 78%;
+    height: 78%;
+  }
+
+  .tp-star.tp-star--half { background: linear-gradient(90deg, #00b67a 50%, #dcdce6 50%); }
+
+  .tp-score {
+    font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+    font-weight: 600;
+    color: #000;
+  }
+
+  .tp-card {
+    background: #fff;
+    border-radius: 0;
+    padding: 22px 22px 24px;
+    box-shadow: 0 10px 28px -8px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.06);
+  }
+
+  .tp-card-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .tp-name {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--da-ink);
+  }
+
+  .tp-date {
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    color: var(--da-ink-mute);
+  }
+
+  /* Trustpilot's own star style: white star on a green square. */
+  .tp-stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 14px;
+  }
+
+  .tp-star {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #00b67a;
+  }
+
+  .tp-star--empty { background: #dcdce6; }
+
+  .tp-star svg {
+    width: 19px;
+    height: 19px;
+    display: block;
+  }
+
+  .tp-text {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--da-ink-soft);
+    white-space: pre-line;
+  }
+
+  @media (max-width: 960px) {
+    .tp-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    .tp-section { padding: 48px 16px 56px; }
+    .tp-head { margin-bottom: 26px; }
+    .tp-grid { grid-template-columns: 1fr; gap: 14px; }
+  }
+
   /* ══════════════ FOOTER ══════════════ */
   .footer {
     background: var(--da-bg);
@@ -965,6 +1144,9 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 
   /* ══════════════ RESPONSIVE ══════════════ */
   @media (max-width: 640px) {
+    .headline-sub { font-size: 0.78rem; }
+    .section-heading { font-size: 1.1rem; gap: 8px; }
+    .heading-arrow { width: 20px; height: 26px; }
     .hero { padding: 40px 0; }
     .site-header-inner { padding: 10px 16px; }
     .corner-brand { gap: 7px; }
@@ -1140,6 +1322,24 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       const subscribed = !!sessionStorage.getItem('da_subscribed');
       bookCtaGate.style.display = subscribed && !unlocked ? 'block' : 'none';
     }
+  }
+
+  // Weekly spots left, counted server-side from this week's rows on the booked sheet.
+  // The fallback text stays in place if the request fails.
+  const spotsEl = document.getElementById('book-cta-spots');
+  if (spotsEl) {
+    fetch('/api/spots')
+      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+      .then((data: { remaining?: number }) => {
+        if (typeof data.remaining !== 'number') return;
+        const n = data.remaining;
+        spotsEl.textContent = n === 0
+          ? 'No spots left this week'
+          : n === 1
+            ? '1 spot is available this week'
+            : `${n} spots are available this week`;
+      })
+      .catch(() => {});
   }
 
   function showBookCta() {
