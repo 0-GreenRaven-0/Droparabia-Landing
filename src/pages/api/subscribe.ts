@@ -63,11 +63,79 @@ function formatPhoneDisplay(digits: string): string {
   return digits;
 }
 
-const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook', 'Form Clicked', 'Headline', 'VSL Watched', 'VSL %'];
+const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook', 'Form Clicked', 'Headline', 'VSL Watched', 'VSL %', 'Survey Answers'];
+const SURVEY_COL_INDEX = SHEET_HEADERS.indexOf('Survey Answers'); // 0-based, for batchUpdate ranges
 // Ranges follow the header list so adding a column doesn't need three edits. A sheet
 // still on the old, narrower header row is rewritten on the next append (see
 // appendToSheet), leaving existing rows padded with blanks.
 const LAST_COL = String.fromCharCode(64 + SHEET_HEADERS.length);
+
+// ── Survey answers column ─────────────────────────────────────────────────────
+
+type SurveyAnswer = { q: string; a: string };
+
+// A guard, not a real constraint: the API accepts far longer list entries, and the
+// longest question here (the effort one) lands around 250 characters.
+const DROPDOWN_ITEM_MAX = 500;
+
+function parseSurveyAnswers(raw: unknown): SurveyAnswer[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((item) => {
+      const rec = item as Partial<SurveyAnswer> | null;
+      const q = typeof rec?.q === 'string' ? rec.q.replace(/\s+/g, ' ').trim() : '';
+      const a = typeof rec?.a === 'string' ? rec.a.replace(/\s+/g, ' ').trim() : '';
+      return { q, a };
+    })
+    .filter((item) => item.q && item.a)
+    .slice(0, 20);
+}
+
+function clip(text: string, max: number): string {
+  return text.length <= max ? text : text.slice(0, max - 1).trimEnd() + '…';
+}
+
+// The cell holds a short label so the column stays readable at a glance; the label is
+// also the first dropdown entry, which keeps the value valid and stops Sheets flagging
+// it. Opening the dropdown lists every question with the answer they picked. The same
+// text, unclipped and on separate lines, goes on the cell as a note for hovering.
+function buildSurveyCell(items: SurveyAnswer[]) {
+  const label = items.length === 1 ? 'View 1 answer' : `View ${items.length} answers`;
+  const options = [label, ...items.map((item, i) => clip(`${i + 1}. ${item.q} → ${item.a}`, DROPDOWN_ITEM_MAX))];
+  const note = items.map((item, i) => `${i + 1}. ${item.q}\n→ ${item.a}`).join('\n\n');
+  return { label, options, note };
+}
+
+async function applySurveyDropdown(
+  spreadsheetId: string, rowNumber: number, options: string[], note: string, token: string,
+): Promise<void> {
+  const range = {
+    sheetId: 0,
+    startRowIndex: rowNumber - 1,
+    endRowIndex: rowNumber,
+    startColumnIndex: SURVEY_COL_INDEX,
+    endColumnIndex: SURVEY_COL_INDEX + 1,
+  };
+  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      requests: [
+        {
+          setDataValidation: {
+            range,
+            rule: {
+              condition: { type: 'ONE_OF_LIST', values: options.map((value) => ({ userEnteredValue: value })) },
+              showCustomUi: true,
+              strict: true,
+            },
+          },
+        },
+        { repeatCell: { range, cell: { note }, fields: 'note' } },
+      ],
+    }),
+  });
+}
 
 // Seconds → m:ss, for the watch-time column.
 function formatClock(totalSeconds: number): string {
@@ -144,7 +212,8 @@ async function removeEmailFromAllSheets(email: string, token: string): Promise<v
   await Promise.all(ids.map(id => removeEmailFromSheet(id, email, token)));
 }
 
-async function appendToSheet(sheetId: string, row: string[], token: string): Promise<void> {
+// Returns the 1-based row the values landed on, so the caller can decorate that cell.
+async function appendToSheet(sheetId: string, row: string[], token: string): Promise<number | null> {
   const base = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values`;
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
@@ -160,11 +229,16 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
     });
   }
 
-  await fetch(`${base}/A:${LAST_COL}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
+  const res = await fetch(`${base}/A:${LAST_COL}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
   });
+
+  // updatedRange reads like "Sheet1!A42:M42".
+  const data = await res.json().catch(() => null) as { updates?: { updatedRange?: string } } | null;
+  const match = data?.updates?.updatedRange?.match(/![A-Z]+(\d+)/);
+  return match ? Number(match[1]) : null;
 }
 
 async function incrementBookingCount(sheetId: string, token: string): Promise<void> {
@@ -234,7 +308,7 @@ export const POST: APIRoute = async ({ request }) => {
           isPaid ? (utm_campaign || '') : '',
           isPaid ? (utm_content  || '') : '',
           isPaid ? (utm_term     || '') : '',
-          '', typeof headline === 'string' ? headline : '', '', '',
+          '', typeof headline === 'string' ? headline : '', '', '', '',
         ];
         await (async () => {
           const token = await getGoogleAccessToken(credsJson);
@@ -357,11 +431,18 @@ export const POST: APIRoute = async ({ request }) => {
       const vslPercent = durationSecs > 0 && furthestSecs > 0
         ? Math.min(100, Math.round((furthestSecs / durationSecs) * 100)) + '%'
         : '';
+      // What they picked on the survey, one dropdown entry per question.
+      const surveyAnswers = parseSurveyAnswers(body.survey_answers);
+      const surveyCell = surveyAnswers.length > 0 ? buildSurveyCell(surveyAnswers) : null;
+
       await (async () => {
         const token = await getGoogleAccessToken(credsJson);
         await removeEmailFromAllSheets(email, token);
         if (hasPreviousEmail) await removeEmailFromAllSheets(previousEmail, token);
-        await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, creative, hook, cta_popup || '', headlineVariant, vslWatched, vslPercent], token);
+        const rowNumber = await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, creative, hook, cta_popup || '', headlineVariant, vslWatched, vslPercent, surveyCell ? surveyCell.label : ''], token);
+        if (surveyCell && rowNumber) {
+          await applySurveyDropdown(sheetId, rowNumber, surveyCell.options, surveyCell.note, token);
+        }
 
         const landingBookingsSheetId = import.meta.env.GOOGLE_SHEET_LANDING_PAGE_BOOKINGS;
         if (list === 'booked' && landingBookingsSheetId) {

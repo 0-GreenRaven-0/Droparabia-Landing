@@ -413,6 +413,11 @@ document.addEventListener('DOMContentLoaded', function() {
               );
             } catch(_) {}
 
+            // What they answered on the survey, so the booked sheet shows it next to
+            // their name instead of only on the row they left behind.
+            var surveyAnswers = [];
+            try { surveyAnswers = JSON.parse(sessionStorage.getItem('da_survey_answers') || '[]'); } catch(_) {}
+
             var payload = {
               name: name, email: email, phone: phone, list: 'booked', referrer: ref,
               cta_popup: sessionStorage.getItem('da_cta_popup') || '',
@@ -420,6 +425,7 @@ document.addEventListener('DOMContentLoaded', function() {
               vsl_watched_seconds: vsl.watched || 0,
               vsl_furthest_seconds: vsl.furthest || 0,
               vsl_duration_seconds: vsl.duration || 0,
+              survey_answers: surveyAnswers,
             };
             // Calendly lets them book under a different address than the one they gave
             // us earlier. Send the original too, otherwise their qualified_no_book row

@@ -190,6 +190,7 @@
       var total = document.querySelectorAll('.survey-page').length;
       var answers = {};
       var answerIsEnd = {}; // field -> true if the currently selected option ends the survey early
+      var answerText = {};  // field -> { q, a } as they read on screen, for the sheet column
       var pageHistory = [0]; // actual path taken, so Previous retraces skips correctly
       var submitted = false;
 
@@ -237,6 +238,7 @@
           var pageEl = btn.closest('.survey-page');
           answers[pageEl.dataset.field] = btn.dataset.value;
           answerIsEnd[pageEl.dataset.field] = btn.dataset.end === 'true';
+          answerText[pageEl.dataset.field] = { q: questionText(pageEl), a: (btn.textContent || '').trim() };
           var err = pageEl.querySelector('.survey-error');
           if (err) err.style.display = 'none';
         });
@@ -259,6 +261,27 @@
         }
       }
 
+      // The question exactly as it reads on screen. innerText turns the <br><br> before
+      // the actual question into newlines, which collapse to a single space here so the
+      // whole thing stays on one line in the sheet.
+      function questionText(pageEl) {
+        var h = pageEl.querySelector('.survey-question');
+        if (!h) return '';
+        return (h.innerText || h.textContent || '').replace(/\s+/g, ' ').trim();
+      }
+
+      // Every question they actually answered, in the order they saw them. Walking the
+      // pages rather than the answers object keeps skipped questions out and keeps a
+      // survey that ended early down to the questions it reached.
+      function collectedAnswers() {
+        var out = [];
+        document.querySelectorAll('.survey-page').forEach(function(p) {
+          var rec = answerText[p.dataset.field];
+          if (rec && rec.q && rec.a) out.push(rec);
+        });
+        return out;
+      }
+
       // Name/email/phone were already collected before the VSL — reuse them instead
       // of asking for them again at the end of the survey.
       function storedUser() {
@@ -272,6 +295,10 @@
         var btn = document.getElementById('btn-next');
         btn.disabled = true;
         btn.textContent = 'Processing...';
+
+        // Handed to /choose-schedule so the booked row carries the answers too.
+        var picked = collectedAnswers();
+        try { sessionStorage.setItem('da_survey_answers', JSON.stringify(picked)); } catch(_) {}
 
         var user = storedUser();
         var nameVal  = user.name  || '';
@@ -332,6 +359,7 @@
             vsl_watched_seconds: vsl.watched || 0,
             vsl_furthest_seconds: vsl.furthest || 0,
             vsl_duration_seconds: vsl.duration || 0,
+            survey_answers: picked,
           }, utms)),
         }).finally(function() {
           window.location.href = dest;
