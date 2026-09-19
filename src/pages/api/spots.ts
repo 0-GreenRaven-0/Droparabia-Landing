@@ -6,7 +6,7 @@ import { getGoogleAccessToken } from '../../lib/google-auth';
 // Weekly call capacity shown on the homepage ("N spots are available this week").
 // The week runs Monday 12:00 AM to Sunday 11:59 PM, Beirut time; every row on the
 // booked sheet dated inside the current week takes one spot.
-const WEEKLY_SPOTS = 15;
+const WEEKLY_SPOTS = 17;
 const TIME_ZONE = 'Asia/Beirut';
 
 // Each isolate keeps the last answer for a minute, so a traffic spike doesn't turn
