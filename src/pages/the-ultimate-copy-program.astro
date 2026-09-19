@@ -178,6 +178,23 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
       /* Testimonials placeholder — no fabricated names/quotes; swap this in once real
          reviews come in after the first cohort. */
 
+      /* Free guide bonus, above the FAQ. The cover render already has its own shadow/
+         perspective baked in, so it's shown as-is rather than cropped like the book
+         covers above. */
+      .free-guide-section { background: linear-gradient(135deg, #0B1D42 0%, #16326B 50%, #1E3E7E 100%); }
+      .free-guide-card { display: flex; align-items: center; gap: 48px; max-width: 900px; margin: 0 auto; }
+      .free-guide-cover { flex: 0 0 260px; width: 260px; height: auto; display: block; filter: drop-shadow(0 16px 30px rgba(0,0,0,0.35)); }
+      .free-guide-copy { flex: 1; text-align: left; }
+      .free-guide-heading { font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 14px; }
+      .free-guide-desc { font-size: 1rem; color: rgba(255,255,255,0.8); line-height: 1.6; margin-bottom: 22px; }
+      .free-guide-btn { margin: 0; max-width: 320px; background: #fff; color: #16326B; box-shadow: 0 4px 14px rgba(0,0,0,0.25); }
+      @media (max-width: 700px) {
+        .free-guide-card { flex-direction: column; text-align: center; gap: 24px; }
+        .free-guide-cover { flex-basis: 200px; width: 200px; }
+        .free-guide-copy { text-align: center; }
+        .free-guide-btn { margin: 0 auto; }
+      }
+
       /* FAQ */
       /* FAQ accordion — same styling/behavior as droparabia-webinar's FAQ.astro,
          with its rgba(0,0,0,..) borders/hover glow swapped for the site's blue. */
@@ -337,7 +354,7 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 
         <div class="section-inner">
           <h1 class="hero-headline hero-headline--top">
-            Learn a legit high-paying skill that every online business will pay you for
+            Learn a high-paying skill that every online business will pay you for
           </h1>
         </div>
 
@@ -548,6 +565,40 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
             <button type="button" class="case-carousel-nav case-carousel-next" aria-label="Next">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
             </button>
+        </div>
+      </section>
+
+      <!-- ═══════════ FREE GUIDE BONUS ═══════════ -->
+      <section class="section free-guide-section" id="free-guide">
+        <div class="section-inner">
+          <div class="free-guide-card">
+            <img
+              src="/free-guide-cover.png"
+              alt="Local Dropshipping for Beginners — free guide"
+              class="free-guide-cover"
+              loading="lazy"
+            />
+            <div class="free-guide-copy">
+              <h2 class="free-guide-heading">The Local Dropshipping Guide for Beginners</h2>
+              <p class="free-guide-desc">
+                A free guide you can download for free, it contains everything you need to know
+                about Dropshipping and how to get started with it in Lebanon.
+              </p>
+              <a
+                href="https://drive.google.com/file/d/1x_8fS2uGkQ_gUJlWQXInbVxuXqLZp-Lt/view"
+                target="_blank"
+                rel="noopener"
+                class="unq-btn free-guide-btn"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32" height="32" style="flex-shrink:0;">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 8H13V3.5zM6 20V4h5v6h6v10H6zm2-7h8v1.5H8V13zm0 3h8v1.5H8V16zm0-6h3v1.5H8V10z"/>
+                </svg>
+                <div>
+                  <p class="unq-btn-txt1">Download it for free!</p>
+                </div>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
