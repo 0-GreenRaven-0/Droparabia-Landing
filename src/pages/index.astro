@@ -1412,23 +1412,39 @@ const trustpilotReviews = [
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: 'subscription_success_modal' });
       // Meta Pixel advanced matching: every page's pixel init reads this back and passes
-      // it as { em, ph }. Plain values; the pixel hashes them itself. The phone becomes
-      // digits only with the 961 country code, no +, spaces or leading zeros.
+      // it as { em, ph } (/choose-schedule also passes fn and ln, for Schedule). Plain
+      // values; the pixel hashes them itself. The phone becomes digits only with the 961
+      // country code, no +, spaces or leading zeros.
+      let ph = smsVal.replace(/\D/g, '');
+      if (ph.startsWith('00961')) ph = ph.slice(5);
+      else if (ph.startsWith('961') && ph.length >= 10) ph = ph.slice(3);
+      ph = ph.replace(/^0+/, '');
+      const em = emailVal.trim().toLowerCase();
+      if (ph) ph = '961' + ph;
+      // The form has a single full-name field: the first word is fn, everything after
+      // the first space is ln (left empty, and never sent, when there isn't one).
+      const fullName = nameVal.trim().toLowerCase().replace(/\s+/g, ' ');
+      const space = fullName.indexOf(' ');
+      const fn = space === -1 ? fullName : fullName.slice(0, space);
+      const ln = space === -1 ? '' : fullName.slice(space + 1);
       try {
-        let ph = smsVal.replace(/\D/g, '');
-        if (ph.startsWith('00961')) ph = ph.slice(5);
-        else if (ph.startsWith('961') && ph.length >= 10) ph = ph.slice(3);
-        ph = ph.replace(/^0+/, '');
-        localStorage.setItem('da_match', JSON.stringify({
-          em: emailVal.trim().toLowerCase(),
-          ph: ph ? '961' + ph : '',
-        }));
+        localStorage.setItem('da_match', JSON.stringify({ em, ph, fn, ln }));
       } catch {}
       // Meta Pixel Lead: only reached after the API confirms the subscription. Wrapped so
-      // a blocked or broken pixel can't drop them into the error path below.
+      // a blocked or broken pixel can't drop them into the error path below. The page's
+      // init ran before they typed anything, so it's re-run with what they just submitted
+      // for the Lead to carry it.
       try {
         const fbq = (window as any).fbq;
-        if (typeof fbq === 'function') fbq('track', 'Lead');
+        if (typeof fbq === 'function') {
+          const match: Record<string, string> = {};
+          if (em) match.em = em;
+          if (ph) match.ph = ph;
+          if (fn) match.fn = fn;
+          if (ln) match.ln = ln;
+          fbq('init', '4560443994198158', match);
+          fbq('track', 'Lead');
+        }
       } catch {}
 
       successEl.style.display = 'block';

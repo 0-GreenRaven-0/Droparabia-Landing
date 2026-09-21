@@ -84,12 +84,15 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    // Advanced matching: email/phone saved by the subscribe modal (da_match).
+    // Advanced matching: email, phone and name saved by the subscribe modal (da_match),
+    // so Schedule matches on all four. ln is only sent when they gave a last name.
     var daMatch = {};
     try {
       var daStored = JSON.parse(localStorage.getItem('da_match') || '{}');
       if (daStored.em) daMatch.em = daStored.em;
       if (daStored.ph) daMatch.ph = daStored.ph;
+      if (daStored.fn) daMatch.fn = daStored.fn;
+      if (daStored.ln) daMatch.ln = daStored.ln;
     } catch(_) {}
     if (daMatch.em || daMatch.ph) fbq('init', '4560443994198158', daMatch);
     else fbq('init', '4560443994198158');
