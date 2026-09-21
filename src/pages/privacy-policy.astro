@@ -71,7 +71,15 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '4560443994198158');
+    // Advanced matching: email/phone saved by the subscribe modal (da_match).
+    var daMatch = {};
+    try {
+      var daStored = JSON.parse(localStorage.getItem('da_match') || '{}');
+      if (daStored.em) daMatch.em = daStored.em;
+      if (daStored.ph) daMatch.ph = daStored.ph;
+    } catch(_) {}
+    if (daMatch.em || daMatch.ph) fbq('init', '4560443994198158', daMatch);
+    else fbq('init', '4560443994198158');
     fbq('track', 'PageView');
     </script>
     <noscript><img height="1" width="1" style="display:none"

@@ -34,6 +34,11 @@ function getSheetId(list: string): string | null {
 // they're just unlinked from every other list (e.g. dropped from unqualified).
 const SHEET_ONLY_LISTS = new Set(['went_to_buy_course']);
 
+// Lists logged to their sheet only, with Brevo left out entirely: the contact isn't
+// added to or removed from any Brevo list, so they keep whatever lists they're on.
+// "survey" is everyone who opened the survey and hasn't finished it yet.
+const NO_BREVO_LISTS = new Set(['survey']);
+
 function getUnlinkListIds(list: string): number[] {
   const all: Record<string, number> = {
     vsl:               Number(import.meta.env.BREVO_LIST_VSL_SUBSCRIBED)      || 0,
@@ -323,7 +328,8 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const listId = getListId(list);
-    const sheetOnly = SHEET_ONLY_LISTS.has(list) && !!getSheetId(list);
+    const skipBrevo = NO_BREVO_LISTS.has(list);
+    const sheetOnly = (SHEET_ONLY_LISTS.has(list) || skipBrevo) && !!getSheetId(list);
     if (!listId && !sheetOnly) {
       return json({ success: false, error: `Unknown or unconfigured list: ${list}` }, 400);
     }
@@ -340,67 +346,69 @@ export const POST: APIRoute = async ({ request }) => {
     const normalizedPhone = normalizePhone(phone || '');
 
     // ── Brevo ──
-    const unlinkListIds = getUnlinkListIds(list);
-    const brevoBody: Record<string, unknown> = {
-      email,
-      attributes: {
-        FIRSTNAME: firstName,
-        LASTNAME:  lastName,
-        SMS: normalizedPhone ? '+961' + normalizedPhone : '',
-      },
-      updateEnabled: true,
-    };
-    if (listId) brevoBody.listIds = [listId];
-    if (unlinkListIds.length > 0) brevoBody.unlinkListIds = unlinkListIds;
+    if (!skipBrevo) {
+      const unlinkListIds = getUnlinkListIds(list);
+      const brevoBody: Record<string, unknown> = {
+        email,
+        attributes: {
+          FIRSTNAME: firstName,
+          LASTNAME:  lastName,
+          SMS: normalizedPhone ? '+961' + normalizedPhone : '',
+        },
+        updateEnabled: true,
+      };
+      if (listId) brevoBody.listIds = [listId];
+      if (unlinkListIds.length > 0) brevoBody.unlinkListIds = unlinkListIds;
 
-    function postContact(body: Record<string, unknown>) {
-      return fetch('https://api.brevo.com/v3/contacts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'api-key': import.meta.env.BREVO_API_KEY },
-        body: JSON.stringify(body),
-      });
-    }
-
-    let res = await postContact(brevoBody);
-
-    // `updateEnabled` resolves a duplicate EMAIL, but not a duplicate SMS: if that phone
-    // number is already attached to a different contact, Brevo hard-rejects with 400
-    // duplicate_parameter and the signup is lost entirely. Retry without the phone so the
-    // lead still lands on the right list with their email and name — the phone simply
-    // stays on whichever contact already owns it.
-    if (res.status === 400) {
-      const errText = await res.clone().text();
-      let isDuplicateSms = false;
-      try {
-        const parsed = JSON.parse(errText) as { code?: string; metadata?: { duplicate_identifiers?: string[] } };
-        isDuplicateSms =
-          parsed.code === 'duplicate_parameter' &&
-          Array.isArray(parsed.metadata?.duplicate_identifiers) &&
-          parsed.metadata.duplicate_identifiers.includes('SMS');
-      } catch { /* non-JSON error body — fall through and report it as-is below */ }
-
-      if (isDuplicateSms) {
-        const attributes = { ...(brevoBody.attributes as Record<string, unknown>) };
-        delete attributes.SMS;
-        res = await postContact({ ...brevoBody, attributes });
-      }
-    }
-
-    if (res.status !== 201 && res.status !== 204) {
-      const errBody = await res.text();
-      return json({ success: false, error: errBody }, res.status);
-    }
-
-    // Detach the old contact from every list it was on. '' matches no list key, so
-    // getUnlinkListIds returns all of them.
-    if (hasPreviousEmail) {
-      const allListIds = getUnlinkListIds('');
-      if (allListIds.length > 0) {
-        await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(previousEmail)}`, {
-          method: 'PUT',
+      function postContact(body: Record<string, unknown>) {
+        return fetch('https://api.brevo.com/v3/contacts', {
+          method: 'POST',
           headers: { 'Content-Type': 'application/json', 'api-key': import.meta.env.BREVO_API_KEY },
-          body: JSON.stringify({ unlinkListIds: allListIds }),
-        }).catch(() => {});
+          body: JSON.stringify(body),
+        });
+      }
+
+      let res = await postContact(brevoBody);
+
+      // `updateEnabled` resolves a duplicate EMAIL, but not a duplicate SMS: if that phone
+      // number is already attached to a different contact, Brevo hard-rejects with 400
+      // duplicate_parameter and the signup is lost entirely. Retry without the phone so the
+      // lead still lands on the right list with their email and name — the phone simply
+      // stays on whichever contact already owns it.
+      if (res.status === 400) {
+        const errText = await res.clone().text();
+        let isDuplicateSms = false;
+        try {
+          const parsed = JSON.parse(errText) as { code?: string; metadata?: { duplicate_identifiers?: string[] } };
+          isDuplicateSms =
+            parsed.code === 'duplicate_parameter' &&
+            Array.isArray(parsed.metadata?.duplicate_identifiers) &&
+            parsed.metadata.duplicate_identifiers.includes('SMS');
+        } catch { /* non-JSON error body — fall through and report it as-is below */ }
+
+        if (isDuplicateSms) {
+          const attributes = { ...(brevoBody.attributes as Record<string, unknown>) };
+          delete attributes.SMS;
+          res = await postContact({ ...brevoBody, attributes });
+        }
+      }
+
+      if (res.status !== 201 && res.status !== 204) {
+        const errBody = await res.text();
+        return json({ success: false, error: errBody }, res.status);
+      }
+
+      // Detach the old contact from every list it was on. '' matches no list key, so
+      // getUnlinkListIds returns all of them.
+      if (hasPreviousEmail) {
+        const allListIds = getUnlinkListIds('');
+        if (allListIds.length > 0) {
+          await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(previousEmail)}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'api-key': import.meta.env.BREVO_API_KEY },
+            body: JSON.stringify({ unlinkListIds: allListIds }),
+          }).catch(() => {});
+        }
       }
     }
 

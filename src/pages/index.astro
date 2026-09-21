@@ -31,14 +31,13 @@ const trustpilotReviews = [
   <section class="hero">
     <div class="wrap">
 
-      <!-- Filled by the synchronous inline script right below with one of the three
-           A/B/C hook variants before the browser paints the rest of the page. -->
+      <!-- Filled by the synchronous inline script right below with one of the two
+           A/B hook variants before the browser paints the rest of the page. -->
       <h1 class="headline" id="headline"></h1>
 
       <script is:inline>
         (function () {
           var variants = {
-            pain: 'Never waste your savings on products that don\'t sell in the Lebanese market',
             benefit: 'Build a successful &amp; high-earning online store without owning a single product',
             fomo: 'How +800 Lebanese built a successful online store without owning a single product',
           };
@@ -87,7 +86,7 @@ const trustpilotReviews = [
       <p class="book-cta-gate" id="book-cta-gate" style="display:none">Watch at least 40% of the tutorial to see if you qualify to access Droparabia</p>
       <a href="/survey" class="book-cta is-locked" id="book-cta" style="display:none" aria-disabled="true">
         See if I Qualify
-        <!-- Replaced with the live count from /api/spots (15 per week, resets Monday 12 AM Beirut time) -->
+        <!-- Replaced with the live count from /api/spots (17 per week, resets Monday 12 AM Beirut time) -->
         <span class="book-cta-sub" id="book-cta-spots">Limited spots are available this week</span>
       </a>
 
@@ -1412,6 +1411,19 @@ const trustpilotReviews = [
       sessionStorage.setItem('userData', JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal }));
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: 'subscription_success_modal' });
+      // Meta Pixel advanced matching: every page's pixel init reads this back and passes
+      // it as { em, ph }. Plain values; the pixel hashes them itself. The phone becomes
+      // digits only with the 961 country code, no +, spaces or leading zeros.
+      try {
+        let ph = smsVal.replace(/\D/g, '');
+        if (ph.startsWith('00961')) ph = ph.slice(5);
+        else if (ph.startsWith('961') && ph.length >= 10) ph = ph.slice(3);
+        ph = ph.replace(/^0+/, '');
+        localStorage.setItem('da_match', JSON.stringify({
+          em: emailVal.trim().toLowerCase(),
+          ph: ph ? '961' + ph : '',
+        }));
+      } catch {}
       // Meta Pixel Lead: only reached after the API confirms the subscription. Wrapped so
       // a blocked or broken pixel can't drop them into the error path below.
       try {

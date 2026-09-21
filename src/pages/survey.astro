@@ -56,7 +56,15 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '4560443994198158');
+    // Advanced matching: email/phone saved by the subscribe modal (da_match).
+    var daMatch = {};
+    try {
+      var daStored = JSON.parse(localStorage.getItem('da_match') || '{}');
+      if (daStored.em) daMatch.em = daStored.em;
+      if (daStored.ph) daMatch.ph = daStored.ph;
+    } catch(_) {}
+    if (daMatch.em || daMatch.ph) fbq('init', '4560443994198158', daMatch);
+    else fbq('init', '4560443994198158');
     fbq('track', 'PageView');
     </script>
     <noscript><img height="1" width="1" style="display:none"
@@ -228,6 +236,29 @@
         updateUI();
       })();
 
+      // Logs them on the "didn't finish survey" sheet as soon as they open it. Finishing
+      // moves them to qualified/unqualified, which clears this row, so whoever is left
+      // on that sheet started the survey and walked away. Sheet only: the API leaves
+      // Brevo out for this list. Once per session, and never after they've finished, so
+      // reopening the survey can't pull a qualified or booked lead back onto it.
+      var surveyStartLog = Promise.resolve();
+      (function() {
+        try {
+          var tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
+          if (tokens.qualified || tokens.unqualified) return;
+          if (sessionStorage.getItem('da_survey_logged')) return;
+          var user = storedUser();
+          if (!isValidEmail(user.email || '')) return;
+          sessionStorage.setItem('da_survey_logged', '1');
+          surveyStartLog = fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(subscribePayload('survey', user)),
+            keepalive: true,
+          }).catch(function() {});
+        } catch(_) {}
+      })();
+
       // Option selection
       document.querySelectorAll('.survey-options').forEach(function(opts) {
         opts.addEventListener('click', function(e) {
@@ -349,30 +380,41 @@
           return;
         }
 
-        var list = qualified ? 'qualified_no_book' : 'unqualified';
-        var utmKeys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
-        var utms = {};
-        utmKeys.forEach(function(k) { var v = sessionStorage.getItem(k); if (v) utms[k] = v; });
-        var ref = sessionStorage.getItem('da_referrer') || '';
+        var payload = subscribePayload(qualified ? 'qualified_no_book' : 'unqualified', user);
+        payload.survey_answers = picked;
 
-        var vsl = {};
-        try { vsl = JSON.parse(sessionStorage.getItem('da_vsl_at_survey') || '{}'); } catch(_) {}
-
-        fetch('/api/subscribe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(Object.assign({
-            name: nameVal, email: emailVal, phone: phoneVal, list: list, referrer: ref,
-            cta_popup: sessionStorage.getItem('da_cta_popup') || '',
-            headline: sessionStorage.getItem('da_headline_variant') || '',
-            vsl_watched_seconds: vsl.watched || 0,
-            vsl_furthest_seconds: vsl.furthest || 0,
-            vsl_duration_seconds: vsl.duration || 0,
-            survey_answers: picked,
-          }, utms)),
-        }).finally(function() {
+        // Waits for the "didn't finish" log first: both calls rewrite this email's rows,
+        // and the finished one has to land last or they'd be left on that sheet.
+        surveyStartLog.then(function() {
+          return fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+        }).catch(function() {}).finally(function() {
           window.location.href = dest;
         });
+      }
+
+      // Contact details plus how they got here (UTMs, referrer, popup, headline, VSL
+      // watch time), shared by the survey-start log and the survey-finished one.
+      function subscribePayload(list, user) {
+        var payload = {
+          name: user.name || '', email: user.email || '', phone: user.phone || '', list: list,
+          referrer: sessionStorage.getItem('da_referrer') || '',
+          cta_popup: sessionStorage.getItem('da_cta_popup') || '',
+          headline: sessionStorage.getItem('da_headline_variant') || '',
+        };
+        var vsl = {};
+        try { vsl = JSON.parse(sessionStorage.getItem('da_vsl_at_survey') || '{}'); } catch(_) {}
+        payload.vsl_watched_seconds = vsl.watched || 0;
+        payload.vsl_furthest_seconds = vsl.furthest || 0;
+        payload.vsl_duration_seconds = vsl.duration || 0;
+        ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k) {
+          var v = sessionStorage.getItem(k);
+          if (v) payload[k] = v;
+        });
+        return payload;
       }
 
       function nextPage() {
