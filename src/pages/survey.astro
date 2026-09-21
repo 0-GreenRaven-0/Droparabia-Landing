@@ -261,6 +261,14 @@
         }
       }
 
+      // Whether the answer picked for this field ends the survey unqualified. Someone
+      // with the budget ("Yes I have the budget!" or "I have at least $700") who says
+      // they're not ready yet stays qualified and carries on to the last question.
+      function endsSurvey(field) {
+        if (field === 'howSoon' && (answers.budget === 'yes' || answers.budget === 'partial')) return false;
+        return !!answerIsEnd[field];
+      }
+
       // The question exactly as it reads on screen. innerText turns the <br><br> before
       // the actual question into newlines, which collapse to a single space here so the
       // whole thing stays on one line in the sheet.
@@ -307,8 +315,9 @@
 
         // Disqualified the moment any of the three "end the survey here" options is
         // picked (readyToStart, budget, howSoon) — regardless of how far they got
-        // afterwards, or whether budget was ever reached at all.
-        var qualified = !(answerIsEnd.readyToStart || answerIsEnd.budget || answerIsEnd.howSoon);
+        // afterwards, or whether budget was ever reached at all. "I'm not ready yet"
+        // doesn't count against someone who has the budget (see endsSurvey).
+        var qualified = !(endsSurvey('readyToStart') || endsSurvey('budget') || endsSurvey('howSoon'));
 
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ event: 'survey_completed', survey_qualified: qualified, user_name: nameVal, user_email: emailVal, user_phone: phoneVal });
@@ -379,7 +388,7 @@
 
         // "End the survey here" options (readyToStart/notInterested, budget/no,
         // howSoon/notReady) submit right away and route them unqualified.
-        if (answerIsEnd[field] || page === total - 1) {
+        if (endsSurvey(field) || page === total - 1) {
           completeSurvey();
           return;
         }
