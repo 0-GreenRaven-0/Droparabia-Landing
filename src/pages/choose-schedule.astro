@@ -126,10 +126,10 @@
         <!-- Header -->
         <div style="text-align:center; display:flex; flex-direction:column; gap:0.5rem; margin-bottom:0.5rem;">
           <h1 style="font-size:clamp(1.75rem,3vw,2.5rem); font-weight:700; color:#2563EB;">
-            We're a good fit for you! 
+            Congratulations!
           </h1>
           <h3 style="font-size:1.1rem; font-weight:600; color:#1f2937;">
-            Our team is looking forward to get you started on building your business!
+            You qualify for the Droparabia system!
           </h3>
           <p style="color:#4B5563;">Select an available time that best suits you</p>
           <p style="color:#6B7280; font-size:0.9rem; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; margin-top:0.5rem;">Click here to refresh the page if the form does not appear</p>
@@ -339,26 +339,8 @@
       })();
     </script>
 
-    <!-- canvas-confetti CDN -->
-    <script is:inline src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-
-    <!-- Confetti + conditional Brevo subscription -->
+    <!-- Conditional Brevo subscription -->
     <script is:inline>
-document.addEventListener('DOMContentLoaded', function() {
-        // Confetti
-        setTimeout(function() {
-          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-          setTimeout(function() { confetti({ particleCount: 50, angle: 60,  spread: 55, origin: { x: 0 } }); }, 250);
-          setTimeout(function() { confetti({ particleCount: 50, angle: 120, spread: 55, origin: { x: 1 } }); }, 400);
-          setTimeout(function() { confetti({ particleCount: 30, spread: 100, decay: 0.91, scalar: 1.2, shapes: ['star'] }); }, 600);
-          var end = Date.now() + 3000;
-          (function frame() {
-            confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: Math.random() }, colors: ['#3b82f6','#10b981','#f59e0b','#ef4444'] });
-            if (Date.now() < end) requestAnimationFrame(frame);
-          }());
-        }, 300);
-      });
-
       // A confirmed booking swaps the Calendly embed for the thank-you view on this page
       // (no redirect) and fires the Meta Pixel Schedule event with the survey tier.
       // The flags live on window so a second copy of this listener, or Calendly posting
