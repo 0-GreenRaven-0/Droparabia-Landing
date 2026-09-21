@@ -1443,11 +1443,19 @@ const trustpilotReviews = [
     }
   });
 
-  // timeupdate fires ~4x/sec, so a real playback tick is a small positive step. Any
-  // jump larger than that is a seek (or the tab coming back from the background) and
-  // is not counted as watched.
-  player.on('play', () => { lastTick = player.currentTime; });
-  player.on('seeked', () => { lastTick = player.currentTime; });
+  // A tick counts as playback only if the video moved forward no faster than the clock
+  // did since the last one. That's what tells a seek apart from real watching, however
+  // far apart the ticks land: a background tab or busy phone can space them seconds
+  // apart and it's still all watched, while a jump ahead covers far more video than
+  // time elapsed. The slack absorbs timer jitter; the VSL has no speed control.
+  let lastTickAt = 0;
+  function resetTick() { lastTick = player.currentTime; lastTickAt = performance.now(); }
+  function isPlaybackStep(delta: number, now: number): boolean {
+    const elapsed = (now - lastTickAt) / 1000;
+    return delta > 0 && delta <= elapsed * 1.25 + 0.25;
+  }
+  player.on('play', resetTick);
+  player.on('seeked', resetTick);
   player.on('pause', saveWatch);
   player.on('ended', saveWatch);
   window.addEventListener('pagehide', saveWatch);
@@ -1474,10 +1482,21 @@ const trustpilotReviews = [
     const dur = player.duration;
     const t = player.currentTime;
 
+    const now = performance.now();
     const delta = t - lastTick;
-    if (delta > 0 && delta < 1.5) watchedSeconds += delta;
+    const played = isPlaybackStep(delta, now);
     lastTick = t;
-    if (t > furthestSeconds) furthestSeconds = t;
+    lastTickAt = now;
+    if (played) {
+      watchedSeconds += delta;
+      if (t > furthestSeconds) furthestSeconds = t;
+    } else if (t > furthestSeconds + SEEK_CLAMP_BUFFER) {
+      // A skip ahead the 'seeking' clamp didn't catch. Some browsers (Safari) can
+      // deliver a tick at the new position before 'seeking' fires, which used to count
+      // the jump as progress. Only real playback moves furthest, and this snaps back.
+      player.currentTime = furthestSeconds;
+      return;
+    }
     if (watchedSeconds - lastSaved >= 2) { lastSaved = watchedSeconds; saveWatch(); }
     updateWatchProgressUI();
 
