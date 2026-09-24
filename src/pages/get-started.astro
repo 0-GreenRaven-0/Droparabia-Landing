@@ -5,6 +5,7 @@ import SurveyFlow from '../components/SurveyFlow.astro';
 <html lang="en">
   <head>
     <script is:inline>window.dataLayer = window.dataLayer || [];</script>
+    <script is:inline>(function(){var p=new URLSearchParams(window.location.search);var hasUtm=false;['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k){var v=p.get(k);if(v){sessionStorage.setItem(k,v);hasUtm=true;}});if(!hasUtm&&!sessionStorage.getItem('da_referrer')&&document.referrer&&document.referrer.indexOf(window.location.hostname)===-1){sessionStorage.setItem('da_referrer',document.referrer);};}());</script>
     <!-- Google Tag Manager -->
     <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -15,7 +16,8 @@ import SurveyFlow from '../components/SurveyFlow.astro';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <title>Get Started — Droparabia</title>
+    <title>See if you qualify for Droparabia</title>
+    <meta name="description" content="Answer a few quick questions to see if Droparabia is a fit for you, then book a free call with our team." />
     <link rel="icon" type="image/png" href="/Droparabia.png" />
     <!-- Global: the survey markup lives in SurveyFlow, so a scoped reset here would never reach it. -->
     <style is:global>
@@ -54,6 +56,6 @@ import SurveyFlow from '../components/SurveyFlow.astro';
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NTGWNM69"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-    <SurveyFlow />
+    <SurveyFlow collectContact />
   </body>
 </html>

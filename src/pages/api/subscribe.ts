@@ -68,6 +68,21 @@ function formatPhoneDisplay(digits: string): string {
   return digits;
 }
 
+// Numbers now arrive in full international form (+20 100 ...) from the country picker,
+// but older callers still send a bare Lebanese national number. Returns what Brevo needs
+// (E.164) and what goes on the sheet — Lebanese numbers keep their familiar grouping.
+function parsePhone(raw: string): { e164: string; display: string } {
+  const trimmed = (raw || '').trim();
+  if (trimmed.startsWith('+')) {
+    const digits = trimmed.replace(/\D/g, '');
+    if (!digits) return { e164: '', display: '' };
+    if (digits.startsWith('961')) return { e164: `+${digits}`, display: formatPhoneDisplay(digits.slice(3)) };
+    return { e164: `+${digits}`, display: `+${digits}` };
+  }
+  const national = normalizePhone(trimmed);
+  return national ? { e164: `+961${national}`, display: formatPhoneDisplay(national) } : { e164: '', display: '' };
+}
+
 const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook', 'Form Clicked', 'Headline', 'VSL Watched', 'VSL %', 'Survey Answers'];
 const SURVEY_COL_INDEX = SHEET_HEADERS.indexOf('Survey Answers'); // 0-based, for batchUpdate ranges
 // Ranges follow the header list so adding a column doesn't need three edits. A sheet
@@ -343,7 +358,7 @@ export const POST: APIRoute = async ({ request }) => {
     const nameParts = (name || '').trim().split(/\s+/);
     const firstName = nameParts[0] || '';
     const lastName  = nameParts.slice(1).join(' ') || '';
-    const normalizedPhone = normalizePhone(phone || '');
+    const parsedPhone = parsePhone(phone || '');
 
     // ── Brevo ──
     if (!skipBrevo) {
@@ -353,7 +368,7 @@ export const POST: APIRoute = async ({ request }) => {
         attributes: {
           FIRSTNAME: firstName,
           LASTNAME:  lastName,
-          SMS: normalizedPhone ? '+961' + normalizedPhone : '',
+          SMS: parsedPhone.e164,
         },
         updateEnabled: true,
       };
@@ -416,7 +431,7 @@ export const POST: APIRoute = async ({ request }) => {
     const sheetId   = getSheetId(list);
     const credsJson = import.meta.env.GOOGLE_SERVICE_ACCOUNT_JSON;
     if (sheetId && credsJson) {
-      const displayPhone = normalizedPhone ? formatPhoneDisplay(normalizedPhone) : '';
+      const displayPhone = parsedPhone.display;
       const date         = new Date().toLocaleDateString('en-GB');
       const isPaid        = (utm_medium || '').toLowerCase().trim() === 'paid';
       const trafficSource = buildTrafficSource(utm_source || '', utm_medium || '', referrer || '');

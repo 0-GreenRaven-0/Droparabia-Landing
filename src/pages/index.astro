@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { siInstagram, siThreads, siYoutube } from 'simple-icons';
+import PhoneCountrySelect from '../components/PhoneCountrySelect.astro';
 
 // Real Trustpilot reviews, copied verbatim (newest first). Dates are the review dates
 // shown on Trustpilot; every one of these is 5 stars.
@@ -240,13 +241,12 @@ const trustpilotReviews = [
           <span class="field-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.31 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.45 5.45l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
           </span>
-          <input type="hidden" name="SMS__COUNTRY_CODE" value="+961" />
-          <span class="sms-country-fixed">+961</span>
+          <PhoneCountrySelect inputId="vsl-modal-country" name="SMS__COUNTRY_CODE" variant="plain" />
           <span class="sms-divider">|</span>
           <input type="tel" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
         </div>
         <p id="vsl-modal-email-err" class="vsl-inline-err" style="display:none">Please enter a valid email address</p>
-        <p id="vsl-modal-phone-err" class="vsl-inline-err" style="display:none">Please enter a valid Lebanese number (e.g. 70 123 456)</p>
+        <p id="vsl-modal-phone-err" class="vsl-inline-err" style="display:none">Please enter a valid phone number for the country you picked</p>
         <button type="submit" class="vsl-inline-btn">Start Watching!</button>
         <p class="vsl-inline-consent">By subscribing, you agree to receive invitation to future events and offers from Droparabia</p>
         <input type="text" name="email_address_check" value="" style="display:none">
@@ -741,6 +741,9 @@ const trustpilotReviews = [
 
   .vsl-modal-form {
     display: grid;
+    /* minmax(0, 1fr), not the default auto: the country select's widest option is a long
+       country name, and an auto column sizes itself to that and overflows the modal. */
+    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
   }
 
@@ -778,13 +781,6 @@ const trustpilotReviews = [
   }
 
   .field-line input::placeholder { color: var(--da-ink-mute); }
-
-  .sms-country-fixed {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--da-ink-soft);
-    flex-shrink: 0;
-  }
 
   .sms-divider {
     color: var(--da-line);
@@ -1232,12 +1228,20 @@ const trustpilotReviews = [
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw.trim());
   }
 
-  function isValidLebanesePhone(raw: string): boolean {
-    let d = raw.replace(/[\s\-()+.]/g, '');
-    if (d.startsWith('00961')) d = d.slice(5);
-    else if (d.startsWith('961') && d.length >= 10) d = d.slice(3);
-    if (d.startsWith('0')) d = d.slice(1);
-    return /^\d{7,8}$/.test(d);
+  // The national part, with any country code they retyped and the trunk zero removed.
+  function nationalDigits(dial: string, raw: string): string {
+    let d = (raw || '').replace(/\D/g, '');
+    if (d.startsWith('00' + dial)) d = d.slice(dial.length + 2);
+    else if (d.startsWith(dial) && d.length > dial.length + 5) d = d.slice(dial.length);
+    return d.replace(/^0+/, '');
+  }
+
+  // Lebanese numbers keep the stricter check they've always had; for every other country
+  // the number only has to be a plausible length (E.164 allows 15 digits in total).
+  function isValidPhone(dial: string, raw: string): boolean {
+    const d = nationalDigits(dial, raw);
+    if (dial === '961') return /^\d{7,8}$/.test(d);
+    return d.length >= 5 && (dial + d).length <= 15;
   }
 
   // ── Subscription modal: opens when Plyr's own play button is clicked while
@@ -1373,7 +1377,10 @@ const trustpilotReviews = [
     const errorEl = document.getElementById('vsl-error-msg') as HTMLElement;
     const nameVal = (this.querySelector('[name="FIRSTNAME"]') as HTMLInputElement)?.value ?? '';
     const emailVal = (this.querySelector('[name="EMAIL"]') as HTMLInputElement)?.value ?? '';
-    const smsVal = (this.querySelector('[name="SMS"]') as HTMLInputElement)?.value ?? '';
+    const dialVal = (this.querySelector('[name="SMS__COUNTRY_CODE"]') as HTMLSelectElement)?.value || '961';
+    const smsRaw = (this.querySelector('[name="SMS"]') as HTMLInputElement)?.value ?? '';
+    // Sent in full international form, so a non-Lebanese lead is still reachable.
+    const smsVal = isValidPhone(dialVal, smsRaw) ? '+' + dialVal + nationalDigits(dialVal, smsRaw) : '';
     const phoneErrEl = document.getElementById('vsl-modal-phone-err') as HTMLElement | null;
     const emailErrEl = document.getElementById('vsl-modal-email-err') as HTMLElement | null;
 
@@ -1389,7 +1396,7 @@ const trustpilotReviews = [
     }
     if (emailErrEl) emailErrEl.style.display = 'none';
 
-    if (!isValidLebanesePhone(smsVal)) {
+    if (!smsVal) {
       if (phoneErrEl) phoneErrEl.style.display = 'block';
       return;
     }
@@ -1415,12 +1422,9 @@ const trustpilotReviews = [
       // it as { em, ph } (/choose-schedule also passes fn and ln, for Schedule). Plain
       // values; the pixel hashes them itself. The phone becomes digits only with the 961
       // country code, no +, spaces or leading zeros.
-      let ph = smsVal.replace(/\D/g, '');
-      if (ph.startsWith('00961')) ph = ph.slice(5);
-      else if (ph.startsWith('961') && ph.length >= 10) ph = ph.slice(3);
-      ph = ph.replace(/^0+/, '');
+      // Already in full international form; Meta wants it as digits with no plus.
+      const ph = smsVal.replace(/\D/g, '');
       const em = emailVal.trim().toLowerCase();
-      if (ph) ph = '961' + ph;
       // The form has a single full-name field: the first word is fn, everything after
       // the first space is ln (left empty, and never sent, when there isn't one).
       const fullName = nameVal.trim().toLowerCase().replace(/\s+/g, ' ');

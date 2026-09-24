@@ -1,0 +1,551 @@
+---
+// The qualification survey, shared by /survey (reached after the VSL, contact details
+// already collected) and /get-started (the YouTube link, where nothing is known yet and
+// question zero collects them first). Everything after that step is identical.
+import PhoneCountrySelect from './PhoneCountrySelect.astro';
+
+interface Props {
+  collectContact?: boolean;
+}
+const { collectContact = false } = Astro.props;
+---
+
+<style>
+  @font-face { font-family: 'IBrand'; src: url('/fonts/ibrand.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+  .survey-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.25rem 1rem; min-height: 100svh; }
+  .survey-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 1.75rem; width: 100%; max-width: 680px; }
+  .survey-title { color: #2563EB; font-size: 0.95rem; font-weight: 700; text-align: center; line-height: 1.5; margin-bottom: 1.25rem; }
+  .survey-progress-track { background: #E2E8F0; height: 6px; border-radius: 999px; margin-bottom: 0.5rem; overflow: hidden; }
+  .survey-progress-bar { background: linear-gradient(90deg, #2563EB, #3B82F6); height: 100%; border-radius: 999px; transition: width 0.5s ease; }
+  .survey-page-count { color: #94A3B8; font-size: 0.9rem; margin-bottom: 1rem; }
+  .survey-question { font-size: 1rem; font-weight: 600; color: #374151; margin-bottom: 1rem; line-height: 1.65; }
+  .survey-options { display: flex; flex-direction: column; gap: 0.5rem; }
+  .survey-option { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.9rem; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #fff; cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.15s; font-weight: 500; color: #374151; font-size: 0.875rem; width: 100%; text-align: left; }
+  .survey-option:hover { border-color: #93C5FD; background: #EFF6FF; transform: translateX(3px); }
+  .survey-option.selected { border-color: #2563EB; background: #EFF6FF; box-shadow: 0 2px 8px rgba(37,99,235,0.12); }
+  .survey-error { color: #DC2626; font-size: 0.85rem; background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 8px; padding: 0.5rem 0.75rem; margin-top: 0.75rem; display: none; }
+  .survey-nav { display: flex; gap: 0.75rem; margin-top: 1.75rem; }
+  .survey-btn { padding: 0.75rem 1.75rem; background: linear-gradient(135deg, #2563EB, #3B82F6); color: #fff; font-weight: 700; border-radius: 10px; border: none; cursor: pointer; font-size: 1rem; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-shadow: 0 4px 12px rgba(37,99,235,0.25); transition: transform 0.15s, box-shadow 0.15s; }
+  .survey-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37,99,235,0.3); }
+  .survey-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .survey-btn-secondary { background: #fff; color: #2563EB; border: 2px solid #2563EB; box-shadow: none; }
+  .survey-btn-secondary:hover { background: #EFF6FF; }
+  .survey-page { display: none; }
+
+  /* Question zero (contact details), /get-started only. */
+  .survey-fields { display: flex; flex-direction: column; gap: 0.75rem; }
+  .survey-field label { display: block; font-size: 0.8rem; font-weight: 600; color: #6B7280; margin-bottom: 0.3rem; }
+  .survey-field input { width: 100%; padding: 0.7rem 0.9rem; border: 1.5px solid #E2E8F0; border-radius: 10px; font-size: 0.95rem; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #111827; background: #fff; }
+  .survey-field input:focus { outline: none; border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+  .survey-phone { display: flex; align-items: stretch; }
+  .survey-field-err { color: #DC2626; font-size: 0.8rem; margin-top: 0.3rem; display: none; }
+
+  @media (max-width: 768px) {
+    .survey-wrap { padding: 1rem 1.25rem; justify-content: flex-start; }
+    .survey-card { background: transparent; box-shadow: none; border-radius: 0; padding: 1.25rem 0; max-width: 100%; }
+  }
+</style>
+
+<!-- Loading overlay while subscribing -->
+<div id="survey-loader" style="display:flex; position:fixed; inset:0; background:#F1F5F9; z-index:999; flex-direction:column; align-items:center; justify-content:center; gap:1rem;">
+  <div style="width:44px; height:44px; border:4px solid #E2E8F0; border-top-color:#2563EB; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+  <p style="color:#6B7280; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:1rem;">Just a moment...</p>
+</div>
+<style is:global>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+<div class="survey-wrap" id="survey-content" style="display:none;" data-collect-contact={collectContact ? 'true' : 'false'}>
+  <div class="survey-card">
+
+    <div style="text-align:center; margin-bottom:1.25rem;">
+      <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:0.75rem;">
+        <img src="/Droparabia.png" alt="Droparabia" style="height:72px;" />
+        <span style="font-family:'IBrand', sans-serif; font-size:3rem; font-weight:400; color:#0f172a;">Droparabia</span>
+      </div>
+    </div>
+
+    <div class="survey-progress-track">
+      <div class="survey-progress-bar" id="progress-bar" style="width:12.5%"></div>
+    </div>
+
+    {collectContact && (
+      <!-- Q0 — only on /get-started, where they haven't given us anything yet -->
+      <div class="survey-page" data-field="contact" data-contact="true">
+        <div class="survey-fields">
+          <div class="survey-field">
+            <label for="contact-name">Full name</label>
+            <input type="text" id="contact-name" name="FIRSTNAME" placeholder="First and Last Name" autocomplete="name" />
+            <p class="survey-field-err" id="contact-name-err">Please enter your name</p>
+          </div>
+          <div class="survey-field">
+            <label for="contact-email">Email</label>
+            <input type="email" id="contact-email" name="EMAIL" placeholder="Your Best Email" autocomplete="email" inputmode="email" />
+            <p class="survey-field-err" id="contact-email-err">Please enter a valid email address</p>
+          </div>
+          <div class="survey-field">
+            <label for="contact-phone">WhatsApp number</label>
+            <div class="survey-phone">
+              <PhoneCountrySelect inputId="contact-country" name="SMS__COUNTRY_CODE" />
+              <input type="tel" id="contact-phone" name="SMS" placeholder="70 123 456" autocomplete="tel" inputmode="tel" />
+            </div>
+            <p class="survey-field-err" id="contact-phone-err">Please enter a valid phone number for the country you picked</p>
+          </div>
+        </div>
+        <div class="survey-error" id="err-0">Something went wrong, please try again</div>
+      </div>
+    )}
+
+    <!-- Q1 -->
+    <div class="survey-page" data-field="startingOrExploring">
+      <h2 class="survey-question">Are you looking to start building an online business for yourself or you're just exploring?</h2>
+      <div class="survey-options">
+        <button class="survey-option" data-value="starting">Yes I wanna start an online business</button>
+        <button class="survey-option" data-value="exploring">No, just looking around</button>
+      </div>
+      <div class="survey-error" id="err-1">Please select an option to continue</div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="survey-page" data-field="stopped">
+      <h2 class="survey-question">What is currently stopping you from starting your very own online business?</h2>
+      <div class="survey-options">
+        <button class="survey-option" data-value="noPath">No clear path or strategy</button>
+        <button class="survey-option" data-value="afraid">Afraid of risking my time and money</button>
+        <button class="survey-option" data-value="neverThought">I never thought about it</button>
+      </div>
+      <div class="survey-error" id="err-2">Please select an option to continue</div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="survey-page" data-field="readyToStart">
+      <h2 class="survey-question">If Droparabia gave you the tools which you can use to build the business + community and advisory support, would you be willing to get started?</h2>
+      <div class="survey-options">
+        <button class="survey-option" data-value="yes">Yes for sure!</button>
+        <button class="survey-option" data-value="learnMore">I'd like to learn more first</button>
+        <button class="survey-option" data-value="notInterested" data-end="true">Not interested at the moment</button>
+      </div>
+      <div class="survey-error" id="err-3">Please select an option to continue</div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="survey-page" data-field="budget">
+      <h2 class="survey-question">We require our users to have a sufficient budget of $700-$1,000, which is a yearly subscription for the SaaS we're offering<br><br>Do you have the budget?</h2>
+      <div class="survey-options">
+        <button class="survey-option" data-value="yes">Yes I have the budget!</button>
+        <button class="survey-option" data-value="partial">I have at least $700</button>
+        <button class="survey-option" data-value="no" data-end="true">No I don't have the budget</button>
+      </div>
+      <div class="survey-error" id="err-4">Please select an option to continue</div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="survey-page" data-field="goalIncome">
+      <h2 class="survey-question">What is your dream or monthly income goal?</h2>
+      <div class="survey-options">
+        <button class="survey-option" data-value="upTo1k">Up to $1,000</button>
+        <button class="survey-option" data-value="1kTo3k">$1,000 – $3,000</button>
+        <button class="survey-option" data-value="3kTo5k">$3,000 – $5,000</button>
+        <button class="survey-option" data-value="5kPlus">$5,000+</button>
+      </div>
+      <div class="survey-error" id="err-5">Please select an option to continue</div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="survey-page" data-field="effort">
+      <h2 class="survey-question">Droparabia and our community will provide you with the BEST support to help you launch and scale your business but only if you're willing to put in the effort (even if you fail at first)<br><br>Are you willing to work hard to achieve your goal?</h2>
+      <div class="survey-options">
+        <button class="survey-option" data-value="hardWork">Yes I am</button>
+        <button class="survey-option" data-value="doMyBest">I'll do my best</button>
+      </div>
+      <div class="survey-error" id="err-6">Please select an option to continue</div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="survey-page" data-field="howSoon">
+      <h2 class="survey-question">That's great! If you're qualified to access the Droparabia system (Plus our +20 hours courses which you get as a bonus), how soon can you start?</h2>
+      <div class="survey-options">
+        <button class="survey-option" data-value="today">Today</button>
+        <button class="survey-option" data-value="asSoonAsICan">As soon as I can</button>
+        <button class="survey-option" data-value="notReady" data-end="true">I'm not ready yet</button>
+      </div>
+      <div class="survey-error" id="err-7">Please select an option to continue</div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="survey-page" data-field="attendCall">
+      <h2 class="survey-question">If we book you a call with one of our advisors, is there any chance you might not attend it?</h2>
+      <div class="survey-options">
+        <button class="survey-option" data-value="willAttend">I'll be sure to attend</button>
+        <button class="survey-option" data-value="mightCancel">I'll let you know If i had to cancel</button>
+      </div>
+      <div class="survey-error" id="err-8">Please select an option to continue</div>
+    </div>
+
+    <div class="survey-nav">
+      <button class="survey-btn survey-btn-secondary" id="btn-prev" style="display:none" onclick="prevPage()">← Previous</button>
+      <button class="survey-btn" id="btn-next" onclick="nextPage()">Next →</button>
+    </div>
+
+  </div>
+</div>
+
+<script is:inline>
+  var page = 0;
+  var total = document.querySelectorAll('.survey-page').length;
+  var answers = {};
+  var answerIsEnd = {}; // field -> true if the currently selected option ends the survey early
+  var answerText = {};  // field -> { q, a } as they read on screen, for the sheet column
+  var pageHistory = [0]; // actual path taken, so Previous retraces skips correctly
+  var submitted = false;
+  var contactDone = false;
+
+  // /get-started collects name, email and phone as question zero; /survey already
+  // has them from the VSL modal.
+  var collectContact = document.getElementById('survey-content').dataset.collectContact === 'true';
+
+  // The national part, with any country code they retyped and the trunk zero removed.
+  function nationalDigits(dial, raw) {
+    var d = (raw || '').replace(/\D/g, '');
+    if (d.indexOf('00' + dial) === 0) d = d.slice(dial.length + 2);
+    else if (d.indexOf(dial) === 0 && d.length > dial.length + 5) d = d.slice(dial.length);
+    return d.replace(/^0+/, '');
+  }
+
+  // Lebanese numbers keep the stricter check they've always had; for every other country
+  // the number only has to be a plausible length (E.164 allows 15 digits in total).
+  function isValidPhone(dial, raw) {
+    var d = nationalDigits(dial, raw);
+    if (dial === '961') return /^\d{7,8}$/.test(d);
+    return d.length >= 5 && (dial + d).length <= 15;
+  }
+
+  function isValidEmail(raw) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw);
+  }
+
+  // How much of the VSL they'd watched at the moment they opened the survey.
+  // Frozen here rather than read at submit time: going back to the video mid-survey
+  // shouldn't change the answer to "how much did they watch before they hopped on".
+  (function() {
+    try {
+      if (!sessionStorage.getItem('da_vsl_at_survey')) {
+        // sessionStorage first (this tab actually watched it this session); fall
+        // back to the localStorage copy for a returning visitor whose session
+        // reset (closed the tab, came back later) since watching.
+        var live = sessionStorage.getItem('da_vsl_watch') || localStorage.getItem('da_vsl_watch_persist');
+        if (live) sessionStorage.setItem('da_vsl_at_survey', live);
+      }
+    } catch(_) {}
+  })();
+
+  // Mark survey as started and reveal it
+  (function() {
+    try {
+      var tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
+      tokens.takeSurvey = Math.random().toString(36).substring(2) + Date.now().toString(36);
+      sessionStorage.setItem('userTokens', JSON.stringify(tokens));
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'survey_started' });
+    } catch(_) {}
+
+    document.getElementById('survey-loader').style.display = 'none';
+    document.getElementById('survey-content').style.display = 'flex';
+    updateUI();
+  })();
+
+  // Logs them on the "didn't finish survey" sheet as soon as they open it. Finishing
+  // moves them to qualified/unqualified, which clears this row, so whoever is left
+  // on that sheet started the survey and walked away. Sheet only: the API leaves
+  // Brevo out for this list. Once per session, and never after they've finished, so
+  // reopening the survey can't pull a qualified or booked lead back onto it.
+  var surveyStartLog = Promise.resolve();
+  function logSurveyStart() {
+    try {
+      var tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
+      if (tokens.qualified || tokens.unqualified) return;
+      if (sessionStorage.getItem('da_survey_logged')) return;
+      var user = storedUser();
+      if (!isValidEmail(user.email || '')) return;
+      sessionStorage.setItem('da_survey_logged', '1');
+      surveyStartLog = surveyStartLog.then(function() {
+        return fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(subscribePayload('survey', user)),
+          keepalive: true,
+        });
+      }).catch(function() {});
+    } catch(_) {}
+  }
+  // On /survey their details are already saved, so the row goes up on load. On
+  // /get-started there's nothing to log until question zero is submitted.
+  if (!collectContact) logSurveyStart();
+
+  // Option selection
+  document.querySelectorAll('.survey-options').forEach(function(opts) {
+    opts.addEventListener('click', function(e) {
+      var btn = e.target.closest('.survey-option');
+      if (!btn) return;
+      opts.querySelectorAll('.survey-option').forEach(function(b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      var pageEl = btn.closest('.survey-page');
+      answers[pageEl.dataset.field] = btn.dataset.value;
+      answerIsEnd[pageEl.dataset.field] = btn.dataset.end === 'true';
+      answerText[pageEl.dataset.field] = { q: questionText(pageEl), a: (btn.textContent || '').trim() };
+      var err = pageEl.querySelector('.survey-error');
+      if (err) err.style.display = 'none';
+    });
+  });
+
+  function updateUI() {
+    var pages = document.querySelectorAll('.survey-page');
+    pages.forEach(function(p, i) { p.style.display = i === page ? 'block' : 'none'; });
+    document.getElementById('progress-bar').style.width = (((page + 1) / total) * 100) + '%';
+    document.getElementById('btn-prev').style.display = page > 0 ? 'inline-block' : 'none';
+    var btn = document.getElementById('btn-next');
+    btn.textContent = page === total - 1 ? 'Complete ✓' : 'Next →';
+  }
+
+  function prevPage() {
+    if (pageHistory.length > 1) {
+      pageHistory.pop();
+      page = pageHistory[pageHistory.length - 1];
+      updateUI();
+    }
+  }
+
+  // Whether the answer picked for this field ends the survey unqualified. Someone
+  // with the budget ("Yes I have the budget!" or "I have at least $700") who says
+  // they're not ready yet stays qualified and carries on to the last question.
+  function endsSurvey(field) {
+    if (field === 'howSoon' && (answers.budget === 'yes' || answers.budget === 'partial')) return false;
+    return !!answerIsEnd[field];
+  }
+
+  // The question exactly as it reads on screen. innerText turns the <br><br> before
+  // the actual question into newlines, which collapse to a single space here so the
+  // whole thing stays on one line in the sheet.
+  function questionText(pageEl) {
+    var h = pageEl.querySelector('.survey-question');
+    if (!h) return '';
+    return (h.innerText || h.textContent || '').replace(/\s+/g, ' ').trim();
+  }
+
+  // Every question they actually answered, in the order they saw them. Walking the
+  // pages rather than the answers object keeps skipped questions out and keeps a
+  // survey that ended early down to the questions it reached.
+  function collectedAnswers() {
+    var out = [];
+    document.querySelectorAll('.survey-page').forEach(function(p) {
+      var rec = answerText[p.dataset.field];
+      if (rec && rec.q && rec.a) out.push(rec);
+    });
+    return out;
+  }
+
+  // Name/email/phone were already collected before the VSL — reuse them instead
+  // of asking for them again at the end of the survey.
+  function storedUser() {
+    try { return JSON.parse(sessionStorage.getItem('userData') || '{}'); } catch(_) { return {}; }
+  }
+
+  function completeSurvey() {
+    if (submitted) return;
+    submitted = true;
+
+    var btn = document.getElementById('btn-next');
+    btn.disabled = true;
+    btn.textContent = 'Processing...';
+
+    // Handed to /choose-schedule so the booked row carries the answers too.
+    var picked = collectedAnswers();
+    try { sessionStorage.setItem('da_survey_answers', JSON.stringify(picked)); } catch(_) {}
+
+    var user = storedUser();
+    var nameVal  = user.name  || '';
+    var emailVal = user.email || '';
+    var phoneVal = user.phone || '';
+
+    // Disqualified the moment any of the three "end the survey here" options is
+    // picked (readyToStart, budget, howSoon) — regardless of how far they got
+    // afterwards, or whether budget was ever reached at all. "I'm not ready yet"
+    // doesn't count against someone who has the budget (see endsSurvey).
+    var qualified = !(endsSurvey('readyToStart') || endsSurvey('budget') || endsSurvey('howSoon'));
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'survey_completed', survey_qualified: qualified, user_name: nameVal, user_email: emailVal, user_phone: phoneVal });
+
+    var tokens = {};
+    try { tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}'); } catch(_) {}
+    var token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    tokens[qualified ? 'qualified' : 'unqualified'] = token;
+    sessionStorage.setItem('userTokens', JSON.stringify(tokens));
+
+    // Unqualified leads carry their token in the URL so the sales page can show
+    // them the "not the right time" attention line.
+    // Qualification tier from the budget answer, read by /choose-schedule as the
+    // value of the Meta Pixel Schedule event.
+    var tier = answers.budget === 'yes' ? 997 : answers.budget === 'partial' ? 697 : null;
+    try {
+      if (qualified && tier) sessionStorage.setItem('da_tier', String(tier));
+      else sessionStorage.removeItem('da_tier');
+    } catch(_) {}
+
+    var dest = qualified
+      ? '/choose-schedule'
+      : '/the-ultimate-copy-program?unq=' + encodeURIComponent(token);
+
+    // No stored contact info (they somehow reached the survey without the VSL
+    // gate) — nothing to subscribe with, so just route them.
+    if (!isValidEmail(emailVal)) {
+      window.location.href = dest;
+      return;
+    }
+
+    var payload = subscribePayload(qualified ? 'qualified_no_book' : 'unqualified', user);
+    payload.survey_answers = picked;
+
+    // Waits for the "didn't finish" log first: both calls rewrite this email's rows,
+    // and the finished one has to land last or they'd be left on that sheet.
+    surveyStartLog.then(function() {
+      return fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    }).catch(function() {}).finally(function() {
+      window.location.href = dest;
+    });
+  }
+
+  // Contact details plus how they got here (UTMs, referrer, popup, headline, VSL
+  // watch time), shared by the survey-start log and the survey-finished one.
+  function subscribePayload(list, user) {
+    var payload = {
+      name: user.name || '', email: user.email || '', phone: user.phone || '', list: list,
+      referrer: sessionStorage.getItem('da_referrer') || '',
+      cta_popup: sessionStorage.getItem('da_cta_popup') || '',
+      headline: sessionStorage.getItem('da_headline_variant') || '',
+    };
+    var vsl = {};
+    try { vsl = JSON.parse(sessionStorage.getItem('da_vsl_at_survey') || '{}'); } catch(_) {}
+    payload.vsl_watched_seconds = vsl.watched || 0;
+    payload.vsl_furthest_seconds = vsl.furthest || 0;
+    payload.vsl_duration_seconds = vsl.duration || 0;
+    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k) {
+      var v = sessionStorage.getItem(k);
+      if (v) payload[k] = v;
+    });
+    return payload;
+  }
+
+  // Question zero on /get-started. Same details, same list and same Meta Pixel Lead
+  // as the homepage's VSL modal; the survey then carries on exactly as it does after
+  // the video. Coming back to this page and going forward again doesn't resubscribe.
+  function submitContact() {
+    if (contactDone) {
+      page++;
+      pageHistory.push(page);
+      updateUI();
+      return;
+    }
+
+    var nameVal  = (document.getElementById('contact-name').value  || '').trim();
+    var emailVal = (document.getElementById('contact-email').value || '').trim();
+    var dial = document.getElementById('contact-country').value || '961';
+    var phoneRaw = (document.getElementById('contact-phone').value || '').trim();
+    // Stored and sent in full international form, so a non-Lebanese lead is still
+    // reachable on WhatsApp and in Brevo.
+    var phoneVal = isValidPhone(dial, phoneRaw) ? '+' + dial + nationalDigits(dial, phoneRaw) : '';
+
+    var ok = true;
+    function mark(id, bad) {
+      var el = document.getElementById(id);
+      if (el) el.style.display = bad ? 'block' : 'none';
+      if (bad) ok = false;
+    }
+    mark('contact-name-err', !nameVal);
+    mark('contact-email-err', !isValidEmail(emailVal));
+    mark('contact-phone-err', !phoneVal);
+    if (!ok) return;
+
+    contactDone = true;
+    var user = { name: nameVal, email: emailVal, phone: phoneVal };
+    try { sessionStorage.setItem('userData', JSON.stringify(user)); } catch(_) {}
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'subscription_success_get_started' });
+    trackLead(user);
+
+    // The "didn't finish survey" row is chained after this one so the two writes
+    // can't race over this email's rows.
+    surveyStartLog = fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(subscribePayload('vsl', user)),
+    }).catch(function() {});
+    logSurveyStart();
+
+    page++;
+    pageHistory.push(page);
+    updateUI();
+  }
+
+  // Meta Pixel advanced matching + Lead, mirroring the homepage modal: the values
+  // are stored for every later page's init, and the Lead carries them right away.
+  function trackLead(user) {
+    try {
+      // Already in full international form; Meta wants it as digits with no plus.
+      var ph = (user.phone || '').replace(/\D/g, '');
+      var em = (user.email || '').trim().toLowerCase();
+      var full = (user.name || '').trim().toLowerCase().replace(/\s+/g, ' ');
+      var at = full.indexOf(' ');
+      var fn = at === -1 ? full : full.slice(0, at);
+      var ln = at === -1 ? '' : full.slice(at + 1);
+      try { localStorage.setItem('da_match', JSON.stringify({ em: em, ph: ph, fn: fn, ln: ln })); } catch(_) {}
+      if (typeof window.fbq === 'function') {
+        var match = {};
+        if (em) match.em = em;
+        if (ph) match.ph = ph;
+        if (fn) match.fn = fn;
+        if (ln) match.ln = ln;
+        window.fbq('init', '4560443994198158', match);
+        window.fbq('track', 'Lead');
+      }
+    } catch(_) {}
+  }
+
+  function nextPage() {
+    var pages = document.querySelectorAll('.survey-page');
+    var pageEl = pages[page];
+    var field = pageEl.dataset.field;
+
+    // Question zero: validated and subscribed rather than answered.
+    if (pageEl.dataset.contact === 'true') {
+      submitContact();
+      return;
+    }
+
+    if (!answers[field]) {
+      var err = pageEl.querySelector('.survey-error');
+      if (err) err.style.display = 'block';
+      return;
+    }
+
+    // "End the survey here" options (readyToStart/notInterested, budget/no,
+    // howSoon/notReady) submit right away and route them unqualified.
+    if (endsSurvey(field) || page === total - 1) {
+      completeSurvey();
+      return;
+    }
+
+    page++;
+    pageHistory.push(page);
+    updateUI();
+  }
+
+  window.addEventListener('beforeunload', function() {
+    if (!submitted) {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'survey_abandoned' });
+    }
+  });
+</script>

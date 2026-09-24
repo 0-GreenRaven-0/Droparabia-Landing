@@ -1,0 +1,156 @@
+---
+// Country dial-code picker for the phone fields. A native <select> can't show flag
+// images and renders the flag emoji as bare letters on Windows, so this is a custom
+// listbox: a button showing the chosen flag and code, and a searchable panel.
+// The chosen dial code lives in a hidden input, so the forms read it as they would a
+// normal field.
+import { COUNTRY_CODES } from '../data/country-codes';
+
+interface Props {
+  inputId: string;
+  name?: string;
+  variant?: 'boxed' | 'plain';
+}
+const { inputId, name = 'SMS__COUNTRY_CODE', variant = 'boxed' } = Astro.props;
+const fallback = COUNTRY_CODES[0];
+const preset = COUNTRY_CODES.find((c) => c.code === 'LB') ?? fallback;
+---
+
+<div class:list={['ccs', `ccs-${variant}`]} data-ccs>
+  <button type="button" class="ccs-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Country code">
+    <img class="ccs-flag" src={`/flags/${preset.code.toLowerCase()}.png`} width="20" height="15" alt="" />
+    <span class="ccs-dial">+{preset.dial}</span>
+    <svg class="ccs-caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /></svg>
+  </button>
+  <input type="hidden" id={inputId} name={name} value={preset.dial} />
+
+  <div class="ccs-panel" hidden>
+    <input type="text" class="ccs-search" placeholder="Search country" aria-label="Search country" autocomplete="off" />
+    <ul class="ccs-list" role="listbox">
+      {COUNTRY_CODES.map((c) => (
+        <li
+          class="ccs-item"
+          role="option"
+          tabindex="-1"
+          data-dial={c.dial}
+          data-code={c.code.toLowerCase()}
+          data-name={c.name.toLowerCase()}
+          aria-selected={c.code === preset.code ? 'true' : 'false'}
+        >
+          <img src={`/flags/${c.code.toLowerCase()}.png`} width="20" height="15" alt="" loading="lazy" />
+          <span class="ccs-item-name">{c.name}</span>
+          <span class="ccs-item-dial">+{c.dial}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="ccs-empty" hidden>No country matches that</p>
+  </div>
+</div>
+
+<style>
+  .ccs { position: relative; flex: 0 0 auto; }
+  .ccs-btn { display: flex; align-items: center; gap: 6px; background: transparent; border: none; font-family: inherit; font-size: 0.95rem; font-weight: 600; color: #374151; cursor: pointer; padding: 0; }
+  .ccs-flag { display: block; width: 20px; height: 15px; object-fit: cover; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.08); }
+  .ccs-caret { color: #6B7280; flex: 0 0 auto; transition: transform 0.15s ease; }
+  .ccs[data-open] .ccs-caret { transform: rotate(180deg); }
+
+  /* Boxed: the survey's phone row, where the picker is a segment of the input. */
+  .ccs-boxed .ccs-btn { padding: 0.7rem 0.6rem; background: #F1F5F9; border: 1.5px solid #E2E8F0; border-right: none; border-radius: 10px 0 0 10px; }
+
+  /* color-scheme: the host pages carry a dark-mode block that repaints form controls,
+     and this panel is always light. */
+  .ccs-panel { position: absolute; top: calc(100% + 6px); left: 0; z-index: 60; width: 280px; max-width: 78vw; background: #fff; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 12px 32px rgba(15,23,42,0.18); padding: 8px; color-scheme: light; }
+  .ccs-search { width: 100%; padding: 0.5rem 0.6rem; border: 1.5px solid #E2E8F0; border-radius: 8px; font-family: inherit; font-size: 0.9rem; color: #111827; background: #fff; margin-bottom: 6px; color-scheme: light; }
+  .ccs-search:focus { outline: none; border-color: #2563EB; }
+  .ccs-list { list-style: none; margin: 0; padding: 0; max-height: 240px; overflow-y: auto; overscroll-behavior: contain; }
+  .ccs-item { display: flex; align-items: center; gap: 8px; padding: 0.45rem 0.5rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; color: #374151; }
+  .ccs-item img { width: 20px; height: 15px; object-fit: cover; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.08); flex: 0 0 auto; }
+  .ccs-item-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ccs-item-dial { color: #6B7280; font-weight: 600; flex: 0 0 auto; }
+  .ccs-item:hover, .ccs-item.is-active { background: #EFF6FF; }
+  .ccs-item[aria-selected='true'] { background: #DBEAFE; color: #1D4ED8; }
+  .ccs-empty { padding: 0.6rem 0.5rem; font-size: 0.85rem; color: #6B7280; }
+</style>
+
+<script is:inline>
+  // One handler for every picker on the page; the inline script can be emitted twice if
+  // the component is used twice, so the work is done once.
+  if (!window.__daCcsInit) {
+    window.__daCcsInit = true;
+
+    document.querySelectorAll('[data-ccs]').forEach(function (root) {
+      var btn = root.querySelector('.ccs-btn');
+      var panel = root.querySelector('.ccs-panel');
+      var search = root.querySelector('.ccs-search');
+      var list = root.querySelector('.ccs-list');
+      var empty = root.querySelector('.ccs-empty');
+      var hidden = root.querySelector('input[type="hidden"]');
+      var items = [].slice.call(root.querySelectorAll('.ccs-item'));
+
+      function open() {
+        panel.hidden = false;
+        root.setAttribute('data-open', '');
+        btn.setAttribute('aria-expanded', 'true');
+        search.value = '';
+        filter('');
+        // Not on touch: focusing here pops the keyboard over the list.
+        if (!window.matchMedia('(pointer: coarse)').matches) search.focus();
+        var picked = root.querySelector('.ccs-item[aria-selected="true"]');
+        if (picked) list.scrollTop = Math.max(0, picked.offsetTop - 60);
+      }
+
+      function close() {
+        panel.hidden = true;
+        root.removeAttribute('data-open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+
+      function filter(q) {
+        var needle = q.trim().toLowerCase();
+        var shown = 0;
+        items.forEach(function (li) {
+          var hit = !needle
+            || li.dataset.name.indexOf(needle) !== -1
+            || li.dataset.code.indexOf(needle) !== -1
+            || li.dataset.dial.indexOf(needle.replace(/^\+/, '')) === 0;
+          li.hidden = !hit;
+          li.classList.remove('is-active');
+          if (hit) shown++;
+        });
+        empty.hidden = shown > 0;
+        list.scrollTop = 0;
+      }
+
+      function choose(li) {
+        items.forEach(function (o) { o.setAttribute('aria-selected', 'false'); });
+        li.setAttribute('aria-selected', 'true');
+        hidden.value = li.dataset.dial;
+        btn.querySelector('.ccs-flag').src = '/flags/' + li.dataset.code + '.png';
+        btn.querySelector('.ccs-dial').textContent = '+' + li.dataset.dial;
+        hidden.dispatchEvent(new Event('change', { bubbles: true }));
+        close();
+      }
+
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (panel.hidden) open(); else close();
+      });
+      panel.addEventListener('click', function (e) { e.stopPropagation(); });
+      list.addEventListener('click', function (e) {
+        var li = e.target.closest('.ccs-item');
+        if (li) choose(li);
+      });
+      search.addEventListener('input', function () { filter(search.value); });
+      search.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        var first = items.filter(function (li) { return !li.hidden; })[0];
+        if (first) choose(first);
+      });
+      root.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !panel.hidden) { close(); btn.focus(); }
+      });
+      document.addEventListener('click', function () { if (!panel.hidden) close(); });
+    });
+  }
+</script>
