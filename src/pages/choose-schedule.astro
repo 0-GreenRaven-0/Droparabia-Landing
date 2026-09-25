@@ -413,6 +413,8 @@
 
             var payload = {
               name: name, email: email, phone: phone, list: 'booked', referrer: ref,
+              // Set on /get-started, so a booking from the YouTube link is labelled as such.
+              entry: sessionStorage.getItem('da_entry') || '',
               cta_popup: sessionStorage.getItem('da_cta_popup') || '',
               headline: sessionStorage.getItem('da_headline_variant') || '',
               vsl_watched_seconds: vsl.watched || 0,

@@ -163,15 +163,22 @@ function formatClock(totalSeconds: number): string {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
 
-function buildTrafficSource(source: string, medium: string, referrer: string): string {
+function buildTrafficSource(source: string, medium: string, referrer: string, entry = ''): string {
   const s = (source || '').toLowerCase().trim();
   const m = (medium || '').toLowerCase().trim();
+
+  // /get-started exists only as the link in the YouTube video descriptions, so anyone
+  // whose journey started there came from YouTube — no UTM tag needed, which matters
+  // because the YouTube app usually sends no referrer at all.
+  if (entry === 'get_started') return m === 'paid' ? 'YouTube Paid Ad' : 'YouTube';
 
   // UTM-based labels take priority
   if (s) {
     if ((s === 'ig' || s === 'instagram') && m === 'paid') return 'Instagram Paid Ad';
     if ((s === 'fb' || s === 'facebook')  && m === 'paid') return 'Facebook Paid Ad';
     if ((s === 'ig' || s === 'instagram'))                 return 'Instagram Organic';
+    // The /get-started link in the YouTube description carries utm_source=youtube.
+    if (s === 'youtube' || s === 'yt' || s === 'youtu.be') return m === 'paid' ? 'YouTube Paid Ad' : 'YouTube Organic';
     if (s === 'linkedin' || s === 'lnkd.in')              return 'LinkedIn';
     if (s === 'google' && m === 'organic')                 return 'Google Search';
     return [s, m].filter(Boolean).join(' / ');
@@ -184,8 +191,10 @@ function buildTrafficSource(source: string, medium: string, referrer: string): s
       if (host.includes('instagram.com'))                    return 'Instagram Organic';
       if (host.includes('linkedin.com') || host.includes('lnkd.in')) return 'LinkedIn';
       if (host.includes('facebook.com'))                     return 'Facebook Organic';
+      // youtu.be short links, and the Android app, which reports itself as
+      // android-app://com.google.android.youtube rather than a website.
+      if (host.includes('youtube') || host === 'youtu.be')   return 'YouTube Organic';
       if (host.includes('google.com'))                       return 'Google Search';
-      if (host.includes('youtube.com'))                      return 'YouTube';
       return host;
     } catch { return referrer; }
   }
@@ -324,7 +333,7 @@ export const POST: APIRoute = async ({ request }) => {
         const isPaid = (utm_medium || '').toLowerCase().trim() === 'paid';
         const row = [
           'Anonymous', '', '', new Date().toLocaleDateString('en-GB'),
-          buildTrafficSource(utm_source || '', utm_medium || '', referrer || ''),
+          buildTrafficSource(utm_source || '', utm_medium || '', referrer || '', typeof body.entry === 'string' ? body.entry : ''),
           isPaid ? (utm_campaign || '') : '',
           isPaid ? (utm_content  || '') : '',
           isPaid ? (utm_term     || '') : '',
@@ -434,7 +443,7 @@ export const POST: APIRoute = async ({ request }) => {
       const displayPhone = parsedPhone.display;
       const date         = new Date().toLocaleDateString('en-GB');
       const isPaid        = (utm_medium || '').toLowerCase().trim() === 'paid';
-      const trafficSource = buildTrafficSource(utm_source || '', utm_medium || '', referrer || '');
+      const trafficSource = buildTrafficSource(utm_source || '', utm_medium || '', referrer || '', typeof body.entry === 'string' ? body.entry : '');
       const campaignName  = isPaid ? (utm_campaign || '') : '';
       const creative      = isPaid ? (utm_content  || '') : '';
       const hook          = isPaid ? (utm_term     || '') : '';

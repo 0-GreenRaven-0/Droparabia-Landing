@@ -423,6 +423,8 @@ const { collectContact = false } = Astro.props;
     var payload = {
       name: user.name || '', email: user.email || '', phone: user.phone || '', list: list,
       referrer: sessionStorage.getItem('da_referrer') || '',
+      // Set on /get-started; makes every row of this journey read as YouTube.
+      entry: sessionStorage.getItem('da_entry') || '',
       cta_popup: sessionStorage.getItem('da_cta_popup') || '',
       headline: sessionStorage.getItem('da_headline_variant') || '',
     };
