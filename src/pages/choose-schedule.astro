@@ -347,11 +347,21 @@
       // the event twice, can't fire the conversion or subscribe the lead again.
       var callBooked = false;
 
+      // Paid traffic only, and only the ads this pixel is optimising: the campaign links
+      // carry utm_medium=paid. Organic visits, the YouTube /get-started link and direct
+      // traffic book calls too, and counting those as ad conversions teaches the ad
+      // account the wrong thing.
+      function isPaidTraffic() {
+        try {
+          return (sessionStorage.getItem('utm_medium') || '').toLowerCase().trim() === 'paid';
+        } catch(_) { return false; }
+      }
+
       function showThankYouView() {
         var tier = 0;
         try { tier = Number(sessionStorage.getItem('da_tier')) || 0; } catch(_) {}
         try {
-          if (typeof window.fbq === 'function') {
+          if (typeof window.fbq === 'function' && isPaidTraffic()) {
             if (tier) window.fbq('track', 'Schedule', { value: tier, currency: 'USD' });
             else window.fbq('track', 'Schedule');
           }
