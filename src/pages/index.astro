@@ -1221,6 +1221,10 @@ const trustpilotReviews = [
     if (ref) result.referrer = ref;
     const headline = sessionStorage.getItem('da_headline_variant');
     if (headline) result.headline = headline;
+    // Meta click/browser ids, for the sheet's offline-conversion columns.
+    const ad = (window as any).daAdClick ? (window as any).daAdClick() : { fbc: '', fbp: '' };
+    if (ad.fbc) result.fbc = ad.fbc;
+    if (ad.fbp) result.fbp = ad.fbp;
     return result;
   }
 
@@ -1434,10 +1438,10 @@ const trustpilotReviews = [
       try {
         localStorage.setItem('da_match', JSON.stringify({ em, ph, fn, ln }));
       } catch {}
-      // Meta Pixel Lead: only reached after the API confirms the subscription. Wrapped so
-      // a blocked or broken pixel can't drop them into the error path below. The page's
-      // init ran before they typed anything, so it's re-run with what they just submitted
-      // for the Lead to carry it.
+      // Advanced matching only: the page's init ran before they typed anything, so it's
+      // re-run with what they just submitted. Lead is no longer fired here — it belongs
+      // to the qualification point in the survey (see SurveyFlow), so it measures
+      // qualified leads rather than everyone who unlocked the video.
       try {
         const fbq = (window as any).fbq;
         if (typeof fbq === 'function') {
@@ -1447,7 +1451,6 @@ const trustpilotReviews = [
           if (fn) match.fn = fn;
           if (ln) match.ln = ln;
           fbq('init', '4560443994198158', match);
-          fbq('track', 'Lead');
         }
       } catch {}
 

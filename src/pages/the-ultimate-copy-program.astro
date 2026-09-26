@@ -1,9 +1,11 @@
 ---
 import { siInstagram, siThreads, siYoutube } from 'simple-icons';
+import AdClickCapture from '../components/AdClickCapture.astro';
 ---
 
 <html lang="en">
   <head>
+    <AdClickCapture />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -814,7 +816,9 @@ import { siInstagram, siThreads, siYoutube } from 'simple-icons';
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 keepalive: true,
-                body: JSON.stringify({ anonymous: true, list: 'went_to_buy_course', referrer, ...utms }),
+                body: JSON.stringify({ anonymous: true, list: 'went_to_buy_course', referrer, ...utms,
+                  fbc: (window.daAdClick ? window.daAdClick().fbc : ''),
+                  fbp: (window.daAdClick ? window.daAdClick().fbp : '') }),
               }).catch(() => {});
               return;
             }

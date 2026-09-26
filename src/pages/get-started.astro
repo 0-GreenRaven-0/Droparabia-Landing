@@ -1,9 +1,11 @@
 ---
 import SurveyFlow from '../components/SurveyFlow.astro';
+import AdClickCapture from '../components/AdClickCapture.astro';
 ---
 
 <html lang="en">
   <head>
+    <AdClickCapture />
     <script is:inline>window.dataLayer = window.dataLayer || [];</script>
     <!-- This page is only ever reached from the link in a YouTube video description, so
          the whole journey from here is YouTube traffic. Recorded rather than relying on

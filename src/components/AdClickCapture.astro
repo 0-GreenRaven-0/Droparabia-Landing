@@ -1,0 +1,35 @@
+---
+// Captures the Meta ad click so it survives the walk from the ad to the booking, and is
+// still there when the row is written for offline-conversion upload.
+//
+// The pixel sets a _fbc cookie itself (fb.1.<ms>.<fbclid>) whenever the URL carries an
+// fbclid, and _fbp for the browser. Cookies are the source of truth; this only keeps a
+// localStorage copy so an fbclid isn't lost if the pixel is blocked or the cookie is
+// dropped, and never invents a value for a visitor who didn't click an ad.
+---
+
+<script is:inline>
+  (function () {
+    try {
+      var fbclid = new URLSearchParams(window.location.search).get('fbclid');
+      // First capture wins: the creation time in fbc must be when the click landed.
+      if (fbclid && !localStorage.getItem('da_fbc')) {
+        localStorage.setItem('da_fbc', 'fb.1.' + Date.now() + '.' + fbclid);
+      }
+    } catch (_) {}
+  })();
+
+  // Read at submit time by every form on the site.
+  window.daAdClick = function () {
+    function cookie(name) {
+      try {
+        var hit = document.cookie.split('; ').find(function (c) { return c.indexOf(name + '=') === 0; });
+        return hit ? decodeURIComponent(hit.slice(name.length + 1)) : '';
+      } catch (_) { return ''; }
+    }
+    var stored = '';
+    try { stored = localStorage.getItem('da_fbc') || ''; } catch (_) {}
+    // The pixel's own cookie first, the fallback copy only if it never got set.
+    return { fbc: cookie('_fbc') || stored, fbp: cookie('_fbp') };
+  };
+</script>

@@ -403,6 +403,11 @@ const { collectContact = false } = Astro.props;
 
     var payload = subscribePayload(qualified ? 'qualified_no_book' : 'unqualified', user);
     payload.survey_answers = picked;
+    // Ties this row to the browser's Lead fire, for Conversions API de-duplication.
+    try {
+      var leadId = sessionStorage.getItem('da_lead_event_id');
+      if (qualified && leadId) payload.event_id = leadId;
+    } catch(_) {}
 
     // Waits for the "didn't finish" log first: both calls rewrite this email's rows,
     // and the finished one has to land last or they'd be left on that sheet.
@@ -428,6 +433,10 @@ const { collectContact = false } = Astro.props;
       cta_popup: sessionStorage.getItem('da_cta_popup') || '',
       headline: sessionStorage.getItem('da_headline_variant') || '',
     };
+    // Meta click/browser ids, for the sheet's offline-conversion columns.
+    var ad = window.daAdClick ? window.daAdClick() : { fbc: '', fbp: '' };
+    payload.fbc = ad.fbc;
+    payload.fbp = ad.fbp;
     var vsl = {};
     try { vsl = JSON.parse(sessionStorage.getItem('da_vsl_at_survey') || '{}'); } catch(_) {}
     payload.vsl_watched_seconds = vsl.watched || 0;
@@ -510,8 +519,34 @@ const { collectContact = false } = Astro.props;
         if (fn) match.fn = fn;
         if (ln) match.ln = ln;
         window.fbq('init', '4560443994198158', match);
-        window.fbq('track', 'Lead');
       }
+    } catch(_) {}
+  }
+
+  // The ad set's optimization event. It fires the moment both qualifying answers are
+  // committed — wanting to start a business, and having the budget — and nowhere else:
+  // not on subscribing, not on finishing the survey, not on booking. Once per visitor
+  // (localStorage, so a second visit in a new session can't fire it again).
+  //
+  // The id generated here is also written to that visitor's sheet row as its Event ID,
+  // so the same event uploaded later through the Conversions API de-duplicates against
+  // this browser fire instead of counting twice.
+  function fireQualifiedLead() {
+    var qualifiedNow = answers.startingOrExploring === 'starting'
+      && (answers.budget === 'yes' || answers.budget === 'partial');
+    if (!qualifiedNow) return;
+    try {
+      if (localStorage.getItem('da_lead_fired')) return;
+      var id = (window.crypto && window.crypto.randomUUID)
+        ? window.crypto.randomUUID()
+        : 'lead-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+      localStorage.setItem('da_lead_fired', '1');
+      sessionStorage.setItem('da_lead_event_id', id);
+      if (typeof window.fbq === 'function') {
+        window.fbq('track', 'Lead', {}, { eventID: id });
+      }
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'survey_qualified', event_id: id });
     } catch(_) {}
   }
 
@@ -531,6 +566,10 @@ const { collectContact = false } = Astro.props;
       if (err) err.style.display = 'block';
       return;
     }
+
+    // Fired on Next rather than on the click itself, so changing a selection before
+    // committing it can't fire the conversion.
+    fireQualifiedLead();
 
     // "End the survey here" options (readyToStart/notInterested, budget/no,
     // howSoon/notReady) submit right away and route them unqualified.

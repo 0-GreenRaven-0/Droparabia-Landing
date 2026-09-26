@@ -68,6 +68,26 @@ function formatPhoneDisplay(digits: string): string {
   return digits;
 }
 
+// ── Meta offline-conversion fields ────────────────────────────────────────────
+
+// fbc has one shape: fb.1.<creation time in ms>.<fbclid>. Anything else is dropped
+// rather than repaired — a fabricated click id is worse than a blank cell. fbp is the
+// pixel's own browser id (fb.1.<ms>.<random>), so the same shape check covers both.
+function cleanFbCookie(raw: unknown): string {
+  if (typeof raw !== 'string') return '';
+  const value = raw.trim();
+  return /^fb\.1\.\d{10,}\..+$/.test(value) ? value : '';
+}
+
+// "Majd Hamdesh" -> { first: 'majd', last: 'hamdesh' }. Everything after the first space
+// is the last name, matching how the pixel's advanced matching splits it.
+function splitName(raw: unknown): { first: string; last: string } {
+  const full = (typeof raw === 'string' ? raw : '').trim().toLowerCase().replace(/\s+/g, ' ');
+  if (!full) return { first: '', last: '' };
+  const at = full.indexOf(' ');
+  return at === -1 ? { first: full, last: '' } : { first: full.slice(0, at), last: full.slice(at + 1) };
+}
+
 // Numbers now arrive in full international form (+20 100 ...) from the country picker,
 // but older callers still send a bare Lebanese national number. Returns what Brevo needs
 // (E.164) and what goes on the sheet — Lebanese numbers keep their familiar grouping.
@@ -83,7 +103,26 @@ function parsePhone(raw: string): { e164: string; display: string } {
   return national ? { e164: `+961${national}`, display: formatPhoneDisplay(national) } : { e164: '', display: '' };
 }
 
-const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook', 'Form Clicked', 'Headline', 'VSL Watched', 'VSL %', 'Survey Answers'];
+// The columns from 'Event Time' on exist to make these rows uploadable to Meta as
+// offline conversions: raw values only (Events Manager hashes on ingest), one event per
+// row keyed by event_id so a re-upload de-duplicates instead of double-counting.
+const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Campaign Name', 'Creative', 'Hook', 'Form Clicked', 'Headline', 'VSL Watched', 'VSL %', 'Survey Answers',
+                       'Event Time', 'Phone Raw', 'Phone E164', 'Email Normalized', 'First Name', 'Last Name', 'fbc', 'fbp', 'Event ID', 'Event Name'];
+
+// What each row means to Meta. Only two stages are real conversions; the rest are funnel
+// progress markers that exist for us, not for the ad account, so they carry an explicit
+// DO_NOT_SEND rather than a blank that an upload script might misread.
+//
+// A row is only Lead when the browser actually reached the qualification point (both
+// qualifying answers positive), which it signals by sending the event id it fired with.
+// The qualified sheet is broader than that — someone who says they're "just looking
+// around" but has the budget still lands on it — so the list alone can't decide.
+const NOT_FOR_META = 'DO_NOT_SEND';
+function getEventName(list: string, firedLead: boolean): string {
+  if (list === 'booked') return 'Schedule';               // confirmed a call on Calendly
+  if (list === 'qualified_no_book' && firedLead) return 'Lead';
+  return NOT_FOR_META;
+}
 const SURVEY_COL_INDEX = SHEET_HEADERS.indexOf('Survey Answers'); // 0-based, for batchUpdate ranges
 // Ranges follow the header list so adding a column doesn't need three edits. A sheet
 // still on the old, narrower header row is rewritten on the next append (see
@@ -258,7 +297,10 @@ async function appendToSheet(sheetId: string, row: string[], token: string): Pro
     });
   }
 
-  const res = await fetch(`${base}/A:${LAST_COL}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, {
+  // RAW, not USER_ENTERED: Sheets was parsing phone numbers as numbers and eating the
+  // leading zero ("03317172" became 3317172), and would read a leading + as a formula.
+  // RAW stores every cell exactly as sent, as text.
+  const res = await fetch(`${base}/A:${LAST_COL}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
     method: 'POST',
     headers: auth,
     body: JSON.stringify({ values: [row] }),
@@ -338,6 +380,10 @@ export const POST: APIRoute = async ({ request }) => {
           isPaid ? (utm_content  || '') : '',
           isPaid ? (utm_term     || '') : '',
           '', typeof headline === 'string' ? headline : '', '', '', '',
+          // No contact details on this row, but the click still has a time, an id and
+          // whatever Meta cookies the visitor carried.
+          String(Math.floor(Date.now() / 1000)), '', '', '', '', '',
+          cleanFbCookie(body.fbc), cleanFbCookie(body.fbp), crypto.randomUUID(), getEventName(list, false),
         ];
         await (async () => {
           const token = await getGoogleAccessToken(credsJson);
@@ -467,11 +513,30 @@ export const POST: APIRoute = async ({ request }) => {
       const surveyAnswers = parseSurveyAnswers(body.survey_answers);
       const surveyCell = surveyAnswers.length > 0 ? buildSurveyCell(surveyAnswers) : null;
 
+      // Meta offline-conversion fields. event_time is the moment of submission, taken
+      // here rather than at export; event_id makes a re-upload de-duplicate.
+      const eventTime = String(Math.floor(Date.now() / 1000));
+      // The qualification row reuses the id the browser already fired Lead with, so the
+      // Conversions API upload de-duplicates against it. Anything else gets a fresh one.
+      const clientEventId = typeof body.event_id === 'string' && /^[0-9a-zA-Z-]{8,64}$/.test(body.event_id)
+        ? body.event_id
+        : '';
+      const eventId = clientEventId || crypto.randomUUID();
+      const phoneRaw = typeof phone === 'string' ? phone : '';
+      const phoneE164 = parsedPhone.e164.replace('+', '');
+      const emailNormalized = String(email).trim().toLowerCase();
+      const { first: firstNameLc, last: lastNameLc } = splitName(name);
+      const fbc = cleanFbCookie(body.fbc);
+      const fbp = cleanFbCookie(body.fbp);
+
       await (async () => {
         const token = await getGoogleAccessToken(credsJson);
         await removeEmailFromAllSheets(email, token);
         if (hasPreviousEmail) await removeEmailFromAllSheets(previousEmail, token);
-        const rowNumber = await appendToSheet(sheetId, [name || '', email, displayPhone, date, trafficSource, campaignName, creative, hook, cta_popup || '', headlineVariant, vslWatched, vslPercent, surveyCell ? surveyCell.label : ''], token);
+        const rowNumber = await appendToSheet(sheetId, [
+          name || '', email, displayPhone, date, trafficSource, campaignName, creative, hook, cta_popup || '', headlineVariant, vslWatched, vslPercent, surveyCell ? surveyCell.label : '',
+          eventTime, phoneRaw, phoneE164, emailNormalized, firstNameLc, lastNameLc, fbc, fbp, eventId, getEventName(list, !!clientEventId),
+        ], token);
         if (surveyCell && rowNumber) {
           await applySurveyDropdown(sheetId, rowNumber, surveyCell.options, surveyCell.note, token);
         }
