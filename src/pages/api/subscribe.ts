@@ -113,14 +113,17 @@ const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Camp
 // progress markers that exist for us, not for the ad account, so they carry an explicit
 // DO_NOT_SEND rather than a blank that an upload script might misread.
 //
-// A row is only Lead when the browser actually reached the qualification point (both
-// qualifying answers positive), which it signals by sending the event id it fired with.
-// The qualified sheet is broader than that — someone who says they're "just looking
+// A row is only QualifiedLead when the browser actually reached the qualification point
+// (both qualifying answers positive), which it signals by sending the event id it fired
+// with. The qualified sheet is broader than that — someone who says they're "just looking
 // around" but has the budget still lands on it — so the list alone can't decide.
+//
+// QualifiedLead is a custom event; the standard Lead belongs to VSL subscription and is
+// fired browser-side only, so no row carries it.
 const NOT_FOR_META = 'DO_NOT_SEND';
 function getEventName(list: string, firedLead: boolean): string {
   if (list === 'booked') return 'Schedule';               // confirmed a call on Calendly
-  if (list === 'qualified_no_book' && firedLead) return 'Lead';
+  if (list === 'qualified_no_book' && firedLead) return 'QualifiedLead';
   return NOT_FOR_META;
 }
 const SURVEY_COL_INDEX = SHEET_HEADERS.indexOf('Survey Answers'); // 0-based, for batchUpdate ranges

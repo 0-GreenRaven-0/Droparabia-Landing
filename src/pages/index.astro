@@ -1438,10 +1438,11 @@ const trustpilotReviews = [
       try {
         localStorage.setItem('da_match', JSON.stringify({ em, ph, fn, ln }));
       } catch {}
-      // Advanced matching only: the page's init ran before they typed anything, so it's
-      // re-run with what they just submitted. Lead is no longer fired here — it belongs
-      // to the qualification point in the survey (see SurveyFlow), so it measures
-      // qualified leads rather than everyone who unlocked the video.
+      // Meta Pixel Lead: only reached after the API confirms the subscription. Wrapped so
+      // a blocked or broken pixel can't drop them into the error path below. The page's
+      // init ran before they typed anything, so it's re-run with what they just submitted
+      // for the Lead to carry it. Qualification has its own event (QualifiedLead, fired
+      // from SurveyFlow); this one stays on subscription, where retargeting depends on it.
       try {
         const fbq = (window as any).fbq;
         if (typeof fbq === 'function') {
@@ -1451,6 +1452,7 @@ const trustpilotReviews = [
           if (fn) match.fn = fn;
           if (ln) match.ln = ln;
           fbq('init', '4560443994198158', match);
+          fbq('track', 'Lead');
         }
       } catch {}
 

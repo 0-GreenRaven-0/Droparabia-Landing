@@ -519,13 +519,16 @@ const { collectContact = false } = Astro.props;
         if (fn) match.fn = fn;
         if (ln) match.ln = ln;
         window.fbq('init', '4560443994198158', match);
+        window.fbq('track', 'Lead');
       }
     } catch(_) {}
   }
 
-  // The ad set's optimization event. It fires the moment both qualifying answers are
-  // committed — wanting to start a business, and having the budget — and nowhere else:
-  // not on subscribing, not on finishing the survey, not on booking. Once per visitor
+  // The ad set's optimization event. Custom, not standard: the standard Lead already
+  // means "subscribed to watch the video" and feeds retargeting audiences, so reusing it
+  // here would mix the two. It fires the moment both qualifying answers are committed —
+  // wanting to start a business, and having the budget — and nowhere else: not on
+  // subscribing, not on finishing the survey, not on booking. Once per visitor
   // (localStorage, so a second visit in a new session can't fire it again).
   //
   // The id generated here is also written to that visitor's sheet row as its Event ID,
@@ -543,7 +546,7 @@ const { collectContact = false } = Astro.props;
       localStorage.setItem('da_lead_fired', '1');
       sessionStorage.setItem('da_lead_event_id', id);
       if (typeof window.fbq === 'function') {
-        window.fbq('track', 'Lead', {}, { eventID: id });
+        window.fbq('trackCustom', 'QualifiedLead', {}, { eventID: id });
       }
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: 'survey_qualified', event_id: id });
