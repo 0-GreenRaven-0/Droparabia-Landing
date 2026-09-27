@@ -1,67 +1,747 @@
 ---
-import SurveyFlow from '../components/SurveyFlow.astro';
-import AdClickCapture from '../components/AdClickCapture.astro';
+import Layout from '../layouts/Layout.astro';
+import { siInstagram, siThreads, siYoutube } from 'simple-icons';
+
+// Trustpilot's own rating blocks (512x96) from /public. Only the 5 and 4.5 star blocks
+// exist, which covers every review below; a lower-rated review needs its own asset
+// rather than the nearest one, so the rating shown stays the rating given.
+const STAR_BLOCKS: Record<string, string> = { '5': '/stars-5.svg', '4.5': '/stars-4.5.svg' };
+
+// Real Trustpilot reviews, copied verbatim (newest first). Dates are the review dates
+// shown on Trustpilot; every one of these is 5 stars.
+const trustpilotReviews = [
+  { name: 'geo kazan', date: 'Aug 29, 2026', stars: 5, text: 'The system works if you stay consistent and put enough effort' },
+  { name: 'Karim Sabeh', date: 'Jul 27, 2026', stars: 5, text: 'I use it personally it is beginner friendly and you can make a living from it' },
+  { name: 'Karim Moghnieh', date: 'Jun 18, 2026', stars: 5, text: 'Professional, reliable, and knowledgeable team. Helped spark out my career in freelancing!' },
+  { name: 'Hhh Mmm', date: 'Jun 17, 2026', stars: 5, text: 'One of the best programs\nIt gave me a real opportunity to grow and to be financially independent\nVery professional team thank you for this helpful and easy program' },
+  { name: 'MD Tech', date: 'Jun 16, 2026', stars: 5, text: "It's a very successful system and provides professional courses and continuous feedback and support for students. High quality products, excellent storage and packaging and smooth money transactions.\n\nVery recommended for people who want to start a small e-com business with a small capitol" },
+  { name: 'Tarek', date: 'May 26, 2026', stars: 5, text: 'Smooth experience using this app. The platform is easy to use and order processing is simple. Definitely a useful app for anyone running a dropshipping business.' },
+];
 ---
 
-<html lang="en">
-  <head>
-    <AdClickCapture />
-    <script is:inline>window.dataLayer = window.dataLayer || [];</script>
-    <!-- This page is only ever reached from the link in a YouTube video description, so
-         the whole journey from here is YouTube traffic. Recorded rather than relying on
-         a UTM tag or a referrer, because the YouTube app sends neither. -->
-    <script is:inline>try { sessionStorage.setItem('da_entry', 'get_started'); } catch (_) {}</script>
-    <script is:inline>(function(){var p=new URLSearchParams(window.location.search);var hasUtm=false;['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k){var v=p.get(k);if(v){sessionStorage.setItem(k,v);hasUtm=true;}});if(!hasUtm&&!sessionStorage.getItem('da_referrer')&&document.referrer&&document.referrer.indexOf(window.location.hostname)===-1){sessionStorage.setItem('da_referrer',document.referrer);};}());</script>
-    <!-- Google Tag Manager -->
-    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-NTGWNM69');</script>
-    <!-- End Google Tag Manager -->
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <title>See if you qualify for Droparabia</title>
-    <meta name="description" content="Answer a few quick questions to see if Droparabia is a fit for you, then book a free call with our team." />
-    <link rel="icon" type="image/png" href="/Droparabia.png" />
-    <!-- Global: the survey markup lives in SurveyFlow, so a scoped reset here would never reach it. -->
-    <style is:global>
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #F1F5F9; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-      @media (max-width: 768px) { body { background: #fff !important; } }
-    </style>
-    <!-- Meta Pixel Code -->
-    <script is:inline>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    // Advanced matching: email/phone saved by the subscribe modal (da_match).
-    var daMatch = {};
-    try {
-      var daStored = JSON.parse(localStorage.getItem('da_match') || '{}');
-      if (daStored.em) daMatch.em = daStored.em;
-      if (daStored.ph) daMatch.ph = daStored.ph;
-    } catch(_) {}
-    if (daMatch.em || daMatch.ph) fbq('init', '4560443994198158', daMatch);
-    else fbq('init', '4560443994198158');
-    fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=4560443994198158&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code -->
-  </head>
-  <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NTGWNM69"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    <SurveyFlow collectContact />
-  </body>
-</html>
+<Layout
+  title="See if you qualify for Droparabia"
+  description="Answer a few quick questions to see if Droparabia is a fit for you, then book a free call with our team."
+>
+
+  <!-- Reached only from the link in a YouTube video description, so everything from
+       here is YouTube traffic. Recorded as a flag rather than read off a UTM tag or a
+       referrer, because the YouTube app sends neither. -->
+  <script is:inline>try { sessionStorage.setItem('da_entry', 'get_started'); } catch (_) {}</script>
+
+  <!-- ═══════════ 1. BRAND + HEADLINE + SURVEY ═══════════ -->
+  <section class="hero">
+    <div class="wrap">
+
+      <a href="/" class="hero-brand" aria-label="Droparabia">
+        <img src="/Droparabia.png" alt="" class="hero-brand-logo" width="64" height="64" />
+        <span class="hero-brand-name">Droparabia</span>
+      </a>
+
+      <!-- No seller count here: the headline already carries it. -->
+      <div class="social-proof">
+        <span class="sp-word">Great!</span>
+        <!-- Trustpilot draws a 4.3 TrustScore as four full stars and a half. -->
+        <img src={STAR_BLOCKS['4.5']} alt="" aria-hidden="true" class="sp-stars-img" width="512" height="96" />
+        <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="sp-tp-logo" width="300" height="74" />
+      </div>
+
+      <h1 class="headline">How +800 Lebanese built a successful online store without owning a single product</h1>
+
+      <script is:inline>
+        // One hook now, so nothing is being split-tested and the headline ships in the
+        // HTML rather than being written in after paint. The variant is still recorded,
+        // because the sheet's Headline column and the GTM event read it, and a blank
+        // there would look like tracking had broken rather than like a choice.
+        (function () {
+          try { sessionStorage.setItem('da_headline_variant', 'fomo'); } catch (_) {}
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ event: 'headline_variant_assigned', headline_variant: 'fomo' });
+        })();
+      </script>
+
+      <p class="headline-sub headline-sub-red">This isn't old dropshipping, traditional e-com or a money making course</p>
+
+    </div>
+  </section>
+
+  <!-- ═══════════ 2. CASE STUDIES ═══════════ -->
+  <section class="proof-section" id="case-studies">
+    <!-- Carousel ported verbatim from droparabia-official's reviews page
+         (CaseStudyCarousels.astro): same slide set with the newest testimonials first,
+         same gradient nav buttons straddling the container edges. -->
+    <div class="carousel-container">
+      <div class="swiper testimonials-swiper" id="cs-swiper-1">
+        <div class="swiper-wrapper">
+          <!-- Newest first. Served straight from /public, unlike the slides below
+               which come through ImageKit's resizing CDN. -->
+          <div class="swiper-slide"><img src="/Case%20studies/Instagram%20story%20-%201.png" alt="Case Study" loading="lazy" width="1080" height="1920" /></div>
+          <div class="swiper-slide"><img src="/Case%20studies/Instagram%20story%20-%202.png" alt="Case Study" loading="lazy" width="1080" height="1920" /></div>
+          <div class="swiper-slide"><img src="/Case%20studies/Instagram%20story%20-%203.png" alt="Case Study" loading="lazy" width="1080" height="1920" /></div>
+          <div class="swiper-slide"><img src="/Case%20studies/Instagram%20story%20-%204.png" alt="Case Study" loading="lazy" width="1080" height="1920" /></div>
+          <div class="swiper-slide"><img src="/Case%20studies/Instagram%20story%20-%205.png" alt="Case Study" loading="lazy" width="1080" height="1920" /></div>
+          <div class="swiper-slide"><img src="/Case%20studies/Instagram%20story%20-%206.png" alt="Case Study" loading="lazy" width="1080" height="1920" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-1.png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-2.png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-3.png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-4.png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/4.png?tr=w-900,q-70,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/5.png?tr=w-900,q-70,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/2.png?tr=w-900,q-70,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/6.png?tr=w-900,q-70,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/1.png?tr=w-900,q-70,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/2.png?tr=w-900,q-70,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Case%20Studies/3.png?tr=w-900,q-70,f-webp" alt="Case Study" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo.png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
+          <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/MJ/Testimonials/Testo%20(1).png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
+        </div>
+      </div>
+
+      <button type="button" class="case-carousel-nav case-carousel-prev" aria-label="Previous">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </button>
+      <button type="button" class="case-carousel-nav case-carousel-next" aria-label="Next">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+    </div>
+
+    <!-- Nothing to unlock here, unlike the homepage's copy of this button: there is no
+         VSL to watch first, so it is live from the moment the page loads. -->
+    <a href="/get-started/survey" class="book-cta">
+      See if you qualify
+      <!-- Replaced with the live count from /api/spots (17 per week, resets Monday 12 AM Beirut time) -->
+      <span class="book-cta-sub" id="book-cta-spots">Limited spots are available this week</span>
+    </a>
+  </section>
+
+  <!-- ═══════════ 3. TRUSTPILOT REVIEWS ═══════════ -->
+  <section class="tp-section" aria-labelledby="tp-heading">
+    <div class="tp-head">
+      <h2 class="tp-heading" id="tp-heading">What our users say on</h2>
+      <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="tp-head-logo" width="300" height="74" loading="lazy" />
+      <!-- Overall TrustScore as shown on Trustpilot (4.3), which Trustpilot draws as four
+           full stars and a half. The span carries the label, so the image is decorative. -->
+      <span class="tp-rating" role="img" aria-label="Rated 4.3 out of 5 on Trustpilot">
+        <img src={STAR_BLOCKS['4.5']} alt="" aria-hidden="true" class="tp-stars-img tp-stars-img--head" width="512" height="96" loading="lazy" />
+        <span class="tp-score">4.3</span>
+      </span>
+    </div>
+
+    <div class="tp-grid">
+      {trustpilotReviews.map((review) => (
+        <article class="tp-card">
+          <div class="tp-card-top">
+            <span class="tp-name">{review.name}</span>
+            <span class="tp-date">{review.date}</span>
+          </div>
+          <img src={STAR_BLOCKS[String(review.stars)]} alt={`Rated ${review.stars} out of 5 stars`} class="tp-stars-img" width="512" height="96" loading="lazy" />
+          <p class="tp-text">{review.text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo-link">
+          <img src="/Droparabia.png" alt="Droparabia logo" class="footer-logo-img" />
+          <span class="footer-logo-name">Droparabia</span>
+        </a>
+      </div>
+
+      <div class="footer-links">
+        <p class="footer-links-label">Legal</p>
+        <div class="footer-compliance">
+          <a href="/privacy-policy" class="footer-compliance-link">Privacy Policy</a>
+          <a href="/terms" class="footer-compliance-link">Terms &amp; Conditions</a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <p class="footer-links-label">Follow us</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/mjbusinessofficial?igsh=Mm5jdmFjMTljbm0x" target="_blank" rel="noopener" class="footer-social-link" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siInstagram.path}/></svg>
+          </a>
+          <a href="https://www.threads.com/@mjbusinessofficial" target="_blank" rel="noopener" class="footer-social-link" aria-label="Threads">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siThreads.path}/></svg>
+          </a>
+          <a href="https://www.youtube.com/@MJ.biznes" target="_blank" rel="noopener" class="footer-social-link" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d={siYoutube.path}/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Droparabia. All rights reserved.</p>
+    </div>
+  </footer>
+
+</Layout>
+
+
+<!-- Global: palette and font lock-down -->
+<style is:global>
+  :root {
+    /* Borrowed from droparabia-official */
+    --da-primary:    #001eff;
+    --da-blue:       #2745ff;
+    --da-blue-deep:  #001a80;
+    --da-navy:       #000c66;
+    --da-cyan:       #06a2d1;
+    --da-purple:     #7200b0;
+    --da-bg:         #f0f0f0;
+    --da-surface:    #ffffff;
+    --da-line:       #dcdbd9;
+    --da-ink:        #0b1230;
+    --da-ink-soft:   #4a5170;
+    --da-ink-mute:   #7b8098;
+    /* CTA blue, matching the site's primary rather than the old green. */
+    --da-cta:        #001eff;
+    --da-cta-light:  #2745ff;
+  }
+
+  body {
+    background: var(--da-bg) !important;
+    color: var(--da-ink);
+  }
+
+</style>
+
+
+<style>
+  /* ══════════════ LAYOUT ══════════════ */
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* ─── SITE HEADER ─── */
+  /* ─── BRAND LOCKUP ─── */
+  .hero-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    margin-bottom: 10px;
+  }
+
+  .hero-brand-logo {
+    width: clamp(48px, 5.4vw, 64px);
+    height: clamp(48px, 5.4vw, 64px);
+    object-fit: contain;
+  }
+
+  .hero-brand-name {
+    font-family: var(--font-brand);
+    font-size: clamp(1.9rem, 4.6vw, 2.5rem);
+    line-height: 1;
+    color: #000;
+    letter-spacing: 0.01em;
+  }
+
+  .hero {
+    position: relative;
+    background: var(--da-bg);
+    text-align: center;
+    padding: 18px 0 24px;
+    overflow: hidden;
+  }
+
+  .hero > .wrap {
+    position: relative;
+    z-index: 1;
+  }
+
+  .headline {
+    font-size: clamp(1.6rem, 4.4vw, 2.6rem);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--da-ink);
+    max-width: 44ch;
+    margin: 0 auto 14px;
+    text-wrap: balance;
+  }
+
+  .headline-sub {
+    font-size: clamp(0.85rem, 1.45vw, 1rem);
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--da-ink-soft);
+    max-width: 860px;
+    margin: 0 auto 22px;
+    text-wrap: balance;
+  }
+
+  .headline-sub-red {
+    font-weight: 700;
+    color: #dc2626;
+  }
+
+  /* ─── SOCIAL PROOF BAR ─── */
+  .social-proof {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin: 0 auto 24px;
+  }
+
+  .sp-users {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--da-ink);
+    line-height: 1;
+  }
+
+  .sp-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--da-line);
+  }
+
+  .sp-trust {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .sp-tp-logo {
+    height: 21px;
+    width: auto;
+  }
+
+  .sp-word {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--da-ink);
+    line-height: 1;
+  }
+
+  /* Height drives the size; the 512x96 viewBox holds the five squares in proportion. */
+  .sp-stars-img {
+    display: block;
+    height: 17px;
+    width: auto;
+  }
+
+  .sp-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  /* viewBox is the star path's own bounding box (x 0-23, y 2-25.3) rather than the
+     0 0 24 24 it shipped with — that clipped the lower points and pushed the shape
+     below the box's centre, which is what knocked it out of line with the text. */
+  .sp-star {
+    width: 23px;
+    height: 23px;
+    display: block;
+  }
+
+  .grad-text {
+    background: linear-gradient(90deg, var(--da-cyan), var(--da-blue), var(--da-cyan));
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: grad-pan 4s linear infinite;
+  }
+
+  @keyframes grad-pan { to { background-position: 200% center; } }
+
+  .mark {
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .mark::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.04em;
+    height: 0.16em;
+    background: var(--da-primary);
+    opacity: 0.22;
+    border-radius: 2px;
+  }
+
+  /* ─── CTA ─── */
+  .book-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    max-width: 420px;
+    width: 100%;
+    margin: 32px auto 0;
+    padding: 15px 20px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--da-cta) 0%, var(--da-cta-light) 100%);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.10), 0 2px 16px rgba(0, 30, 255, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .book-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 6px 32px rgba(0, 30, 255, 0.50);
+  }
+
+  .book-cta-sub {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* ══════════════ 2. CASE STUDIES ══════════════ */
+  .proof-section {
+    padding: 0 0 56px;
+    background: var(--da-bg);
+  }
+
+  .carousel-container {
+    position: relative;
+    max-width: 1152px;
+    margin: 40px auto 0;
+    padding: 0 24px;
+  }
+
+  .testimonials-swiper { overflow: hidden; }
+
+  .swiper-slide {
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 8px 18px -10px rgba(0, 0, 0, 0.16);
+  }
+
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Gradient pills straddling the container edges, per the official reviews page. */
+  .case-carousel-nav {
+    position: absolute;
+    top: 50%;
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: linear-gradient(135deg, #2745ff, #001eff 45%, #000c66);
+    box-shadow: 0 6px 16px -6px rgba(0, 30, 255, 0.35);
+    transition: transform 0.15s ease-out;
+  }
+
+  .case-carousel-prev {
+    left: 0;
+    transform: translate(-50%, -50%);
+  }
+
+  .case-carousel-next {
+    right: 0;
+    transform: translate(50%, -50%);
+  }
+
+  .case-carousel-prev:hover { transform: translate(-50%, -50%) scale(1.1); }
+  .case-carousel-next:hover { transform: translate(50%, -50%) scale(1.1); }
+
+  /* ══════════════ 3. TRUSTPILOT REVIEWS ══════════════ */
+  .tp-section {
+    background: var(--da-bg);
+    padding: 64px 24px 72px;
+  }
+
+  .tp-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    margin-bottom: 36px;
+    text-align: center;
+  }
+
+  .tp-heading {
+    font-size: clamp(1.35rem, 3.6vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: #000;
+    /* Nudged down so the text sits on the same line as the Trustpilot wordmark,
+       whose star makes the logo image taller than the lettering. */
+    position: relative;
+    top: 0.14em;
+  }
+
+  .tp-head-logo {
+    height: clamp(30px, 4.4vw, 42px);
+    width: auto;
+  }
+
+  .tp-grid {
+    max-width: 1152px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .tp-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    top: 0.14em; /* same nudge as the heading text, to sit on the wordmark's line */
+  }
+
+  .tp-stars-img.tp-stars-img--head {
+    height: clamp(24px, 3vw, 30px);
+    margin-bottom: 0;
+  }
+
+  .tp-score {
+    font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+    font-weight: 600;
+    color: #000;
+  }
+
+  .tp-card {
+    background: #fff;
+    border-radius: 0;
+    padding: 22px 22px 24px;
+    box-shadow: 0 10px 28px -8px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.06);
+  }
+
+  .tp-card-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .tp-name {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--da-ink);
+  }
+
+  .tp-date {
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    color: var(--da-ink-mute);
+  }
+
+  /* Height drives the size; the 512x96 viewBox keeps the five squares in proportion. */
+  .tp-stars-img {
+    display: block;
+    height: 24px;
+    width: auto;
+    margin-bottom: 14px;
+  }
+
+  .tp-text {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--da-ink-soft);
+    white-space: pre-line;
+  }
+
+  @media (max-width: 960px) {
+    .tp-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    .tp-section { padding: 48px 16px 56px; }
+    .tp-head { margin-bottom: 26px; }
+    .tp-grid { grid-template-columns: 1fr; gap: 14px; }
+  }
+
+  /* ══════════════ FOOTER ══════════════ */
+  .footer {
+    background: var(--da-bg);
+    color: var(--da-ink);
+    padding: 40px 0 0;
+    /* Cast upward, separating it from the section above rather than the page edge
+       below — matches the header's shadow, which casts the opposite way for the
+       same reason. */
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.16);
+  }
+
+  .footer-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 20px 32px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 28px;
+  }
+
+  .footer-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .footer-logo-img {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+  }
+
+  .footer-logo-name {
+    font-family: var(--font-brand);
+    font-size: 1.4rem;
+    color: var(--da-ink);
+  }
+
+  .footer-links-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--da-ink-mute);
+    margin-bottom: 10px;
+  }
+
+  .footer-compliance {
+    display: grid;
+    gap: 7px;
+  }
+
+  .footer-compliance-link {
+    font-size: 0.88rem;
+    color: var(--da-ink-soft);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer-compliance-link:hover { color: var(--da-ink); }
+
+  .footer-socials {
+    display: flex;
+    gap: 10px;
+  }
+
+  .footer-social-link {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--da-line);
+    color: var(--da-ink-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .footer-social-link:hover { background: var(--da-primary); color: #fff; }
+
+  .footer-social-link svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .footer-bottom {
+    border-top: 1px solid var(--da-line);
+    padding: 16px 20px;
+    text-align: center;
+  }
+
+  .footer-bottom p {
+    font-size: 0.8rem;
+    color: var(--da-ink-mute);
+  }
+
+  /* ══════════════ RESPONSIVE ══════════════ */
+  @media (max-width: 640px) {
+    .headline-sub { font-size: 0.78rem; }
+    .hero { padding: 12px 0 40px; }
+    .hero-brand { gap: 8px; margin-bottom: 8px; }
+    .social-proof { gap: 6px; }
+    .sp-word { font-size: 0.8rem; }
+    .sp-tp-logo { height: 18px; }
+    .sp-stars-img { height: 15px; }
+    .headline { max-width: none; }
+    .carousel-container { padding: 0 26px; }
+    /* left:0/right:0 resolve to the container's outer edge regardless of its padding
+       (padding never shifts that reference point for an absolutely-positioned child) —
+       straddling that edge on mobile meant half the button hung off the viewport itself.
+       Sitting fully inside instead, overlaid on the slide. */
+    .case-carousel-nav { width: 36px; height: 36px; top: 50%; transform: translateY(-50%) !important; }
+    .case-carousel-prev { left: 8px; }
+    .case-carousel-next { right: 8px; }
+    .footer-inner { flex-direction: column; gap: 24px; }
+  }
+</style>
+
+
+<script>
+  // Weekly spots left, counted server-side from this week's rows on the booked sheet.
+  // The fallback text stays in place if the request fails.
+  const spotsEl = document.getElementById('book-cta-spots');
+  if (spotsEl) {
+    fetch('/api/spots')
+      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+      .then((data: { remaining?: number }) => {
+        if (typeof data.remaining !== 'number') return;
+        const n = data.remaining;
+        spotsEl.textContent = n === 0
+          ? 'No spots left this week'
+          : n === 1
+            ? '1 spot is available this week'
+            : `${n} spots are available this week`;
+      })
+      .catch(() => {});
+  }
+</script>
+
+<script>
+  import Swiper from 'swiper';
+  import { Navigation } from 'swiper/modules';
+  import 'swiper/css';
+  import 'swiper/css/navigation';
+
+  // Initialised straight away, matching the official reviews page. The previous
+  // IntersectionObserver deferral meant the carousel was still booting as it scrolled
+  // into view, which is what made it feel less smooth than that one.
+  document.querySelectorAll('.testimonials-swiper').forEach((swiperEl) => {
+    const container = swiperEl.closest('.carousel-container');
+    if (!container) return;
+    new Swiper(swiperEl as HTMLElement, {
+      modules: [Navigation],
+      slidesPerView: 1,
+      spaceBetween: 16,
+      breakpoints: {
+        600: { slidesPerView: 2, spaceBetween: 20 },
+        1024: { slidesPerView: 3, spaceBetween: 24 },
+      },
+      loop: true,
+      navigation: {
+        nextEl: container.querySelector('.case-carousel-next') as HTMLElement,
+        prevEl: container.querySelector('.case-carousel-prev') as HTMLElement,
+      },
+      pagination: false,
+    });
+  });
+</script>

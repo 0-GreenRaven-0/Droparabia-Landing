@@ -120,6 +120,10 @@ const SHEET_HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Traffic Source', 'Camp
 //
 // QualifiedLead is a custom event; the standard Lead belongs to VSL subscription and is
 // fired browser-side only, so no row carries it.
+//
+// Schedule and QualifiedLead also fire in the browser, carrying the same id as the row,
+// so uploading these rows adds server-side copies that Events Manager de-duplicates
+// rather than a second conversion.
 const NOT_FOR_META = 'DO_NOT_SEND';
 function getEventName(list: string, firedLead: boolean): string {
   if (list === 'booked') return 'Schedule';               // confirmed a call on Calendly

@@ -3,6 +3,11 @@ import Layout from '../layouts/Layout.astro';
 import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 import PhoneCountrySelect from '../components/PhoneCountrySelect.astro';
 
+// Trustpilot's own rating blocks (512x96) from /public. Only the 5 and 4.5 star blocks
+// exist, which covers every review below; a lower-rated review needs its own asset
+// rather than the nearest one, so the rating shown stays the rating given.
+const STAR_BLOCKS: Record<string, string> = { '5': '/stars-5.svg', '4.5': '/stars-4.5.svg' };
+
 // Real Trustpilot reviews, copied verbatim (newest first). Dates are the review dates
 // shown on Trustpilot; every one of these is 5 stars.
 const trustpilotReviews = [
@@ -17,50 +22,38 @@ const trustpilotReviews = [
 
 <Layout>
 
-  <!-- ═══════════ SITE HEADER ═══════════ -->
-  <header class="site-header">
-    <div class="site-header-inner">
-      <a href="/" class="corner-brand" aria-label="Droparabia">
-        <img src="/Droparabia.png" alt="" class="corner-brand-logo" width="40" height="40" />
-        <span class="corner-brand-name">Droparabia</span>
-      </a>
-      <a href="#case-studies" class="site-header-link">Latest Reviews</a>
-    </div>
-  </header>
-
-  <!-- ═══════════ 1. HEADLINE + GATED VSL ═══════════ -->
+  <!-- ═══════════ 1. BRAND + HEADLINE + GATED VSL ═══════════ -->
   <section class="hero">
     <div class="wrap">
 
-      <!-- Filled by the synchronous inline script right below with one of the two
-           A/B hook variants before the browser paints the rest of the page. -->
-      <h1 class="headline" id="headline"></h1>
+      <a href="/" class="hero-brand" aria-label="Droparabia">
+        <img src="/Droparabia.png" alt="" class="hero-brand-logo" width="64" height="64" />
+        <span class="hero-brand-name">Droparabia</span>
+      </a>
+
+      <!-- No seller count here: the headline already carries it. -->
+      <div class="social-proof">
+        <span class="sp-word">Great!</span>
+        <!-- Trustpilot draws a 4.3 TrustScore as four full stars and a half. -->
+        <img src={STAR_BLOCKS['4.5']} alt="" aria-hidden="true" class="sp-stars-img" width="512" height="96" />
+        <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="sp-tp-logo" width="300" height="74" />
+      </div>
+
+      <h1 class="headline">How +800 Lebanese built a successful online store without owning a single product</h1>
 
       <script is:inline>
+        // One hook now, so nothing is being split-tested and the headline ships in the
+        // HTML rather than being written in after paint. The variant is still recorded,
+        // because the sheet's Headline column and the GTM event read it, and a blank
+        // there would look like tracking had broken rather than like a choice.
         (function () {
-          var variants = {
-            benefit: 'Build a successful &amp; high-earning online store without owning a single product',
-            fomo: 'How +800 Lebanese built a successful online store without owning a single product',
-          };
-          // sessionStorage, not localStorage: a fresh browser session gets a new random
-          // pick each time, but stays on the same hook while navigating within that
-          // session (so it doesn't flip mid-visit, e.g. going back from /survey).
-          var STORAGE_KEY = 'da_headline_variant';
-          var variant = null;
-          try { variant = sessionStorage.getItem(STORAGE_KEY); } catch (_) {}
-          if (!variant || !variants[variant]) {
-            var keys = Object.keys(variants);
-            variant = keys[Math.floor(Math.random() * keys.length)];
-            try { sessionStorage.setItem(STORAGE_KEY, variant); } catch (_) {}
-          }
-          var el = document.getElementById('headline');
-          if (el) el.innerHTML = variants[variant];
+          try { sessionStorage.setItem('da_headline_variant', 'fomo'); } catch (_) {}
           window.dataLayer = window.dataLayer || [];
-          window.dataLayer.push({ event: 'headline_variant_assigned', headline_variant: variant });
+          window.dataLayer.push({ event: 'headline_variant_assigned', headline_variant: 'fomo' });
         })();
       </script>
 
-      <p class="headline-sub"><span class="headline-sub-red">This has nothing to do with the old Dropshipping</span>, it's a platform that finds you <strong>hundreds of high-selling products</strong> in the Lebanese market &amp; <strong>delivers them to your customer's doorstep</strong></p>
+      <p class="headline-sub headline-sub-red">This isn't old dropshipping, traditional e-com or a money making course</p>
 
       <!-- VSL — plain Plyr play button; subscription is gated behind the play click itself -->
       <div class="vsl-wrapper">
@@ -86,7 +79,7 @@ const trustpilotReviews = [
            been watched. -->
       <p class="book-cta-gate" id="book-cta-gate" style="display:none">Watch at least 40% of the tutorial to see if you qualify to access Droparabia</p>
       <a href="/survey" class="book-cta is-locked" id="book-cta" style="display:none" aria-disabled="true">
-        See if I Qualify
+        See if you qualify
         <!-- Replaced with the live count from /api/spots (17 per week, resets Monday 12 AM Beirut time) -->
         <span class="book-cta-sub" id="book-cta-spots">Limited spots are available this week</span>
       </a>
@@ -98,7 +91,7 @@ const trustpilotReviews = [
   <section class="proof-section" id="case-studies">
     <h2 class="section-heading">
       <svg class="heading-arrow" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad3)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad3" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#06a2d1"/><stop offset="100%" stop-color="#2745ff"/></linearGradient></defs></svg>
-      +800 Lebanese are currently selling with Droparabia
+      Weekly latest results
       <svg class="heading-arrow" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad4)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad4" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#06a2d1"/><stop offset="100%" stop-color="#2745ff"/></linearGradient></defs></svg>
     </h2>
 
@@ -108,6 +101,14 @@ const trustpilotReviews = [
     <div class="carousel-container">
       <div class="swiper testimonials-swiper" id="cs-swiper-1">
         <div class="swiper-wrapper">
+          <!-- Newest first. Served straight from /public, unlike the slides below
+               which come through ImageKit's resizing CDN. -->
+          <div class="swiper-slide"><img src="/Case%20studies/Instagram%20story%20-%201.png" alt="Case Study" loading="lazy" width="1080" height="1920" /></div>
+          <div class="swiper-slide"><img src="/Case%20studies/Instagram%20story%20-%202.png" alt="Case Study" loading="lazy" width="1080" height="1920" /></div>
+          <div class="swiper-slide"><img src="/Case%20studies/Instagram%20story%20-%203.png" alt="Case Study" loading="lazy" width="1080" height="1920" /></div>
+          <div class="swiper-slide"><img src="/Case%20studies/Instagram%20story%20-%204.png" alt="Case Study" loading="lazy" width="1080" height="1920" /></div>
+          <div class="swiper-slide"><img src="/Case%20studies/Instagram%20story%20-%205.png" alt="Case Study" loading="lazy" width="1080" height="1920" /></div>
+          <div class="swiper-slide"><img src="/Case%20studies/Instagram%20story%20-%206.png" alt="Case Study" loading="lazy" width="1080" height="1920" /></div>
           <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-1.png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
           <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-2.png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
           <div class="swiper-slide"><img src="https://ik.imagekit.io/greenraven/droparabia/testimonial-3.png?tr=w-900,q-70,f-webp" alt="Testimonial" loading="lazy" /></div>
@@ -138,15 +139,10 @@ const trustpilotReviews = [
     <div class="tp-head">
       <h2 class="tp-heading" id="tp-heading">What our users say on</h2>
       <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="tp-head-logo" width="300" height="74" loading="lazy" />
-      <!-- Overall TrustScore as shown on Trustpilot (4.3): four full stars and a half star, like Trustpilot draws it -->
+      <!-- Overall TrustScore as shown on Trustpilot (4.3), which Trustpilot draws as four
+           full stars and a half. The span carries the label, so the image is decorative. -->
       <span class="tp-rating" role="img" aria-label="Rated 4.3 out of 5 on Trustpilot">
-        <span class="tp-stars tp-stars--head">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <span class={i <= 4 ? 'tp-star' : 'tp-star tp-star--half'}>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 3.5l2.47 5.7 6.18.54-4.68 4.07 1.4 6.05L12 16.66l-5.37 3.2 1.4-6.05L3.35 9.74l6.18-.54z"/></svg>
-            </span>
-          ))}
-        </span>
+        <img src={STAR_BLOCKS['4.5']} alt="" aria-hidden="true" class="tp-stars-img tp-stars-img--head" width="512" height="96" loading="lazy" />
         <span class="tp-score">4.3</span>
       </span>
     </div>
@@ -158,13 +154,7 @@ const trustpilotReviews = [
             <span class="tp-name">{review.name}</span>
             <span class="tp-date">{review.date}</span>
           </div>
-          <div class="tp-stars" role="img" aria-label={`Rated ${review.stars} out of 5 stars`}>
-            {[1, 2, 3, 4, 5].map((i) => (
-              <span class={i <= review.stars ? 'tp-star' : 'tp-star tp-star--empty'}>
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 3.5l2.47 5.7 6.18.54-4.68 4.07 1.4 6.05L12 16.66l-5.37 3.2 1.4-6.05L3.35 9.74l6.18-.54z"/></svg>
-              </span>
-            ))}
-          </div>
+          <img src={STAR_BLOCKS[String(review.stars)]} alt={`Rated ${review.stars} out of 5 stars`} class="tp-stars-img" width="512" height="96" loading="lazy" />
           <p class="tp-text">{review.text}</p>
         </article>
       ))}
@@ -274,8 +264,9 @@ const trustpilotReviews = [
     --da-ink:        #0b1230;
     --da-ink-soft:   #4a5170;
     --da-ink-mute:   #7b8098;
-    --da-cta:        #16a34a;
-    --da-cta-light:  #22c55e;
+    /* CTA blue, matching the site's primary rather than the old green. */
+    --da-cta:        #001eff;
+    --da-cta-light:  #2745ff;
   }
 
   body {
@@ -333,63 +324,34 @@ const trustpilotReviews = [
   }
 
   /* ─── SITE HEADER ─── */
-  .site-header {
-    position: relative;
-    z-index: 5;
-    background: var(--da-bg);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16);
-  }
-
-  .site-header-inner {
-    /* No max-width/centering here on purpose — the logo and the link sit at the
-       browser's actual left/right edges on every screen, not the edges of a boxed,
-       centered container that only reaches them on narrower viewports. */
-    width: 100%;
-    padding: 14px 24px;
-    display: flex;
+  /* ─── BRAND LOCKUP ─── */
+  .hero-brand {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .corner-brand {
-    display: flex;
-    align-items: center;
-    gap: 9px;
+    gap: 10px;
     text-decoration: none;
+    margin-bottom: 10px;
   }
 
-  .corner-brand-logo {
-    width: 36px;
-    height: 36px;
+  .hero-brand-logo {
+    width: clamp(48px, 5.4vw, 64px);
+    height: clamp(48px, 5.4vw, 64px);
     object-fit: contain;
   }
 
-  .corner-brand-name {
+  .hero-brand-name {
     font-family: var(--font-brand);
-    font-size: 1.5rem;
+    font-size: clamp(1.9rem, 4.6vw, 2.5rem);
     line-height: 1;
     color: #000;
     letter-spacing: 0.01em;
-  }
-
-  .site-header-link {
-    font-family: var(--font-brand);
-    font-size: 1.15rem;
-    color: #000;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  .site-header-link:hover {
-    text-decoration: underline;
   }
 
   .hero {
     position: relative;
     background: var(--da-bg);
     text-align: center;
-    padding: 48px 0;
+    padding: 18px 0 48px;
     overflow: hidden;
   }
 
@@ -419,11 +381,6 @@ const trustpilotReviews = [
     text-wrap: balance;
   }
 
-  .headline-sub strong {
-    font-weight: 700;
-    color: var(--da-ink);
-  }
-
   .headline-sub-red {
     font-weight: 700;
     color: #dc2626;
@@ -434,7 +391,7 @@ const trustpilotReviews = [
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
+    gap: 7px;
     flex-wrap: wrap;
     margin: 0 auto 24px;
   }
@@ -459,7 +416,21 @@ const trustpilotReviews = [
   }
 
   .sp-tp-logo {
-    height: 28px;
+    height: 21px;
+    width: auto;
+  }
+
+  .sp-word {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--da-ink);
+    line-height: 1;
+  }
+
+  /* Height drives the size; the 512x96 viewBox holds the five squares in proportion. */
+  .sp-stars-img {
+    display: block;
+    height: 17px;
     width: auto;
   }
 
@@ -537,13 +508,13 @@ const trustpilotReviews = [
     text-decoration: none;
     font-weight: 700;
     font-size: 1.1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.10), 0 2px 16px rgba(22, 163, 74, 0.35);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.10), 0 2px 16px rgba(0, 30, 255, 0.35);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   .book-cta:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 6px 32px rgba(22, 163, 74, 0.50);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 6px 32px rgba(0, 30, 255, 0.50);
   }
 
   .book-cta-sub {
@@ -802,13 +773,13 @@ const trustpilotReviews = [
     font-weight: 700;
     color: #fff;
     background: linear-gradient(135deg, var(--da-cta) 0%, var(--da-cta-light) 100%);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.10), 0 2px 16px rgba(22, 163, 74, 0.35);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.10), 0 2px 16px rgba(0, 30, 255, 0.35);
     transition: box-shadow 0.2s ease, transform 0.2s ease;
   }
 
   .vsl-inline-btn:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 6px 32px rgba(22, 163, 74, 0.50);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 6px 32px rgba(0, 30, 255, 0.50);
   }
 
   .vsl-inline-btn:active:not(:disabled) { transform: translateY(2px); }
@@ -847,6 +818,18 @@ const trustpilotReviews = [
     width: 28px;
     height: 36px;
     flex-shrink: 0;
+    /* Both bob in step rather than staggered: they're a matched pair pointing at the
+       same line, so the symmetry is the point. */
+    animation: arrow-bob 1.5s ease-in-out infinite;
+  }
+
+  @keyframes arrow-bob {
+    0%, 100% { transform: translateY(-15%); }
+    50%      { transform: translateY(15%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .heading-arrow { animation: none; }
   }
 
   .carousel-container {
@@ -951,19 +934,10 @@ const trustpilotReviews = [
     top: 0.14em; /* same nudge as the heading text, to sit on the wordmark's line */
   }
 
-  .tp-stars.tp-stars--head { margin-bottom: 0; }
-
-  .tp-stars--head .tp-star {
-    width: clamp(24px, 3vw, 30px);
+  .tp-stars-img.tp-stars-img--head {
     height: clamp(24px, 3vw, 30px);
+    margin-bottom: 0;
   }
-
-  .tp-stars--head .tp-star svg {
-    width: 78%;
-    height: 78%;
-  }
-
-  .tp-star.tp-star--half { background: linear-gradient(90deg, #00b67a 50%, #dcdce6 50%); }
 
   .tp-score {
     font-size: clamp(1.1rem, 2.4vw, 1.45rem);
@@ -998,28 +972,12 @@ const trustpilotReviews = [
     color: var(--da-ink-mute);
   }
 
-  /* Trustpilot's own star style: white star on a green square. */
-  .tp-stars {
-    display: flex;
-    gap: 3px;
-    margin-bottom: 14px;
-  }
-
-  .tp-star {
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #00b67a;
-  }
-
-  .tp-star--empty { background: #dcdce6; }
-
-  .tp-star svg {
-    width: 19px;
-    height: 19px;
+  /* Height drives the size; the 512x96 viewBox keeps the five squares in proportion. */
+  .tp-stars-img {
     display: block;
+    height: 24px;
+    width: auto;
+    margin-bottom: 14px;
   }
 
   .tp-text {
@@ -1142,16 +1100,12 @@ const trustpilotReviews = [
     .headline-sub { font-size: 0.78rem; }
     .section-heading { font-size: 1.1rem; gap: 8px; }
     .heading-arrow { width: 20px; height: 26px; }
-    .hero { padding: 40px 0; }
-    .site-header-inner { padding: 10px 16px; }
-    .corner-brand { gap: 7px; }
-    .corner-brand-logo { width: 28px; height: 28px; }
-    .corner-brand-name { font-size: 1.15rem; }
-    .site-header-link { font-size: 0.82rem; }
-    .social-proof { gap: 10px; }
-    .sp-users { font-size: 0.92rem; }
-    .sp-tp-logo { height: 23px; }
-    .sp-star { width: 19px; height: 19px; }
+    .hero { padding: 12px 0 40px; }
+    .hero-brand { gap: 8px; margin-bottom: 8px; }
+    .social-proof { gap: 6px; }
+    .sp-word { font-size: 0.8rem; }
+    .sp-tp-logo { height: 18px; }
+    .sp-stars-img { height: 15px; }
     .headline { max-width: none; }
     .vsl-wrapper { border-radius: 14px; box-shadow: 0 0 0 3px var(--da-blue), 0 16px 40px rgba(0, 30, 255, 0.18); }
     .carousel-container { padding: 0 26px; }

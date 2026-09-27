@@ -349,8 +349,17 @@ import AdClickCapture from '../components/AdClickCapture.astro';
       // lead again.
       var callBooked = false;
 
-      // No pixel fire here: Schedule is sent server-side from the sheet through the
-      // Conversions API, so firing it in the browser too would double-count the booking.
+      // Schedule fires in the browser for every booking, whatever the traffic source,
+      // so Meta sees the conversion now rather than waiting on the sheet upload. The id
+      // it carries is written to the row's Event ID column, so once that upload runs
+      // Events Manager de-duplicates the two copies instead of counting two bookings.
+      function newEventId() {
+        try {
+          if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
+        } catch(_) {}
+        return 'sched-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+      }
+
       function showThankYouView() {
         var main = document.getElementById('main-content');
         var view = document.getElementById('thank-you-view');
@@ -374,6 +383,14 @@ import AdClickCapture from '../components/AdClickCapture.astro';
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({ event: 'call_booked' });
           showThankYouView();
+
+          var scheduleEventId = newEventId();
+          try {
+            sessionStorage.setItem('da_schedule_event_id', scheduleEventId);
+            if (typeof window.fbq === 'function') {
+              window.fbq('track', 'Schedule', {}, { eventID: scheduleEventId });
+            }
+          } catch(_) {}
 
           // Prefer Calendly payload (always available), fall back to sessionStorage
           var invitee = (e.data.payload && e.data.payload.invitee) || {};
@@ -419,6 +436,8 @@ import AdClickCapture from '../components/AdClickCapture.astro';
               vsl_furthest_seconds: vsl.furthest || 0,
               vsl_duration_seconds: vsl.duration || 0,
               survey_answers: surveyAnswers,
+              // The id the browser's Schedule fired with, so the sheet row matches it.
+              event_id: scheduleEventId,
             };
             // Calendly lets them book under a different address than the one they gave
             // us earlier. Send the original too, otherwise their qualified_no_book row

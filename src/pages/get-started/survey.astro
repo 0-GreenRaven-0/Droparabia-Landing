@@ -1,0 +1,69 @@
+---
+import SurveyFlow from '../../components/SurveyFlow.astro';
+import AdClickCapture from '../../components/AdClickCapture.astro';
+---
+
+<html lang="en">
+  <head>
+    <AdClickCapture />
+    <script is:inline>window.dataLayer = window.dataLayer || [];</script>
+    <!-- Reached from the CTA on /get-started, which is itself only linked from a
+         YouTube video description, so the whole journey is YouTube traffic. Set here
+         too, not just on /get-started, so a direct hit on this URL is labelled the
+         same. Recorded as a flag rather than read off a UTM tag or a referrer,
+         because the YouTube app sends neither. -->
+    <script is:inline>try { sessionStorage.setItem('da_entry', 'get_started'); } catch (_) {}</script>
+    <script is:inline>(function(){var p=new URLSearchParams(window.location.search);var hasUtm=false;['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k){var v=p.get(k);if(v){sessionStorage.setItem(k,v);hasUtm=true;}});if(!hasUtm&&!sessionStorage.getItem('da_referrer')&&document.referrer&&document.referrer.indexOf(window.location.hostname)===-1){sessionStorage.setItem('da_referrer',document.referrer);};}());</script>
+    <!-- Google Tag Manager -->
+    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NTGWNM69');</script>
+    <!-- End Google Tag Manager -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <title>See if you qualify for Droparabia</title>
+    <meta name="description" content="Answer a few quick questions to see if Droparabia is a fit for you, then book a free call with our team." />
+    <link rel="icon" type="image/png" href="/Droparabia.png" />
+    <!-- Global: the survey markup lives in SurveyFlow, so a scoped reset here would never reach it. -->
+    <style is:global>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #F1F5F9; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+      @media (max-width: 768px) { body { background: #fff !important; } }
+    </style>
+    <!-- Meta Pixel Code -->
+    <script is:inline>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    // Advanced matching: email/phone saved by the subscribe modal (da_match).
+    var daMatch = {};
+    try {
+      var daStored = JSON.parse(localStorage.getItem('da_match') || '{}');
+      if (daStored.em) daMatch.em = daStored.em;
+      if (daStored.ph) daMatch.ph = daStored.ph;
+    } catch(_) {}
+    if (daMatch.em || daMatch.ph) fbq('init', '4560443994198158', daMatch);
+    else fbq('init', '4560443994198158');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=4560443994198158&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NTGWNM69"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <SurveyFlow collectContact />
+  </body>
+</html>
