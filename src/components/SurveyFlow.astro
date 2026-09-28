@@ -3,6 +3,7 @@
 // already collected) and /get-started (the YouTube link, where nothing is known yet and
 // question zero collects them first). Everything after that step is identical.
 import PhoneCountrySelect from './PhoneCountrySelect.astro';
+import EmailTypo from './EmailTypo.astro';
 
 interface Props {
   collectContact?: boolean;
@@ -40,6 +41,11 @@ const { collectContact = false, embedded = false } = Astro.props;
   .survey-fields { display: flex; flex-direction: column; gap: 0.75rem; }
   .survey-field label { display: block; font-size: 0.8rem; font-weight: 600; color: #6B7280; margin-bottom: 0.3rem; }
   .survey-field input { width: 100%; padding: 0.7rem 0.9rem; border: 1.5px solid #E2E8F0; border-radius: 10px; font-size: 0.95rem; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #111827; background: #fff; }
+  /* Off-screen rather than display:none: a bot reading the computed style sees a field
+     that is technically rendered, while nobody can tab to or see it. */
+  .survey-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+  .survey-typo { display: none; font-size: 0.78rem; color: #6B7280; margin-top: 0.3rem; }
+  .survey-typo-btn { border: none; background: none; padding: 0; font: inherit; color: #2563EB; font-weight: 700; text-decoration: underline; cursor: pointer; }
   .survey-field input:focus { outline: none; border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
   .survey-phone { display: flex; align-items: stretch; }
   .survey-field-err { color: #DC2626; font-size: 0.8rem; margin-top: 0.3rem; display: none; }
@@ -59,6 +65,8 @@ const { collectContact = false, embedded = false } = Astro.props;
   </div>
 )}
 <style is:global>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+<EmailTypo />
 
 <div class:list={['survey-wrap', embedded && 'survey-wrap--embedded']} id="survey-content" style="display:none;" data-collect-contact={collectContact ? 'true' : 'false'}>
   <div class="survey-card">
@@ -89,6 +97,8 @@ const { collectContact = false, embedded = false } = Astro.props;
             <label for="contact-email">Email</label>
             <input type="email" id="contact-email" name="EMAIL" placeholder="Your Best Email" autocomplete="email" inputmode="email" />
             <p class="survey-field-err" id="contact-email-err">Please enter a valid email address</p>
+            <!-- Offered on blur, never applied on its own; submitting is not blocked by it. -->
+            <p class="survey-typo" id="contact-email-typo">Did you mean <button type="button" class="survey-typo-btn" id="contact-email-typo-btn"></button>?</p>
           </div>
           <div class="survey-field">
             <label for="contact-phone">WhatsApp number</label>
@@ -99,6 +109,11 @@ const { collectContact = false, embedded = false } = Astro.props;
             <p class="survey-field-err" id="contact-phone-err">Please enter a valid phone number for the country you picked</p>
           </div>
         </div>
+        <!-- Two honeypots. email_address_check is Brevo's own public field name, which a
+             bot trained on Brevo forms may know to leave alone, so company_website sits
+             beside it. Either one arriving filled is treated as a bot. -->
+        <input type="text" id="contact-hp-brevo" name="email_address_check" value="" tabindex="-1" autocomplete="off" aria-hidden="true" class="survey-hp" />
+        <input type="text" id="contact-hp-site" name="company_website" value="" tabindex="-1" autocomplete="off" aria-hidden="true" class="survey-hp" />
         <div class="survey-error" id="err-0">Something went wrong, please try again</div>
       </div>
     )}
@@ -462,6 +477,26 @@ const { collectContact = false, embedded = false } = Astro.props;
   // Question zero on /get-started. Same details, same list and same Meta Pixel Lead
   // as the homepage's VSL modal; the survey then carries on exactly as it does after
   // the video. Coming back to this page and going forward again doesn't resubscribe.
+  // Typo suggestion: offered when they leave the field, dismissed as soon as they
+  // change it or accept it. Advisory only — it never rewrites the value or blocks them.
+  (function () {
+    var input = document.getElementById('contact-email');
+    var line = document.getElementById('contact-email-typo');
+    var btn = document.getElementById('contact-email-typo-btn');
+    if (!input || !line || !btn) return;
+    input.addEventListener('blur', function () {
+      var suggestion = window.daEmailSuggest ? window.daEmailSuggest(input.value) : null;
+      if (suggestion) { btn.textContent = suggestion; line.style.display = 'block'; }
+      else { line.style.display = 'none'; }
+    });
+    input.addEventListener('input', function () { line.style.display = 'none'; });
+    btn.addEventListener('click', function () {
+      input.value = btn.textContent || input.value;
+      line.style.display = 'none';
+      input.focus();
+    });
+  })();
+
   function submitContact() {
     if (contactDone) {
       page++;
@@ -494,15 +529,25 @@ const { collectContact = false, embedded = false } = Astro.props;
     try { sessionStorage.setItem('userData', JSON.stringify(user)); } catch(_) {}
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: 'subscription_success_get_started' });
-    trackLead(user);
+
+    // The two are deliberately decoupled: the next question shows straight away, while
+    // Lead waits for the API to accept the address. Nobody waits on the network, and an
+    // address the server refuses (disposable, no mail exchanger) never reaches Meta.
+    var payload = subscribePayload('vsl', user);
+    payload.email_address_check = (document.getElementById('contact-hp-brevo') || {}).value || '';
+    payload.company_website = (document.getElementById('contact-hp-site') || {}).value || '';
 
     // The "didn't finish survey" row is chained after this one so the two writes
     // can't race over this email's rows.
     surveyStartLog = fetch('/api/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(subscribePayload('vsl', user)),
-    }).catch(function() {});
+      body: JSON.stringify(payload),
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; });
+    }).then(function (data) {
+      if (data && data.success) storeMatch(user);
+    }).catch(function () {});
     logSurveyStart();
 
     page++;
@@ -510,9 +555,13 @@ const { collectContact = false, embedded = false } = Astro.props;
     updateUI();
   }
 
-  // Meta Pixel advanced matching + Lead, mirroring the homepage modal: the values
-  // are stored for every later page's init, and the Lead carries them right away.
-  function trackLead(user) {
+  // Meta Pixel advanced matching only. No Lead is fired here: question zero on
+  // /get-started/survey is a YouTube visitor giving their details, not a VSL
+  // subscription, and Lead means "subscribed to watch the video" — it belongs to the
+  // homepage modal alone, where the retargeting audiences built on it come from.
+  // The values are still stored and passed to the pixel, so QualifiedLead here and
+  // Schedule on /choose-schedule are matched on em, ph, fn and ln as before.
+  function storeMatch(user) {
     try {
       // Already in full international form; Meta wants it as digits with no plus.
       var ph = (user.phone || '').replace(/\D/g, '');
@@ -529,7 +578,6 @@ const { collectContact = false, embedded = false } = Astro.props;
         if (fn) match.fn = fn;
         if (ln) match.ln = ln;
         window.fbq('init', '4560443994198158', match);
-        window.fbq('track', 'Lead');
       }
     } catch(_) {}
   }

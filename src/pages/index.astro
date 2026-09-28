@@ -2,15 +2,20 @@
 import Layout from '../layouts/Layout.astro';
 import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 import PhoneCountrySelect from '../components/PhoneCountrySelect.astro';
+import EmailTypo from '../components/EmailTypo.astro';
 
 // Trustpilot's own rating blocks (512x96) from /public. Only the 5 and 4.5 star blocks
 // exist, which covers every review below; a lower-rated review needs its own asset
 // rather than the nearest one, so the rating shown stays the rating given.
 const STAR_BLOCKS: Record<string, string> = { '5': '/stars-5.svg', '4.5': '/stars-4.5.svg' };
 
+// Split into words in the markup below, so each word carries the gradient on its own.
+const HEADLINE = 'How +800 Lebanese built a successful online store without owning a single product';
+
 // Real Trustpilot reviews, copied verbatim (newest first). Dates are the review dates
 // shown on Trustpilot; every one of these is 5 stars.
 const trustpilotReviews = [
+  { name: 'Michel Hsan', date: 'Sep 27, 2026', stars: 5, text: 'This application significantly helps reduce shipping costs by allowing you to source the product without having to handle the shipping process yourself.' },
   { name: 'geo kazan', date: 'Aug 29, 2026', stars: 5, text: 'The system works if you stay consistent and put enough effort' },
   { name: 'Karim Sabeh', date: 'Jul 27, 2026', stars: 5, text: 'I use it personally it is beginner friendly and you can make a living from it' },
   { name: 'Karim Moghnieh', date: 'Jun 18, 2026', stars: 5, text: 'Professional, reliable, and knowledgeable team. Helped spark out my career in freelancing!' },
@@ -22,24 +27,27 @@ const trustpilotReviews = [
 
 <Layout>
 
-  <!-- ═══════════ 1. BRAND + HEADLINE + GATED VSL ═══════════ -->
+  <EmailTypo />
+
+  <!-- ═══════════ SITE HEADER ═══════════ -->
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a href="/" class="corner-brand" aria-label="Droparabia">
+        <img src="/Droparabia.png" alt="" class="corner-brand-logo" width="40" height="40" />
+        <span class="corner-brand-name">Droparabia</span>
+      </a>
+      <a href="#case-studies" class="site-header-link">Latest Reviews</a>
+    </div>
+  </header>
+
+  <!-- ═══════════ 1. HEADLINE + GATED VSL ═══════════ -->
   <section class="hero">
     <div class="wrap">
 
-      <a href="/" class="hero-brand" aria-label="Droparabia">
-        <img src="/Droparabia.png" alt="" class="hero-brand-logo" width="64" height="64" />
-        <span class="hero-brand-name">Droparabia</span>
-      </a>
-
-      <!-- No seller count here: the headline already carries it. -->
-      <div class="social-proof">
-        <span class="sp-word">Great!</span>
-        <!-- Trustpilot draws a 4.3 TrustScore as four full stars and a half. -->
-        <img src={STAR_BLOCKS['4.5']} alt="" aria-hidden="true" class="sp-stars-img" width="512" height="96" />
-        <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="sp-tp-logo" width="300" height="74" />
-      </div>
-
-      <h1 class="headline">How +800 Lebanese built a successful online store without owning a single product</h1>
+      <!-- One span per word: the gradient is clipped to each word's own height, so every
+           word runs black into blue. Across the whole block it would instead stretch over
+           both lines, painting the first line black and the second line blue. -->
+      <h1 class="headline">{HEADLINE.split(' ').map((word, i) => (<>{i > 0 && ' '}<span class="headline-word">{word}</span></>))}</h1>
 
       <script is:inline>
         // One hook now, so nothing is being split-tested and the headline ships in the
@@ -53,7 +61,8 @@ const trustpilotReviews = [
         })();
       </script>
 
-      <p class="headline-sub headline-sub-red">This isn't old dropshipping, traditional e-com or a money making course</p>
+      <p class="headline-sub headline-sub--lead headline-sub-red">This isn't old dropshipping, traditional e-com or a money making course</p>
+      <p class="headline-sub headline-sub--detail">It's a platform that finds you <strong>high-selling products</strong> in the Lebanese market &amp; <strong>delivers them to your customer's doorstep</strong></p>
 
       <!-- VSL — plain Plyr play button; subscription is gated behind the play click itself -->
       <div class="vsl-wrapper">
@@ -135,9 +144,10 @@ const trustpilotReviews = [
   </section>
 
   <!-- ═══════════ 3. TRUSTPILOT REVIEWS ═══════════ -->
-  <section class="tp-section" aria-labelledby="tp-heading">
+  <!-- Labelled on the section itself now that the heading is gone, so the reviews are
+       still announced as a named region rather than an unlabelled block. -->
+  <section class="tp-section" aria-label="What our users say on Trustpilot">
     <div class="tp-head">
-      <h2 class="tp-heading" id="tp-heading">What our users say on</h2>
       <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="tp-head-logo" width="300" height="74" loading="lazy" />
       <!-- Overall TrustScore as shown on Trustpilot (4.3), which Trustpilot draws as four
            full stars and a half. The span carries the label, so the image is decorative. -->
@@ -205,7 +215,7 @@ const trustpilotReviews = [
       <button class="vsl-modal-close" id="vsl-modal-close" aria-label="Close">&times;</button>
       <div class="vsl-modal-head">
         <h3 class="vsl-modal-title" id="vsl-modal-title">
-          One small step needed!<br /><span class="vsl-modal-title-sub">Subscribe to unlock this Tutorial for FREE!</span>
+          <span class="vsl-modal-title-sub">Subscribe to unlock this training for FREE</span>
         </h3>
         <p class="vsl-modal-warning">This Tutorial Might be taken down soon!</p>
       </div>
@@ -236,10 +246,16 @@ const trustpilotReviews = [
           <input type="tel" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
         </div>
         <p id="vsl-modal-email-err" class="vsl-inline-err" style="display:none">Please enter a valid email address</p>
+        <!-- Offered on blur, never applied on its own; submitting is not blocked by it. -->
+        <p id="vsl-modal-email-typo" class="vsl-inline-typo" style="display:none">Did you mean <button type="button" class="vsl-typo-btn" id="vsl-modal-email-typo-btn"></button>?</p>
         <p id="vsl-modal-phone-err" class="vsl-inline-err" style="display:none">Please enter a valid phone number for the country you picked</p>
         <button type="submit" class="vsl-inline-btn">Start Watching!</button>
-        <p class="vsl-inline-consent">By subscribing, you agree to receive invitation to future events and offers from Droparabia</p>
+        <p class="vsl-inline-consent">By subscribing, you agree to receive future marketing messages and newsletters</p>
+        <!-- Two honeypots. email_address_check is Brevo's own public field name, which a
+             bot trained on Brevo forms may know to leave alone, so company_website sits
+             beside it. Either one arriving filled is treated as a bot. -->
         <input type="text" name="email_address_check" value="" style="display:none">
+        <input type="text" name="company_website" value="" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp-field">
         <input type="hidden" name="locale" value="en">
       </form>
     </div>
@@ -324,34 +340,63 @@ const trustpilotReviews = [
   }
 
   /* ─── SITE HEADER ─── */
-  /* ─── BRAND LOCKUP ─── */
-  .hero-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    margin-bottom: 10px;
+  .site-header {
+    position: relative;
+    z-index: 5;
+    background: var(--da-bg);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16);
   }
 
-  .hero-brand-logo {
-    width: clamp(48px, 5.4vw, 64px);
-    height: clamp(48px, 5.4vw, 64px);
+  .site-header-inner {
+    /* No max-width/centering here on purpose — the logo and the link sit at the
+       browser's actual left/right edges on every screen, not the edges of a boxed,
+       centered container that only reaches them on narrower viewports. */
+    width: 100%;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .corner-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none;
+  }
+
+  .corner-brand-logo {
+    width: 36px;
+    height: 36px;
     object-fit: contain;
   }
 
-  .hero-brand-name {
+  .corner-brand-name {
     font-family: var(--font-brand);
-    font-size: clamp(1.9rem, 4.6vw, 2.5rem);
+    font-size: 1.5rem;
     line-height: 1;
     color: #000;
     letter-spacing: 0.01em;
+  }
+
+  .site-header-link {
+    font-family: var(--font-brand);
+    font-size: 1.15rem;
+    color: #000;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .site-header-link:hover {
+    text-decoration: underline;
   }
 
   .hero {
     position: relative;
     background: var(--da-bg);
     text-align: center;
-    padding: 18px 0 48px;
+    padding: 48px 0;
     overflow: hidden;
   }
 
@@ -365,10 +410,32 @@ const trustpilotReviews = [
     font-weight: 800;
     line-height: 1.2;
     letter-spacing: -0.015em;
+    /* Stays the solid ink colour on its own; the gradient is layered on below, only
+       where the browser can actually clip a background to the text. Without that guard
+       a browser that ignores background-clip renders the headline invisible. */
     color: var(--da-ink);
     max-width: 44ch;
     margin: 0 auto 14px;
     text-wrap: balance;
+  }
+
+  /* Top-to-bottom within one hue, bright at the top falling into the deep navy — the
+     same move as the gold headline that inspired it, in the brand blue. Vertical on
+     purpose: it reads down each line, so multi-line headlines stay consistent.
+     background-clip: text is what paints the letters instead of the box. */
+  @supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    /* inline-block so each word is its own box and the gradient maps to that word's
+       height, rather than to the line box it happens to sit in. */
+    .headline-word {
+      display: inline-block;
+      /* 0deg runs bottom to top: black at the base of each word, blue at the top. */
+      background: linear-gradient(0deg, #000000, #001994);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      /* Unprefixed alongside it, for engines that clip without the -webkit- alias. */
+      background-clip: text;
+      color: transparent;
+    }
   }
 
   .headline-sub {
@@ -386,67 +453,26 @@ const trustpilotReviews = [
     color: #dc2626;
   }
 
-  /* ─── SOCIAL PROOF BAR ─── */
-  .social-proof {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    flex-wrap: wrap;
-    margin: 0 auto 24px;
+  /* The red line hands most of its space to the line under it, so the two read as one
+     statement rather than two stacked paragraphs. */
+  .headline-sub.headline-sub--lead {
+    margin-bottom: 5px;
   }
 
-  .sp-users {
-    font-size: 1.08rem;
+  /* The supporting line sits a step below the red one: narrower, lighter and smaller,
+     which is what keeps the pair from eating the screen above the video on a phone. */
+  .headline-sub.headline-sub--detail {
+    /* No cap and no balancing: it uses the container's full width and breaks wherever
+       it runs out of room, instead of being held to a narrow column and split into
+       short, even lines. */
+    max-width: none;
+    text-wrap: initial;
+    font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+  }
+
+  .headline-sub strong {
     font-weight: 700;
     color: var(--da-ink);
-    line-height: 1;
-  }
-
-  .sp-divider {
-    width: 1px;
-    height: 24px;
-    background: var(--da-line);
-  }
-
-  .sp-trust {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-  }
-
-  .sp-tp-logo {
-    height: 21px;
-    width: auto;
-  }
-
-  .sp-word {
-    font-size: 0.88rem;
-    font-weight: 700;
-    color: var(--da-ink);
-    line-height: 1;
-  }
-
-  /* Height drives the size; the 512x96 viewBox holds the five squares in proportion. */
-  .sp-stars-img {
-    display: block;
-    height: 17px;
-    width: auto;
-  }
-
-  .sp-stars {
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-  }
-
-  /* viewBox is the star path's own bounding box (x 0-23, y 2-25.3) rather than the
-     0 0 24 24 it shipped with — that clipped the lower points and pushed the shape
-     below the box's centre, which is what knocked it out of line with the text. */
-  .sp-star {
-    width: 23px;
-    height: 23px;
-    display: block;
   }
 
   .grad-text {
@@ -758,6 +784,34 @@ const trustpilotReviews = [
     flex-shrink: 0;
   }
 
+  /* Off-screen rather than display:none: a bot reading the computed style sees a
+     field that is technically rendered, while nobody can tab to or see it. */
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .vsl-inline-typo {
+    font-size: 0.78rem;
+    color: var(--da-ink-soft);
+    margin-top: -4px;
+  }
+
+  .vsl-typo-btn {
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: var(--da-primary);
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
   .vsl-inline-err {
     font-size: 0.78rem;
     color: #dc2626;
@@ -901,29 +955,20 @@ const trustpilotReviews = [
     text-align: center;
   }
 
-  .tp-heading {
-    font-size: clamp(1.35rem, 3.6vw, 2rem);
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    color: #000;
-    /* Nudged down so the text sits on the same line as the Trustpilot wordmark,
-       whose star makes the logo image taller than the lettering. */
-    position: relative;
-    top: 0.14em;
-  }
-
   .tp-head-logo {
     height: clamp(30px, 4.4vw, 42px);
     width: auto;
   }
 
+  /* Columns, not grid. The reviews vary a lot in length, and a grid sizes every row to
+     its tallest card, so a long one left a block of dead space under its short
+     neighbours. Columns pack the cards tight, and absorb an odd number of them without
+     stranding one alone on a last row. */
   .tp-grid {
     max-width: 1152px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    align-items: start;
+    column-count: 3;
+    column-gap: 20px;
   }
 
   .tp-rating {
@@ -950,6 +995,10 @@ const trustpilotReviews = [
     border-radius: 0;
     padding: 22px 22px 24px;
     box-shadow: 0 10px 28px -8px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.06);
+    /* Keeps a review from being split down the middle across two columns. */
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    margin-bottom: 20px;
   }
 
   .tp-card-top {
@@ -988,13 +1037,14 @@ const trustpilotReviews = [
   }
 
   @media (max-width: 960px) {
-    .tp-grid { grid-template-columns: repeat(2, 1fr); }
+    .tp-grid { column-count: 2; }
   }
 
   @media (max-width: 640px) {
     .tp-section { padding: 48px 16px 56px; }
     .tp-head { margin-bottom: 26px; }
-    .tp-grid { grid-template-columns: 1fr; gap: 14px; }
+    .tp-grid { column-count: 1; column-gap: 14px; }
+    .tp-card { margin-bottom: 14px; }
   }
 
   /* ══════════════ FOOTER ══════════════ */
@@ -1098,14 +1148,32 @@ const trustpilotReviews = [
   /* ══════════════ RESPONSIVE ══════════════ */
   @media (max-width: 640px) {
     .headline-sub { font-size: 0.78rem; }
+    /* Ordered after .headline-sub so the smaller size wins at equal weight. */
+    /* Two classes, matching the desktop rules above: a media query adds no specificity,
+       so a single-class rule here loses to .headline-sub.headline-sub--detail and the
+       phone kept rendering the desktop size. */
+    .headline-sub.headline-sub--detail { font-size: 0.62rem; line-height: 1.45; margin-bottom: 16px; }
+    .headline-sub.headline-sub--lead { margin-bottom: 4px; }
     .section-heading { font-size: 1.1rem; gap: 8px; }
     .heading-arrow { width: 20px; height: 26px; }
-    .hero { padding: 12px 0 40px; }
-    .hero-brand { gap: 8px; margin-bottom: 8px; }
-    .social-proof { gap: 6px; }
-    .sp-word { font-size: 0.8rem; }
-    .sp-tp-logo { height: 18px; }
-    .sp-stars-img { height: 15px; }
+    /* Tighter above the headline on a phone: the header bar already separates it from
+       the top of the screen, so the full 40px was pushing the video down for nothing. */
+    /* Before they subscribe, the progress bar and the CTA are display:none and take no
+       room, so the carousel closes right up under the video and fills the screen instead
+       of leaving a blank strip there. Subscribing reveals those two, which take the space
+       back and push the carousel down — no class toggling needed, since the gap being
+       collapsed is only ever the space they will occupy. */
+    /* The bottom gap can't go below the video's glow: .hero clips its overflow, so a
+       shorter padding than the shadow's reach (16px down, 40px blur) shears it off. */
+    .hero { padding: 18px 0 26px; }
+    .vsl-wrapper { margin-bottom: 24px; }
+    .proof-section { padding-top: 18px; }
+    .carousel-container { margin-top: 16px; }
+    .site-header-inner { padding: 10px 16px; }
+    .corner-brand { gap: 7px; }
+    .corner-brand-logo { width: 28px; height: 28px; }
+    .corner-brand-name { font-size: 1.15rem; }
+    .site-header-link { font-size: 0.82rem; }
     .headline { max-width: none; }
     .vsl-wrapper { border-radius: 14px; box-shadow: 0 0 0 3px var(--da-blue), 0 16px 40px rgba(0, 30, 255, 0.18); }
     .carousel-container { padding: 0 26px; }
@@ -1119,6 +1187,9 @@ const trustpilotReviews = [
     .footer-inner { flex-direction: column; gap: 24px; }
     .vsl-modal-box { padding: 32px 20px 24px; }
     .vsl-modal-title { font-size: 1.2rem; }
+    /* It's the only line in the title now, so on a phone it carries the whole message
+       and shouldn't render at the smaller size it had as a second line. */
+    .vsl-modal-title-sub { font-size: 1.2rem; }
   }
 </style>
 
@@ -1327,6 +1398,30 @@ const trustpilotReviews = [
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
+  // Typo suggestion: offered when they leave the field, dismissed as soon as they
+  // change it or accept it. Purely advisory — it never rewrites the value or blocks the
+  // submit, because a "correction" against a real address would cost us the lead.
+  const emailInput = modalForm.querySelector('[name="EMAIL"]') as HTMLInputElement | null;
+  const typoEl = document.getElementById('vsl-modal-email-typo') as HTMLElement | null;
+  const typoBtn = document.getElementById('vsl-modal-email-typo-btn') as HTMLButtonElement | null;
+  if (emailInput && typoEl && typoBtn) {
+    emailInput.addEventListener('blur', () => {
+      const suggestion = (window as any).daEmailSuggest?.(emailInput.value);
+      if (suggestion) {
+        typoBtn.textContent = suggestion;
+        typoEl.style.display = 'block';
+      } else {
+        typoEl.style.display = 'none';
+      }
+    });
+    emailInput.addEventListener('input', () => { typoEl.style.display = 'none'; });
+    typoBtn.addEventListener('click', () => {
+      emailInput.value = typoBtn.textContent || emailInput.value;
+      typoEl.style.display = 'none';
+      emailInput.focus();
+    });
+  }
+
   modalForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const btn = this.querySelector('button[type="submit"]') as HTMLButtonElement;
@@ -1367,10 +1462,26 @@ const trustpilotReviews = [
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal, list: 'vsl', ...getTrackingData() }),
+        body: JSON.stringify({
+          name: nameVal, email: emailVal, phone: smsVal, list: 'vsl',
+          email_address_check: (this.querySelector('[name="email_address_check"]') as HTMLInputElement)?.value ?? '',
+          company_website: (this.querySelector('[name="company_website"]') as HTMLInputElement)?.value ?? '',
+          ...getTrackingData(),
+        }),
       });
       const json = await res.json();
-      if (!json.success) throw new Error(json.error);
+      // A refused address comes back with wording meant for the visitor; showing it
+      // beside the field tells them which one to fix, unlike the generic banner.
+      if (!json.success) {
+        if (res.status === 422 && json.error && emailErrEl) {
+          emailErrEl.textContent = json.error;
+          emailErrEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = btnText;
+          return;
+        }
+        throw new Error(json.error);
+      }
 
       sessionStorage.setItem('da_subscribed', '1');
       sessionStorage.setItem('userData', JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal }));

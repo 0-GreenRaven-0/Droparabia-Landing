@@ -2,6 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getGoogleAccessToken } from '../../lib/google-auth';
+import { checkEmail, honeypotTripped, logRejection } from '../../lib/email-check';
 
 // ── Brevo ────────────────────────────────────────────────────────────────────
 
@@ -38,6 +39,13 @@ const SHEET_ONLY_LISTS = new Set(['went_to_buy_course']);
 // added to or removed from any Brevo list, so they keep whatever lists they're on.
 // "survey" is everyone who opened the survey and hasn't finished it yet.
 const NO_BREVO_LISTS = new Set(['survey']);
+
+// The only lists a person submits with a keyboard in front of them, so the only ones
+// where refusing the address lets them fix it. Every other list arrives after the form
+// (the survey's own logs, a Calendly booking, a buy click): the visitor cannot correct
+// anything there, and dropping the row over a typo or a DNS hiccup loses a lead we have
+// already paid for. Those are checked and logged, never rejected.
+const ENFORCE_EMAIL_LISTS = new Set(['vsl']);
 
 function getUnlinkListIds(list: string): number[] {
   const all: Record<string, number> = {
@@ -131,6 +139,7 @@ function getEventName(list: string, firedLead: boolean): string {
   return NOT_FOR_META;
 }
 const SURVEY_COL_INDEX = SHEET_HEADERS.indexOf('Survey Answers'); // 0-based, for batchUpdate ranges
+const EVENT_ID_COL_INDEX = SHEET_HEADERS.indexOf('Event ID');
 // Ranges follow the header list so adding a column doesn't need three edits. A sheet
 // still on the old, narrower header row is rewritten on the next append (see
 // appendToSheet), leaving existing rows padded with blanks.
@@ -175,8 +184,12 @@ function buildSurveyCell(items: SurveyAnswer[]) {
 async function applySurveyDropdown(
   spreadsheetId: string, rowNumber: number, options: string[], note: string, token: string,
 ): Promise<void> {
+  // Same gid-0 problem as the delete path: the validation and note were applied to
+  // whatever tab happened to be gid 0, not the tab the row was written to.
+  const tab = await resolveFirstTab(spreadsheetId, token);
+  if (!tab) return;
   const range = {
-    sheetId: 0,
+    sheetId: tab.sheetId,
     startRowIndex: rowNumber - 1,
     endRowIndex: rowNumber,
     startColumnIndex: SURVEY_COL_INDEX,
@@ -248,23 +261,69 @@ function buildTrafficSource(source: string, medium: string, referrer: string, en
   return 'Direct Visit';
 }
 
+// Emails are compared after trimming and lowercasing on both sides. Column B holds the
+// address exactly as it was submitted, whitespace and all, so comparing raw values makes
+// the lookup miss rows it should find.
+function normalizeEmail(value: unknown): string {
+  return typeof value === 'string' ? value.trim().toLowerCase() : '';
+}
+
+// A tab's gid is not its position. The old code read B:B (which resolves to the FIRST tab
+// in order) and then deleted those row indices from sheetId 0 (a gid). On any spreadsheet
+// whose data is not on gid 0 those are two different tabs, so rows found in one were
+// deleted from another. Everything now resolves the tab once and uses both its real gid
+// and its name, so a read and the write that follows it cannot disagree.
+type Tab = { title: string; sheetId: number };
+
+async function resolveFirstTab(spreadsheetId: string, token: string): Promise<Tab | null> {
+  const res = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties(sheetId,title,index)`,
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  if (!res.ok) return null;
+  const data = await res.json() as { sheets?: { properties?: { sheetId?: number; title?: string; index?: number } }[] };
+  const props = (data.sheets ?? [])
+    .map((sheet) => sheet.properties)
+    .filter((p): p is { sheetId: number; title: string; index: number } =>
+      !!p && typeof p.sheetId === 'number' && typeof p.title === 'string' && typeof p.index === 'number')
+    .sort((a, b) => a.index - b.index);
+  const first = props[0];
+  return first ? { title: first.title, sheetId: first.sheetId } : null;
+}
+
+// Sheets quotes a tab name with single quotes and escapes a literal quote by doubling it.
+function tabRange(tab: Tab, a1: string): string {
+  return `'${tab.title.replace(/'/g, "''")}'!${a1}`;
+}
+
 async function removeEmailFromSheet(spreadsheetId: string, email: string, token: string): Promise<void> {
+  const wanted = normalizeEmail(email);
+  if (!wanted) return;
   const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
-  const res  = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/B:B`, { headers: auth });
+
+  // No resolved tab means no delete. Falling back to gid 0 is exactly what removed rows
+  // from the wrong tab, so a failed lookup has to be a no-op instead.
+  const tab = await resolveFirstTab(spreadsheetId, token);
+  if (!tab) return;
+
+  const res  = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(tabRange(tab, 'B:B'))}`,
+    { headers: auth },
+  );
   const data = await res.json() as { values?: string[][] };
   if (!data.values) return;
 
   const rowsToDelete: number[] = [];
   data.values.forEach((row, i) => {
     if (i === 0) return; // skip header
-    if (row[0]?.toLowerCase() === email.toLowerCase()) rowsToDelete.push(i);
+    if (normalizeEmail(row[0]) === wanted) rowsToDelete.push(i);
   });
   if (rowsToDelete.length === 0) return;
 
   // Delete bottom-up so indices stay valid
   const requests = rowsToDelete.reverse().map(rowIndex => ({
     deleteDimension: {
-      range: { sheetId: 0, dimension: 'ROWS', startIndex: rowIndex, endIndex: rowIndex + 1 },
+      range: { sheetId: tab.sheetId, dimension: 'ROWS', startIndex: rowIndex, endIndex: rowIndex + 1 },
     },
   }));
 
@@ -275,16 +334,67 @@ async function removeEmailFromSheet(spreadsheetId: string, email: string, token:
   });
 }
 
+// The booked sheet is deliberately absent from this list. Every other sheet records the
+// stage someone is currently at, so moving on clears the old row; a booking is a thing
+// that happened. Reopening the survey, re-watching the VSL or clicking buy used to delete
+// the booking row of anyone who had already booked, taking its ad attribution with it.
+// A genuine rebooking updates that row in place instead (findRowByEmail / updateSheetRow).
 async function removeEmailFromAllSheets(email: string, token: string): Promise<void> {
   const ids = [
     import.meta.env.GOOGLE_SHEET_VSL,
     import.meta.env.GOOGLE_SHEET_SURVEY,
     import.meta.env.GOOGLE_SHEET_QUALIFIED_NO_BOOK,
     import.meta.env.GOOGLE_SHEET_UNQUALIFIED,
-    import.meta.env.GOOGLE_SHEET_BOOKED,
     import.meta.env.GOOGLE_SHEET_WENT_TO_BUY_COURSE,
   ].filter(Boolean) as string[];
   await Promise.all(ids.map(id => removeEmailFromSheet(id, email, token)));
+}
+
+// ── Booked sheet: update in place rather than delete and re-append ──
+
+// Finds the first row whose column B matches any of the given addresses, returning the row
+// as it stands so the caller can carry forward values that must not be regenerated.
+async function findRowByEmail(
+  spreadsheetId: string, emails: string[], token: string,
+): Promise<{ tab: Tab; rowNumber: number; values: string[] } | null> {
+  const wanted = emails.map(normalizeEmail).filter(Boolean);
+  if (wanted.length === 0) return null;
+  const auth = { Authorization: `Bearer ${token}` };
+
+  const tab = await resolveFirstTab(spreadsheetId, token);
+  if (!tab) return null;
+
+  const res = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(tabRange(tab, `A:${LAST_COL}`))}`,
+    { headers: auth },
+  );
+  if (!res.ok) return null;
+  const data = await res.json() as { values?: string[][] };
+  const rows = data.values ?? [];
+  for (let i = 1; i < rows.length; i++) {
+    if (wanted.includes(normalizeEmail(rows[i][1]))) {
+      return { tab, rowNumber: i + 1, values: rows[i] };
+    }
+  }
+  return null;
+}
+
+// Scoped to A:LAST_COL on purpose: the columns the Apps Script appended past it (Meta Sent
+// At, Call Outcome, Purchase Value, Currency, Purchase Date, Purchase Event ID, Purchase
+// Sent At) sit outside the range and are left untouched, so an updated booking keeps its
+// record of what has already been sent to Meta.
+async function updateSheetRow(
+  spreadsheetId: string, tab: Tab, rowNumber: number, row: string[], token: string,
+): Promise<void> {
+  const range = tabRange(tab, `A${rowNumber}:${LAST_COL}${rowNumber}`);
+  await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}?valueInputOption=RAW`,
+    {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ values: [row] }),
+    },
+  );
 }
 
 // Returns the 1-based row the values landed on, so the caller can decorate that cell.
@@ -366,6 +476,23 @@ async function incrementBookingCount(sheetId: string, token: string): Promise<vo
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
+
+    // ── Email quality, before anything is written ──
+    // Nothing below this block runs for a rejected submission: no sheet row, no Brevo
+    // contact, no Meta event. The honeypot answers success so a bot learns nothing.
+    if (honeypotTripped(body)) {
+      logRejection('honeypot', body.list, '');
+      return json({ success: true }, 200);
+    }
+    if (typeof body.email === 'string' && body.email.trim() !== '') {
+      const verdict = await checkEmail(body.email);
+      if (!verdict.ok) {
+        logRejection(verdict.reason, body.list, body.email);
+        if (ENFORCE_EMAIL_LISTS.has(body.list)) {
+          return json({ success: false, error: verdict.message }, 422);
+        }
+      }
+    }
     const { name, email, phone, list, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, cta_popup, prev_email,
             headline, vsl_watched_seconds, vsl_furthest_seconds, vsl_duration_seconds } = body;
 
@@ -540,10 +667,33 @@ export const POST: APIRoute = async ({ request }) => {
         const token = await getGoogleAccessToken(credsJson);
         await removeEmailFromAllSheets(email, token);
         if (hasPreviousEmail) await removeEmailFromAllSheets(previousEmail, token);
-        const rowNumber = await appendToSheet(sheetId, [
+
+        const row = [
           name || '', email, displayPhone, date, trafficSource, campaignName, creative, hook, cta_popup || '', headlineVariant, vslWatched, vslPercent, surveyCell ? surveyCell.label : '',
           eventTime, phoneRaw, phoneE164, emailNormalized, firstNameLc, lastNameLc, fbc, fbp, eventId, getEventName(list, !!clientEventId),
-        ], token);
+        ];
+
+        // A rebooking updates the row that is already there. Appending a second one would
+        // put a second Schedule on the sheet with a different Event ID, which Meta cannot
+        // de-duplicate against the first, inflating the conversion count. The previous
+        // address is checked too, since rebooking under a different email is the case
+        // prev_email exists for.
+        const existing = list === 'booked'
+          ? await findRowByEmail(sheetId, hasPreviousEmail ? [email, previousEmail] : [email], token)
+          : null;
+
+        let rowNumber: number | null;
+        if (existing) {
+          // The original Event ID stands: it is what was already sent to Meta, and the
+          // Apps Script's Meta Sent At beside it still refers to it.
+          const originalEventId = existing.values[EVENT_ID_COL_INDEX];
+          if (originalEventId) row[EVENT_ID_COL_INDEX] = originalEventId;
+          await updateSheetRow(sheetId, existing.tab, existing.rowNumber, row, token);
+          rowNumber = existing.rowNumber;
+        } else {
+          rowNumber = await appendToSheet(sheetId, row, token);
+        }
+
         if (surveyCell && rowNumber) {
           await applySurveyDropdown(sheetId, rowNumber, surveyCell.options, surveyCell.note, token);
         }

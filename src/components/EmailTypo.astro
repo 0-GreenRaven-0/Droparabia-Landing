@@ -1,0 +1,61 @@
+---
+// Suggests a correction when an email domain looks like a near miss for a common
+// provider. Exposed as a global rather than imported, because the survey's script is
+// is:inline and cannot import a module. Same pattern as AdClickCapture.
+---
+
+<script is:inline>
+  (function () {
+    if (window.daEmailSuggest) return;
+
+    // The providers our leads actually use, plus the local variants.
+    var DOMAINS = [
+      'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com',
+      'live.com', 'hotmail.co.uk', 'outlook.fr', 'windowslive.com',
+    ];
+
+    // Levenshtein, capped: anything past 2 edits is a different domain, not a typo.
+    function distance(a, b) {
+      if (Math.abs(a.length - b.length) > 2) return 99;
+      var prev = [];
+      for (var j = 0; j <= b.length; j++) prev[j] = j;
+      for (var i = 1; i <= a.length; i++) {
+        var curr = [i];
+        for (var k = 1; k <= b.length; k++) {
+          curr[k] = Math.min(
+            prev[k] + 1,
+            curr[k - 1] + 1,
+            prev[k - 1] + (a.charAt(i - 1) === b.charAt(k - 1) ? 0 : 1)
+          );
+        }
+        prev = curr;
+      }
+      return prev[b.length];
+    }
+
+    /**
+     * Returns the whole corrected address, or null when the domain is already one we
+     * know, is too far from any of them, or the value isn't an address yet. Never
+     * rewrites anything itself: the caller offers it and the visitor decides.
+     */
+    window.daEmailSuggest = function (value) {
+      var email = (value || '').trim().toLowerCase();
+      var at = email.lastIndexOf('@');
+      if (at < 1 || at === email.length - 1) return null;
+      var local = email.slice(0, at);
+      var domain = email.slice(at + 1);
+      if (!domain || domain.indexOf('.') === -1) return null;
+      if (DOMAINS.indexOf(domain) !== -1) return null;
+
+      var best = null;
+      var bestDistance = 3;
+      for (var i = 0; i < DOMAINS.length; i++) {
+        var d = distance(domain, DOMAINS[i]);
+        if (d < bestDistance) { bestDistance = d; best = DOMAINS[i]; }
+      }
+      // A one-character domain like "a.com" is within 2 edits of far too much.
+      if (!best || domain.length < 5) return null;
+      return local + '@' + best;
+    };
+  })();
+</script>
