@@ -25,10 +25,7 @@ const trustpilotReviews = [
 ];
 ---
 
-<Layout
-  title="Get the free training that shows how +800 Lebanese built an online store"
-  description="Enter your details and we'll send you the link to the free video training."
->
+<Layout>
 
   <EmailTypo />
 
@@ -43,7 +40,7 @@ const trustpilotReviews = [
     </div>
   </header>
 
-  <!-- ═══════════ 1. HEADLINE + EMAIL CAPTURE ═══════════ -->
+  <!-- ═══════════ 1. HEADLINE + GATED VSL ═══════════ -->
   <section class="hero">
     <div class="wrap">
 
@@ -67,22 +64,34 @@ const trustpilotReviews = [
       <p class="headline-sub headline-sub--lead headline-sub-red">This isn't old dropshipping, traditional e-com or a money making course</p>
       <p class="headline-sub headline-sub--detail">It's a platform that finds you <strong>high-selling products</strong> in the Lebanese market &amp; <strong>delivers them to your customer's doorstep</strong></p>
 
-      <!-- Version B's whole difference sits here: no player on the page, just the
-           opt-in. The video lives on /training/watch and is reached by the link the
-           email carries. -->
-      <button type="button" class="book-cta" id="optin-cta">
-        Send me the free training
-        <span class="book-cta-sub">Takes 10 seconds, the link arrives by email</span>
-      </button>
-
-      <p class="optin-note">We'll email you the link to the training video right away</p>
-
-      <!-- Swapped in once the details are in, so the page itself confirms it rather
-           than leaving them wondering whether it worked. -->
-      <div class="optin-done" id="optin-done" hidden>
-        <p class="optin-done-title">Check your inbox</p>
-        <p class="optin-done-text">We've sent the training link to <strong id="optin-done-email">your email</strong>. It should land within a minute. If you don't see it, check your spam or promotions tab.</p>
+      <!-- VSL — plain Plyr play button; subscription is gated behind the play click itself -->
+      <div class="vsl-wrapper">
+        <video id="vsl-player" playsinline preload="metadata">
+          <source src="/vsl.mp4" type="video/mp4" />
+        </video>
       </div>
+
+      <!-- Watch-progress bar — hidden until they subscribe, then tracks how far into
+           the VSL they've gotten. Booking is gated on reaching 40%, so this is the
+           visible half of that gate; see the Plyr script below for the other half. -->
+      <div class="vsl-progress-wrap" id="vsl-progress-wrap" style="display:none">
+        <div class="vsl-progress-track">
+          <div class="vsl-progress-marker" style="left:40%"></div>
+          <div class="vsl-progress-bar" id="vsl-progress-bar" style="width:0%"></div>
+        </div>
+        <span class="vsl-progress-label" id="vsl-progress-label">0% watched</span>
+      </div>
+
+      <!-- Hidden until the subscribe modal succeeds (or the visitor is already
+           subscribed this session) — see the "unlockVideo"-equivalent block in the
+           Plyr script below. Starts locked (grey, inert) until 40% of the VSL has
+           been watched. -->
+      <p class="book-cta-gate" id="book-cta-gate" style="display:none">Watch at least 40% of the tutorial to see if you qualify to access Droparabia</p>
+      <a href="/survey" class="book-cta is-locked" id="book-cta" style="display:none" aria-disabled="true">
+        See if you qualify
+        <!-- Replaced with the live count from /api/spots (17 per week, resets Monday 12 AM Beirut time) -->
+        <span class="book-cta-sub" id="book-cta-spots">Limited spots are available this week</span>
+      </a>
 
     </div>
   </section>
@@ -200,18 +209,18 @@ const trustpilotReviews = [
     </div>
   </footer>
 
-  <!-- Opt-in modal — opens from the CTA; there is no player on this page to gate. -->
+  <!-- VSL Subscription Modal — opens when Plyr's play button is clicked while unsubscribed -->
   <div id="vsl-modal" class="vsl-modal-overlay" aria-hidden="true">
     <div class="vsl-modal-box" role="dialog" aria-modal="true" aria-labelledby="vsl-modal-title">
       <button class="vsl-modal-close" id="vsl-modal-close" aria-label="Close">&times;</button>
       <div class="vsl-modal-head">
         <h3 class="vsl-modal-title" id="vsl-modal-title">
-          <span class="vsl-modal-title-sub">Where should we send the training?</span>
+          <span class="vsl-modal-title-sub">Subscribe to unlock this training for FREE</span>
         </h3>
-        <p class="vsl-modal-warning">This training might be taken down soon!</p>
+        <p class="vsl-modal-warning">This Tutorial Might be taken down soon!</p>
       </div>
       <div id="vsl-error-msg" class="brevo-alert brevo-alert--error" style="display:none">Could not subscribe. Please try again.</div>
-      <div id="vsl-success-msg" class="brevo-alert brevo-alert--success" style="display:none">Sent! Check your inbox for the link.</div>
+      <div id="vsl-success-msg" class="brevo-alert brevo-alert--success" style="display:none">Subscribed! Starting your video...</div>
       <form id="vsl-modal-form" class="vsl-modal-form" method="POST" action="/api/subscribe" data-type="subscription">
         <div class="field-line">
           <span class="field-icon">
@@ -240,7 +249,7 @@ const trustpilotReviews = [
         <!-- Offered on blur, never applied on its own; submitting is not blocked by it. -->
         <p id="vsl-modal-email-typo" class="vsl-inline-typo" style="display:none">Did you mean <button type="button" class="vsl-typo-btn" id="vsl-modal-email-typo-btn"></button>?</p>
         <p id="vsl-modal-phone-err" class="vsl-inline-err" style="display:none">Please enter a valid phone number for the country you picked</p>
-        <button type="submit" class="vsl-inline-btn">Send me the training</button>
+        <button type="submit" class="vsl-inline-btn">Start Watching!</button>
         <p class="vsl-inline-consent">By subscribing, you agree to receive future marketing messages and newsletters</p>
         <!-- Two honeypots. email_address_check is Brevo's own public field name, which a
              bot trained on Brevo forms may know to leave alone, so company_website sits
@@ -255,7 +264,7 @@ const trustpilotReviews = [
 </Layout>
 
 
-<!-- Global: palette and font lock-down -->
+<!-- Global: palette, font lock-down, and Plyr internals (Plyr builds its DOM at runtime) -->
 <style is:global>
   :root {
     /* Borrowed from droparabia-official */
@@ -291,6 +300,34 @@ const trustpilotReviews = [
     font-family: var(--font-body) !important;
   }
 
+  /* ─── Plyr skin ─── */
+  .vsl-wrapper {
+    --plyr-color-main: var(--da-blue);
+    --plyr-control-icon-size: 28px;
+    --plyr-font-family: var(--font-body);
+  }
+
+  .vsl-wrapper .plyr,
+  .vsl-wrapper .plyr__video-wrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+  }
+
+  .vsl-wrapper video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .vsl-wrapper .plyr__control--overlaid {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+  }
 </style>
 
 
@@ -466,38 +503,22 @@ const trustpilotReviews = [
     border-radius: 2px;
   }
 
-  /* ─── OPT-IN ─── */
-  .optin-note {
-    font-size: 0.82rem;
-    color: var(--da-ink-mute);
-    margin: 10px auto 0;
+  /* ─── VSL ─── */
+  .vsl-wrapper {
+    max-width: 660px;
+    width: 100%;
+    margin: 0 auto 28px;
+    border-radius: 18px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    position: relative;
+    box-shadow:
+      0 0 0 4px var(--da-blue),
+      0 24px 60px rgba(0, 30, 255, 0.20);
   }
 
-  .optin-done {
-    max-width: 520px;
-    margin: 24px auto 0;
-    padding: 20px 22px;
-    border-radius: 14px;
-    background: var(--da-surface);
-    border: 1px solid rgba(22, 163, 74, 0.35);
-    box-shadow: 0 10px 28px -12px rgba(0, 0, 0, 0.25);
-  }
-
-  .optin-done-title {
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: #15803d;
-    margin-bottom: 6px;
-  }
-
-  .optin-done-text {
-    font-size: 0.9rem;
-    line-height: 1.55;
-    color: var(--da-ink-soft);
-  }
-
-  /* The opt-in CTA. Same shape as the homepage's book-a-call button so the two
-     variants are visually comparable. */
+  /* Book-a-call CTA, revealed the moment the VSL unlocks (see the Plyr script). */
   .book-cta {
     display: flex;
     flex-direction: column;
@@ -529,6 +550,80 @@ const trustpilotReviews = [
   }
 
   /* Watch-progress bar, shown once subscribed. */
+  .vsl-progress-wrap {
+    max-width: 420px;
+    width: 100%;
+    margin: 18px auto 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .vsl-progress-track {
+    position: relative;
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--da-line);
+    overflow: hidden;
+  }
+
+  /* Tick at the 40% unlock point, so the bar reads as "progress toward a goal"
+     rather than a plain loading indicator. */
+  .vsl-progress-marker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 1;
+  }
+
+  .vsl-progress-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--da-primary) 0%, var(--da-blue) 100%);
+    transition: width 0.3s ease;
+  }
+
+  .vsl-progress-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--da-ink-mute);
+  }
+
+  /* Gate message, shown above the CTA only once subscribed and only while locked. */
+  .book-cta-gate {
+    max-width: 420px;
+    width: 100%;
+    margin: 16px auto 0;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--da-ink);
+  }
+
+  /* Locked state: same CTA, just inert and greyed out until 40% is reached. */
+  .book-cta.is-locked {
+    margin-top: 10px;
+    background: var(--da-line);
+    color: var(--da-ink-mute);
+    box-shadow: none;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .book-cta.is-locked:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .book-cta.is-locked .book-cta-sub {
+    color: var(--da-ink-mute);
+  }
+
+  /* ─── VSL SUBSCRIPTION MODAL ─── */
   .vsl-modal-overlay {
     position: fixed;
     inset: 0;
@@ -1071,6 +1166,7 @@ const trustpilotReviews = [
     /* The bottom gap can't go below the video's glow: .hero clips its overflow, so a
        shorter padding than the shadow's reach (16px down, 40px blur) shears it off. */
     .hero { padding: 18px 0 26px; }
+    .vsl-wrapper { margin-bottom: 24px; }
     .proof-section { padding-top: 18px; }
     .carousel-container { margin-top: 16px; }
     .site-header-inner { padding: 10px 16px; }
@@ -1079,6 +1175,7 @@ const trustpilotReviews = [
     .corner-brand-name { font-size: 1.15rem; }
     .site-header-link { font-size: 0.82rem; }
     .headline { max-width: none; }
+    .vsl-wrapper { border-radius: 14px; box-shadow: 0 0 0 3px var(--da-blue), 0 16px 40px rgba(0, 30, 255, 0.18); }
     .carousel-container { padding: 0 26px; }
     /* left:0/right:0 resolve to the container's outer edge regardless of its padding
        (padding never shifts that reference point for an absolutely-positioned child) —
@@ -1128,6 +1225,17 @@ const trustpilotReviews = [
 </script>
 
 <script>
+  import Plyr from 'plyr';
+  import 'plyr/dist/plyr.css';
+
+  const player = new Plyr('#vsl-player', {
+    // Progress bar and keyboard seeking are both back on — scrubbing is fine as long
+    // as it's constrained to ground already covered. See the 'seeking' clamp below,
+    // which is what actually stops anyone from dragging or arrow-keying ahead.
+    controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'fullscreen'],
+    resetOnEnd: false,
+  });
+
   function getTrackingData(): Record<string, string> {
     const result: Record<string, string> = {};
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach((k) => {
@@ -1165,7 +1273,7 @@ const trustpilotReviews = [
     return d.length >= 5 && (dial + d).length <= 15;
   }
 
-  // ── Opt-in modal: opens from the CTA button, since nothing here needs unlocking
+  // ── Subscription modal: opens when Plyr's own play button is clicked while
   // unsubscribed. No overlay/lock on the video itself — it looks and behaves like a
   // normal player; the gate only kicks in on the play action.
   const modal = document.getElementById('vsl-modal') as HTMLElement;
@@ -1181,6 +1289,114 @@ const trustpilotReviews = [
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
   }
+
+  // ── VSL watch tracking ─────────────────────────────────────────────────────
+  // Kept in sessionStorage so /survey can report how much of the video they'd seen
+  // before leaving to book. Two numbers, because they answer different questions:
+  // "watched" is time actually played (a seek forward doesn't earn credit, a rewatch
+  // doesn't double-count), "furthest" is the deepest point they reached. Declared here
+  // (ahead of the book-cta section below) because showBookCta needs furthestSeconds
+  // to set the CTA's initial lock state for a returning, already-subscribed visitor.
+  const WATCH_KEY = 'da_vsl_watch';
+  // Same figures, mirrored into localStorage. sessionStorage alone loses this the
+  // moment the tab closes, so anyone who watches the VSL and comes back later (a
+  // different tab, a bookmark, the next day) to finish the survey or book would
+  // otherwise report as having watched nothing. localStorage survives that; read as
+  // a fallback wherever this data gets sent, never as the primary source.
+  const WATCH_PERSIST_KEY = 'da_vsl_watch_persist';
+  const BOOK_UNLOCK_RATIO = 0.4; // must watch 40% of the VSL to unlock booking
+  let watchedSeconds = 0;
+  let furthestSeconds = 0;
+  let lastTick = 0;
+  let lastSaved = 0;
+
+  try {
+    const prior = JSON.parse(sessionStorage.getItem(WATCH_KEY) || '{}');
+    watchedSeconds = Number(prior.watched) || 0;
+    furthestSeconds = Number(prior.furthest) || 0;
+  } catch { /* nothing recorded yet */ }
+
+  function saveWatch() {
+    const payload = JSON.stringify({
+      watched: Math.round(watchedSeconds),
+      furthest: Math.round(furthestSeconds),
+      duration: Math.round(player.duration || 0),
+    });
+    try { sessionStorage.setItem(WATCH_KEY, payload); } catch { /* storage unavailable — tracking is best-effort */ }
+    try { localStorage.setItem(WATCH_PERSIST_KEY, payload); } catch { /* same */ }
+  }
+
+  // Book-a-call CTA: hidden until the VSL is actually unlocked, so it shows up the
+  // moment subscribing succeeds — and immediately on load for a returning visitor
+  // who already subscribed earlier this session. Even once shown it stays locked
+  // (grey, inert) until 40% of the VSL has been watched.
+  const bookCta = document.getElementById('book-cta') as HTMLElement | null;
+  const bookCtaGate = document.getElementById('book-cta-gate') as HTMLElement | null;
+  const progressWrap = document.getElementById('vsl-progress-wrap') as HTMLElement | null;
+  const progressBar = document.getElementById('vsl-progress-bar') as HTMLElement | null;
+  const progressLabel = document.getElementById('vsl-progress-label') as HTMLElement | null;
+
+  function updateWatchProgressUI() {
+    const dur = player.duration || 0;
+    const pct = dur > 0 ? Math.min(100, Math.round((furthestSeconds / dur) * 100)) : 0;
+    if (progressBar) progressBar.style.width = pct + '%';
+    if (progressLabel) progressLabel.textContent = pct + '% watched';
+
+    const unlocked = dur > 0 && furthestSeconds / dur >= BOOK_UNLOCK_RATIO;
+    if (bookCta) {
+      bookCta.classList.toggle('is-locked', !unlocked);
+      bookCta.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
+    }
+    // This runs on every timeupdate tick regardless of subscription state (the video's
+    // preload="metadata" fires loadedmetadata on its own), so without the subscribed
+    // check the gate line would leak into view before anyone's actually subscribed.
+    if (bookCtaGate) {
+      const subscribed = !!sessionStorage.getItem('da_subscribed');
+      bookCtaGate.style.display = subscribed && !unlocked ? 'block' : 'none';
+    }
+  }
+
+  // Weekly spots left, counted server-side from this week's rows on the booked sheet.
+  // The fallback text stays in place if the request fails.
+  const spotsEl = document.getElementById('book-cta-spots');
+  if (spotsEl) {
+    fetch('/api/spots')
+      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+      .then((data: { remaining?: number }) => {
+        if (typeof data.remaining !== 'number') return;
+        const n = data.remaining;
+        spotsEl.textContent = n === 0
+          ? 'No spots left this week'
+          : n === 1
+            ? '1 spot is available this week'
+            : `${n} spots are available this week`;
+      })
+      .catch(() => {});
+  }
+
+  function showBookCta() {
+    if (bookCta) bookCta.style.display = 'flex';
+    if (progressWrap) progressWrap.style.display = 'flex';
+    updateWatchProgressUI();
+  }
+  if (sessionStorage.getItem('da_subscribed')) showBookCta();
+
+  // A locked CTA is also pointer-events:none in CSS, but that alone won't stop a
+  // keyboard Enter/Space activation — belt and suspenders.
+  bookCta?.addEventListener('click', (e) => {
+    if (bookCta.classList.contains('is-locked')) e.preventDefault();
+  });
+
+  player.on('play', () => {
+    if (!sessionStorage.getItem('da_subscribed')) {
+      player.pause();
+      openModal();
+    }
+  });
+
+  modalClose.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
   // Typo suggestion: offered when they leave the field, dismissed as soon as they
   // change it or accept it. Purely advisory — it never rewrites the value or blocks the
@@ -1306,21 +1522,10 @@ const trustpilotReviews = [
       } catch {}
 
       successEl.style.display = 'block';
-      btn.textContent = 'Sent!';
+      btn.textContent = 'Starting video...';
       closeModal();
-
-      // The page confirms it itself, rather than leaving them on a form that just
-      // emptied. The address is echoed back so a typo is obvious while they still
-      // remember what they typed.
-      const doneEl = document.getElementById('optin-done') as HTMLElement | null;
-      const doneEmail = document.getElementById('optin-done-email') as HTMLElement | null;
-      if (doneEmail) doneEmail.textContent = emailVal.trim();
-      if (doneEl) doneEl.hidden = false;
-      const cta = document.getElementById('optin-cta') as HTMLElement | null;
-      if (cta) cta.style.display = 'none';
-      const note = document.querySelector('.optin-note') as HTMLElement | null;
-      if (note) note.style.display = 'none';
-      doneEl?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      showBookCta();
+      player.play();
     } catch {
       errorEl.style.display = 'block';
       btn.disabled = false;
@@ -1328,10 +1533,67 @@ const trustpilotReviews = [
     }
   });
 
-  modalClose.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+  // A tick counts as playback only if the video moved forward no faster than the clock
+  // did since the last one. That's what tells a seek apart from real watching, however
+  // far apart the ticks land: a background tab or busy phone can space them seconds
+  // apart and it's still all watched, while a jump ahead covers far more video than
+  // time elapsed. The slack absorbs timer jitter; the VSL has no speed control.
+  let lastTickAt = 0;
+  function resetTick() { lastTick = player.currentTime; lastTickAt = performance.now(); }
+  function isPlaybackStep(delta: number, now: number): boolean {
+    const elapsed = (now - lastTickAt) / 1000;
+    return delta > 0 && delta <= elapsed * 1.25 + 0.25;
+  }
+  player.on('play', resetTick);
+  player.on('seeked', resetTick);
+  player.on('pause', saveWatch);
+  player.on('ended', saveWatch);
+  window.addEventListener('pagehide', saveWatch);
 
-  // The only way into the form on this page — there is no player to click.
-  document.getElementById('optin-cta')?.addEventListener('click', openModal);
+  // Let them scrub freely within what they've already watched — rewatching a scene
+  // is fine — but snap back any drag/click/arrow-key seek that lands past the
+  // furthest point reached. 'seeking' fires with the target time already applied to
+  // the media element, so this is the one place that can actually block a skip-ahead
+  // before it plays; a small buffer absorbs float rounding at the boundary itself.
+  const SEEK_CLAMP_BUFFER = 0.5;
+  player.on('seeking', () => {
+    if (player.currentTime > furthestSeconds + SEEK_CLAMP_BUFFER) {
+      player.currentTime = furthestSeconds;
+    }
+  });
+
+  // Duration isn't known until metadata loads — re-check the lock/progress state
+  // once it is, for a subscribed visitor who reloaded mid-video.
+  player.on('loadedmetadata', updateWatchProgressUI);
+
+  // Fire video_complete when the user reaches 80% of the video
+  let videoCompleteTracked = false;
+  player.on('timeupdate', () => {
+    const dur = player.duration;
+    const t = player.currentTime;
+
+    const now = performance.now();
+    const delta = t - lastTick;
+    const played = isPlaybackStep(delta, now);
+    lastTick = t;
+    lastTickAt = now;
+    if (played) {
+      watchedSeconds += delta;
+      if (t > furthestSeconds) furthestSeconds = t;
+    } else if (t > furthestSeconds + SEEK_CLAMP_BUFFER) {
+      // A skip ahead the 'seeking' clamp didn't catch. Some browsers (Safari) can
+      // deliver a tick at the new position before 'seeking' fires, which used to count
+      // the jump as progress. Only real playback moves furthest, and this snaps back.
+      player.currentTime = furthestSeconds;
+      return;
+    }
+    if (watchedSeconds - lastSaved >= 2) { lastSaved = watchedSeconds; saveWatch(); }
+    updateWatchProgressUI();
+
+    if (!videoCompleteTracked && dur > 0 && t >= dur * 0.8) {
+      videoCompleteTracked = true;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'video_complete' });
+    }
+  });
 </script>
