@@ -1,8 +1,6 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
 import { siInstagram, siThreads, siYoutube } from 'simple-icons';
-import PhoneCountrySelect from '../components/PhoneCountrySelect.astro';
-import EmailTypo from '../components/EmailTypo.astro';
 
 // Trustpilot's own rating blocks (512x96) from /public. Only the 5 and 4.5 star blocks
 // exist, which covers every review below; a lower-rated review needs its own asset
@@ -26,11 +24,9 @@ const trustpilotReviews = [
 ---
 
 <Layout
-  title="Get the free training that shows how +800 Lebanese built an online store"
-  description="Enter your details and we'll send you the link to the free video training."
+  title="Your free training — Droparabia"
+  description="The video training you requested, plus the next step once you've watched it."
 >
-
-  <EmailTypo />
 
   <!-- ═══════════ SITE HEADER ═══════════ -->
   <header class="site-header">
@@ -43,46 +39,42 @@ const trustpilotReviews = [
     </div>
   </header>
 
-  <!-- ═══════════ 1. HEADLINE + EMAIL CAPTURE ═══════════ -->
+  <!-- ═══════════ 1. THE TRAINING ═══════════ -->
   <section class="hero">
     <div class="wrap">
 
-      <!-- One span per word: the gradient is clipped to each word's own height, so every
-           word runs black into blue. Across the whole block it would instead stretch over
-           both lines, painting the first line black and the second line blue. -->
-      <h1 class="headline">{HEADLINE.split(' ').map((word, i) => (<>{i > 0 && ' '}<span class="headline-word">{word}</span></>))}</h1>
+      <p class="watch-step">Step 1</p>
+      <h1 class="watch-title">Watch this video</h1>
+      <p class="watch-note">Watch at least 40% to unlock the next step</p>
 
-      <script is:inline>
-        // One hook now, so nothing is being split-tested and the headline ships in the
-        // HTML rather than being written in after paint. The variant is still recorded,
-        // because the sheet's Headline column and the GTM event read it, and a blank
-        // there would look like tracking had broken rather than like a choice.
-        (function () {
-          try { sessionStorage.setItem('da_headline_variant', 'fomo'); } catch (_) {}
-          window.dataLayer = window.dataLayer || [];
-          window.dataLayer.push({ event: 'headline_variant_assigned', headline_variant: 'fomo' });
-        })();
-      </script>
-
-      <p class="headline-sub headline-sub--lead headline-sub-red">This isn't old dropshipping, traditional e-com or a money making course</p>
-      <p class="headline-sub headline-sub--detail">It's a platform that finds you <strong>high-selling products</strong> in the Lebanese market &amp; <strong>delivers them to your customer's doorstep</strong></p>
-
-      <!-- Version B's whole difference sits here: no player on the page, just the
-           opt-in. The video lives on /training/watch and is reached by the link the
-           email carries. -->
-      <button type="button" class="book-cta" id="optin-cta">
-        Send me the free training
-        <span class="book-cta-sub">Takes 10 seconds, the link arrives by email</span>
-      </button>
-
-      <p class="optin-note">We'll email you the link to the training video right away</p>
-
-      <!-- Swapped in once the details are in, so the page itself confirms it rather
-           than leaving them wondering whether it worked. -->
-      <div class="optin-done" id="optin-done" hidden>
-        <p class="optin-done-title">Check your inbox</p>
-        <p class="optin-done-text">We've sent the training link to <strong id="optin-done-email">your email</strong>. It should land within a minute. If you don't see it, check your spam or promotions tab.</p>
+      <!-- VSL — plain Plyr play button; subscription is gated behind the play click itself -->
+      <div class="vsl-wrapper">
+        <video id="vsl-player" playsinline preload="metadata">
+          <source src="/vsl.mp4" type="video/mp4" />
+        </video>
       </div>
+
+      <!-- Watch-progress bar — hidden until they subscribe, then tracks how far into
+           the VSL they've gotten. Booking is gated on reaching 40%, so this is the
+           visible half of that gate; see the Plyr script below for the other half. -->
+      <div class="vsl-progress-wrap" id="vsl-progress-wrap">
+        <div class="vsl-progress-track">
+          <div class="vsl-progress-marker" style="left:40%"></div>
+          <div class="vsl-progress-bar" id="vsl-progress-bar" style="width:0%"></div>
+        </div>
+        <span class="vsl-progress-label" id="vsl-progress-label">0% watched</span>
+      </div>
+
+      <!-- Hidden until the subscribe modal succeeds (or the visitor is already
+           subscribed this session) — see the "unlockVideo"-equivalent block in the
+           Plyr script below. Starts locked (grey, inert) until 40% of the VSL has
+           been watched. -->
+      <p class="book-cta-gate" id="book-cta-gate">Watch at least 40% of the tutorial to see if you qualify to access Droparabia</p>
+      <a href="/survey" class="book-cta is-locked" id="book-cta" aria-disabled="true">
+        See if you qualify
+        <!-- Replaced with the live count from /api/spots (17 per week, resets Monday 12 AM Beirut time) -->
+        <span class="book-cta-sub" id="book-cta-spots">Limited spots are available this week</span>
+      </a>
 
     </div>
   </section>
@@ -200,62 +192,11 @@ const trustpilotReviews = [
     </div>
   </footer>
 
-  <!-- Opt-in modal — opens from the CTA; there is no player on this page to gate. -->
-  <div id="vsl-modal" class="vsl-modal-overlay" aria-hidden="true">
-    <div class="vsl-modal-box" role="dialog" aria-modal="true" aria-labelledby="vsl-modal-title">
-      <button class="vsl-modal-close" id="vsl-modal-close" aria-label="Close">&times;</button>
-      <div class="vsl-modal-head">
-        <h3 class="vsl-modal-title" id="vsl-modal-title">
-          <span class="vsl-modal-title-sub">Where should we send the training?</span>
-        </h3>
-        <p class="vsl-modal-warning">This training might be taken down soon!</p>
-      </div>
-      <div id="vsl-error-msg" class="brevo-alert brevo-alert--error" style="display:none">Could not subscribe. Please try again.</div>
-      <div id="vsl-success-msg" class="brevo-alert brevo-alert--success" style="display:none">Sent! Check your inbox for the link.</div>
-      <form id="vsl-modal-form" class="vsl-modal-form" method="POST" action="/api/subscribe" data-type="subscription">
-        <div class="field-line">
-          <span class="field-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </span>
-          <input type="text" name="FIRSTNAME" placeholder="First and Last Name" required autocomplete="name" />
-        </div>
-        <div class="field-line">
-          <span class="field-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          </span>
-          <!-- type="email", not "text": as a plain text field Chrome's autofill treated
-               this as a generic box and filled it with the surname, which Brevo then
-               rejected as an invalid email. Also gives an email keyboard on mobile. -->
-          <input type="email" name="EMAIL" placeholder="Your Best Email" required autocomplete="email" inputmode="email" />
-        </div>
-        <div class="field-line">
-          <span class="field-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.31 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.45 5.45l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          </span>
-          <PhoneCountrySelect inputId="vsl-modal-country" name="SMS__COUNTRY_CODE" variant="plain" />
-          <span class="sms-divider">|</span>
-          <input type="tel" name="SMS" placeholder="WhatsApp Number" required autocomplete="tel" />
-        </div>
-        <p id="vsl-modal-email-err" class="vsl-inline-err" style="display:none">Please enter a valid email address</p>
-        <!-- Offered on blur, never applied on its own; submitting is not blocked by it. -->
-        <p id="vsl-modal-email-typo" class="vsl-inline-typo" style="display:none">Did you mean <button type="button" class="vsl-typo-btn" id="vsl-modal-email-typo-btn"></button>?</p>
-        <p id="vsl-modal-phone-err" class="vsl-inline-err" style="display:none">Please enter a valid phone number for the country you picked</p>
-        <button type="submit" class="vsl-inline-btn">Send me the training</button>
-        <p class="vsl-inline-consent">By subscribing, you agree to receive future marketing messages and newsletters</p>
-        <!-- Two honeypots. email_address_check is Brevo's own public field name, which a
-             bot trained on Brevo forms may know to leave alone, so company_website sits
-             beside it. Either one arriving filled is treated as a bot. -->
-        <input type="text" name="email_address_check" value="" style="display:none">
-        <input type="text" name="company_website" value="" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp-field">
-        <input type="hidden" name="locale" value="en">
-      </form>
-    </div>
-  </div>
 
 </Layout>
 
 
-<!-- Global: palette and font lock-down -->
+<!-- Global: palette, font lock-down, and Plyr internals (Plyr builds its DOM at runtime) -->
 <style is:global>
   :root {
     /* Borrowed from droparabia-official */
@@ -291,6 +232,34 @@ const trustpilotReviews = [
     font-family: var(--font-body) !important;
   }
 
+  /* ─── Plyr skin ─── */
+  .vsl-wrapper {
+    --plyr-color-main: var(--da-blue);
+    --plyr-control-icon-size: 28px;
+    --plyr-font-family: var(--font-body);
+  }
+
+  .vsl-wrapper .plyr,
+  .vsl-wrapper .plyr__video-wrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+  }
+
+  .vsl-wrapper video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .vsl-wrapper .plyr__control--overlaid {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+  }
 </style>
 
 
@@ -466,38 +435,46 @@ const trustpilotReviews = [
     border-radius: 2px;
   }
 
-  /* ─── OPT-IN ─── */
-  .optin-note {
-    font-size: 0.82rem;
-    color: var(--da-ink-mute);
-    margin: 10px auto 0;
-  }
-
-  .optin-done {
-    max-width: 520px;
-    margin: 24px auto 0;
-    padding: 20px 22px;
-    border-radius: 14px;
-    background: var(--da-surface);
-    border: 1px solid rgba(22, 163, 74, 0.35);
-    box-shadow: 0 10px 28px -12px rgba(0, 0, 0, 0.25);
-  }
-
-  .optin-done-title {
-    font-size: 1.1rem;
+  /* ─── WATCH HEADER ─── */
+  .watch-step {
+    font-size: 0.78rem;
     font-weight: 800;
-    color: #15803d;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--da-primary);
     margin-bottom: 6px;
   }
 
-  .optin-done-text {
-    font-size: 0.9rem;
-    line-height: 1.55;
-    color: var(--da-ink-soft);
+  .watch-title {
+    font-size: clamp(1.5rem, 3.6vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    color: var(--da-ink);
+    margin-bottom: 8px;
   }
 
-  /* The opt-in CTA. Same shape as the homepage's book-a-call button so the two
-     variants are visually comparable. */
+  .watch-note {
+    font-size: 0.88rem;
+    color: var(--da-ink-soft);
+    margin-bottom: 22px;
+  }
+
+  /* ─── VSL ─── */
+  .vsl-wrapper {
+    max-width: 660px;
+    width: 100%;
+    margin: 0 auto 28px;
+    border-radius: 18px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    position: relative;
+    box-shadow:
+      0 0 0 4px var(--da-blue),
+      0 24px 60px rgba(0, 30, 255, 0.20);
+  }
+
+  /* Book-a-call CTA, revealed the moment the VSL unlocks (see the Plyr script). */
   .book-cta {
     display: flex;
     flex-direction: column;
@@ -529,231 +506,80 @@ const trustpilotReviews = [
   }
 
   /* Watch-progress bar, shown once subscribed. */
-  .vsl-modal-overlay {
-    position: fixed;
-    inset: 0;
-    /* html/body carry overflow-x: hidden, and on mobile that lets a fixed overlay
-       stretch to the page's scrollable width instead of the viewport whenever
-       something on the page overflows sideways — which pushed this modal and its
-       inputs off the right edge of the screen. Pinning the width to the viewport
-       keeps the box centred however wide the document gets; min() so desktop,
-       where 100% already excludes the scrollbar, is left alone. */
-    width: min(100vw, 100%);
-    background: rgba(0, 0, 0, 0.72);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    padding: 20px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.25s, visibility 0.25s;
-  }
-
-  .vsl-modal-overlay.is-open {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .vsl-modal-box {
-    background: var(--da-surface);
-    border-radius: 20px;
-    padding: 40px 36px 32px;
-    max-width: 460px;
+  .vsl-progress-wrap {
+    max-width: 420px;
     width: 100%;
+    margin: 18px auto 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .vsl-progress-track {
     position: relative;
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-    transform: translateY(14px) scale(0.97);
-    transition: transform 0.25s;
-    box-sizing: border-box;
-    text-align: left;
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--da-line);
+    overflow: hidden;
   }
 
-  .vsl-modal-overlay.is-open .vsl-modal-box {
-    transform: translateY(0) scale(1);
-  }
-
-  .vsl-modal-close {
+  /* Tick at the 40% unlock point, so the bar reads as "progress toward a goal"
+     rather than a plain loading indicator. */
+  .vsl-progress-marker {
     position: absolute;
-    top: 14px;
-    right: 16px;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: none;
-    background: var(--da-bg);
-    color: var(--da-ink-mute);
-    font-size: 1.25rem;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s, color 0.15s;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 1;
   }
 
-  .vsl-modal-close:hover { background: var(--da-line); color: var(--da-ink); }
-
-  .vsl-modal-head {
-    text-align: center;
-    margin-bottom: 24px;
+  .vsl-progress-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--da-primary) 0%, var(--da-blue) 100%);
+    transition: width 0.3s ease;
   }
 
-  .vsl-modal-title {
-    font-size: 1.375rem;
-    font-weight: 800;
-    color: var(--da-ink);
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
-  }
-
-  .vsl-modal-title-sub {
-    font-size: 1rem;
-    font-weight: 700;
-  }
-
-  .vsl-modal-warning {
-    color: #dc2626;
-    font-size: 0.78rem;
-    font-weight: 500;
-    margin-top: 6px;
-  }
-
-  .brevo-alert--success,
-  .brevo-alert--error {
-    font-size: 0.88rem;
+  .vsl-progress-label {
+    font-size: 0.8rem;
     font-weight: 600;
-    text-align: center;
-    border-radius: 10px;
-    padding: 10px 14px;
-    margin-bottom: 12px;
-  }
-
-  .brevo-alert--success {
-    background: rgba(22, 163, 74, 0.10);
-    border: 1px solid rgba(22, 163, 74, 0.35);
-    color: #15803d;
-  }
-
-  .brevo-alert--error {
-    background: rgba(220, 38, 38, 0.10);
-    border: 1px solid rgba(220, 38, 38, 0.35);
-    color: #dc2626;
-  }
-
-  .vsl-modal-form {
-    display: grid;
-    /* minmax(0, 1fr), not the default auto: the country select's widest option is a long
-       country name, and an auto column sizes itself to that and overflows the modal. */
-    grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
-  }
-
-  .field-line {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--da-surface);
-    border: 1px solid var(--da-line);
-    border-radius: 10px;
-    padding: 0 12px;
-    transition: border-color 0.18s ease, box-shadow 0.18s ease;
-  }
-
-  .field-line:focus-within {
-    border-color: var(--da-primary);
-    box-shadow: 0 0 0 3px rgba(0, 30, 255, 0.12);
-  }
-
-  .field-icon {
-    display: flex;
     color: var(--da-ink-mute);
-    flex-shrink: 0;
   }
 
-  .field-line input {
-    flex: 1;
-    min-width: 0;
-    border: none;
-    outline: none;
-    background: transparent;
-    padding: 12px 0;
-    font-size: 0.95rem;
+  /* Gate message, shown above the CTA only once subscribed and only while locked. */
+  .book-cta-gate {
+    max-width: 420px;
+    width: 100%;
+    margin: 16px auto 0;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 700;
     color: var(--da-ink);
   }
 
-  .field-line input::placeholder { color: var(--da-ink-mute); }
-
-  .sms-divider {
-    color: var(--da-line);
-    flex-shrink: 0;
-  }
-
-  /* Off-screen rather than display:none: a bot reading the computed style sees a
-     field that is technically rendered, while nobody can tab to or see it. */
-  .hp-field {
-    position: absolute;
-    left: -9999px;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
+  /* Locked state: same CTA, just inert and greyed out until 40% is reached. */
+  .book-cta.is-locked {
+    margin-top: 10px;
+    background: var(--da-line);
+    color: var(--da-ink-mute);
+    box-shadow: none;
+    cursor: not-allowed;
     pointer-events: none;
   }
 
-  .vsl-inline-typo {
-    font-size: 0.78rem;
-    color: var(--da-ink-soft);
-    margin-top: -4px;
+  .book-cta.is-locked:hover {
+    transform: none;
+    box-shadow: none;
   }
 
-  .vsl-typo-btn {
-    border: none;
-    background: none;
-    padding: 0;
-    font: inherit;
-    color: var(--da-primary);
-    font-weight: 700;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-
-  .vsl-inline-err {
-    font-size: 0.78rem;
-    color: #dc2626;
-    margin-top: -4px;
-  }
-
-  .vsl-inline-btn {
-    width: 100%;
-    border: none;
-    border-radius: 12px;
-    padding: 14px 20px;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #fff;
-    background: linear-gradient(135deg, var(--da-cta) 0%, var(--da-cta-light) 100%);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.10), 0 2px 16px rgba(0, 30, 255, 0.35);
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
-  }
-
-  .vsl-inline-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 6px 32px rgba(0, 30, 255, 0.50);
-  }
-
-  .vsl-inline-btn:active:not(:disabled) { transform: translateY(2px); }
-
-  .vsl-inline-btn:disabled { opacity: 0.7; cursor: default; }
-
-  .vsl-inline-consent {
-    font-size: 0.7rem;
+  .book-cta.is-locked .book-cta-sub {
     color: var(--da-ink-mute);
-    text-align: center;
-    margin-top: 4px;
-    line-height: 1.4;
   }
 
-  /* ══════════════ 2. CASE STUDIES ══════════════ */
+  /* ─── VSL SUBSCRIPTION MODAL ─── */
   .proof-section {
     padding: 52px 0 60px;
     background: var(--da-bg);
@@ -1071,6 +897,7 @@ const trustpilotReviews = [
     /* The bottom gap can't go below the video's glow: .hero clips its overflow, so a
        shorter padding than the shadow's reach (16px down, 40px blur) shears it off. */
     .hero { padding: 18px 0 26px; }
+    .vsl-wrapper { margin-bottom: 24px; }
     .proof-section { padding-top: 18px; }
     .carousel-container { margin-top: 16px; }
     .site-header-inner { padding: 10px 16px; }
@@ -1079,6 +906,7 @@ const trustpilotReviews = [
     .corner-brand-name { font-size: 1.15rem; }
     .site-header-link { font-size: 0.82rem; }
     .headline { max-width: none; }
+    .vsl-wrapper { border-radius: 14px; box-shadow: 0 0 0 3px var(--da-blue), 0 16px 40px rgba(0, 30, 255, 0.18); }
     .carousel-container { padding: 0 26px; }
     /* left:0/right:0 resolve to the container's outer edge regardless of its padding
        (padding never shifts that reference point for an absolutely-positioned child) —
@@ -1088,11 +916,6 @@ const trustpilotReviews = [
     .case-carousel-prev { left: 8px; }
     .case-carousel-next { right: 8px; }
     .footer-inner { flex-direction: column; gap: 24px; }
-    .vsl-modal-box { padding: 32px 20px 24px; }
-    .vsl-modal-title { font-size: 1.2rem; }
-    /* It's the only line in the title now, so on a phone it carries the whole message
-       and shouldn't render at the smaller size it had as a second line. */
-    .vsl-modal-title-sub { font-size: 1.2rem; }
   }
 </style>
 
@@ -1128,210 +951,138 @@ const trustpilotReviews = [
 </script>
 
 <script>
-  function getTrackingData(): Record<string, string> {
-    const result: Record<string, string> = {};
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach((k) => {
-      const v = sessionStorage.getItem(k);
-      if (v) result[k] = v;
-    });
-    const ref = sessionStorage.getItem('da_referrer');
-    if (ref) result.referrer = ref;
-    const headline = sessionStorage.getItem('da_headline_variant');
-    if (headline) result.headline = headline;
-    // Meta click/browser ids, for the sheet's offline-conversion columns.
-    const ad = (window as any).daAdClick ? (window as any).daAdClick() : { fbc: '', fbp: '' };
-    if (ad.fbc) result.fbc = ad.fbc;
-    if (ad.fbp) result.fbp = ad.fbp;
-    return result;
-  }
+  import Plyr from 'plyr';
+  import 'plyr/dist/plyr.css';
 
-  function isValidEmail(raw: string): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw.trim());
-  }
-
-  // The national part, with any country code they retyped and the trunk zero removed.
-  function nationalDigits(dial: string, raw: string): string {
-    let d = (raw || '').replace(/\D/g, '');
-    if (d.startsWith('00' + dial)) d = d.slice(dial.length + 2);
-    else if (d.startsWith(dial) && d.length > dial.length + 5) d = d.slice(dial.length);
-    return d.replace(/^0+/, '');
-  }
-
-  // Lebanese numbers keep the stricter check they've always had; for every other country
-  // the number only has to be a plausible length (E.164 allows 15 digits in total).
-  function isValidPhone(dial: string, raw: string): boolean {
-    const d = nationalDigits(dial, raw);
-    if (dial === '961') return /^\d{7,8}$/.test(d);
-    return d.length >= 5 && (dial + d).length <= 15;
-  }
-
-  // ── Opt-in modal: opens from the CTA button, since nothing here needs unlocking
-  // unsubscribed. No overlay/lock on the video itself — it looks and behaves like a
-  // normal player; the gate only kicks in on the play action.
-  const modal = document.getElementById('vsl-modal') as HTMLElement;
-  const modalClose = document.getElementById('vsl-modal-close') as HTMLElement;
-  const modalForm = document.getElementById('vsl-modal-form') as HTMLFormElement;
-
-  function openModal() {
-    modal.classList.add('is-open');
-    modal.setAttribute('aria-hidden', 'false');
-  }
-
-  function closeModal() {
-    modal.classList.remove('is-open');
-    modal.setAttribute('aria-hidden', 'true');
-  }
-
-  // Typo suggestion: offered when they leave the field, dismissed as soon as they
-  // change it or accept it. Purely advisory — it never rewrites the value or blocks the
-  // submit, because a "correction" against a real address would cost us the lead.
-  const emailInput = modalForm.querySelector('[name="EMAIL"]') as HTMLInputElement | null;
-  const typoEl = document.getElementById('vsl-modal-email-typo') as HTMLElement | null;
-  const typoBtn = document.getElementById('vsl-modal-email-typo-btn') as HTMLButtonElement | null;
-  if (emailInput && typoEl && typoBtn) {
-    emailInput.addEventListener('blur', () => {
-      const suggestion = (window as any).daEmailSuggest?.(emailInput.value);
-      if (suggestion) {
-        typoBtn.textContent = suggestion;
-        typoEl.style.display = 'block';
-      } else {
-        typoEl.style.display = 'none';
-      }
-    });
-    emailInput.addEventListener('input', () => { typoEl.style.display = 'none'; });
-    typoBtn.addEventListener('click', () => {
-      emailInput.value = typoBtn.textContent || emailInput.value;
-      typoEl.style.display = 'none';
-      emailInput.focus();
-    });
-  }
-
-  modalForm.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const btn = this.querySelector('button[type="submit"]') as HTMLButtonElement;
-    const btnText = btn.textContent;
-    const successEl = document.getElementById('vsl-success-msg') as HTMLElement;
-    const errorEl = document.getElementById('vsl-error-msg') as HTMLElement;
-    const nameVal = (this.querySelector('[name="FIRSTNAME"]') as HTMLInputElement)?.value ?? '';
-    const emailVal = (this.querySelector('[name="EMAIL"]') as HTMLInputElement)?.value ?? '';
-    const dialVal = (this.querySelector('[name="SMS__COUNTRY_CODE"]') as HTMLSelectElement)?.value || '961';
-    const smsRaw = (this.querySelector('[name="SMS"]') as HTMLInputElement)?.value ?? '';
-    // Sent in full international form, so a non-Lebanese lead is still reachable.
-    const smsVal = isValidPhone(dialVal, smsRaw) ? '+' + dialVal + nationalDigits(dialVal, smsRaw) : '';
-    const phoneErrEl = document.getElementById('vsl-modal-phone-err') as HTMLElement | null;
-    const emailErrEl = document.getElementById('vsl-modal-email-err') as HTMLElement | null;
-
-    successEl.style.display = 'none';
-    errorEl.style.display = 'none';
-
-    // Validate the email here rather than letting Brevo reject it — an invalid address
-    // came back as a generic "Could not subscribe. Please try again.", which gave the
-    // visitor no idea which field was actually wrong.
-    if (!isValidEmail(emailVal)) {
-      if (emailErrEl) emailErrEl.style.display = 'block';
-      return;
-    }
-    if (emailErrEl) emailErrEl.style.display = 'none';
-
-    if (!smsVal) {
-      if (phoneErrEl) phoneErrEl.style.display = 'block';
-      return;
-    }
-    if (phoneErrEl) phoneErrEl.style.display = 'none';
-
-    btn.disabled = true;
-    btn.textContent = 'Subscribing...';
-
-    try {
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: nameVal, email: emailVal, phone: smsVal, list: 'vsl',
-          email_address_check: (this.querySelector('[name="email_address_check"]') as HTMLInputElement)?.value ?? '',
-          company_website: (this.querySelector('[name="company_website"]') as HTMLInputElement)?.value ?? '',
-          ...getTrackingData(),
-        }),
-      });
-      const json = await res.json();
-      // A refused address comes back with wording meant for the visitor; showing it
-      // beside the field tells them which one to fix, unlike the generic banner.
-      if (!json.success) {
-        if (res.status === 422 && json.error && emailErrEl) {
-          emailErrEl.textContent = json.error;
-          emailErrEl.style.display = 'block';
-          btn.disabled = false;
-          btn.textContent = btnText;
-          return;
-        }
-        throw new Error(json.error);
-      }
-
-      sessionStorage.setItem('da_subscribed', '1');
-      sessionStorage.setItem('userData', JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal }));
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'subscription_success_modal' });
-      // Meta Pixel advanced matching: every page's pixel init reads this back and passes
-      // it as { em, ph } (/choose-schedule also passes fn and ln, for Schedule). Plain
-      // values; the pixel hashes them itself. The phone becomes digits only with the 961
-      // country code, no +, spaces or leading zeros.
-      // Already in full international form; Meta wants it as digits with no plus.
-      const ph = smsVal.replace(/\D/g, '');
-      const em = emailVal.trim().toLowerCase();
-      // The form has a single full-name field: the first word is fn, everything after
-      // the first space is ln (left empty, and never sent, when there isn't one).
-      const fullName = nameVal.trim().toLowerCase().replace(/\s+/g, ' ');
-      const space = fullName.indexOf(' ');
-      const fn = space === -1 ? fullName : fullName.slice(0, space);
-      const ln = space === -1 ? '' : fullName.slice(space + 1);
-      try {
-        localStorage.setItem('da_match', JSON.stringify({ em, ph, fn, ln }));
-      } catch {}
-      // Meta Pixel Lead: only reached after the API confirms the subscription. Wrapped so
-      // a blocked or broken pixel can't drop them into the error path below. The page's
-      // init ran before they typed anything, so it's re-run with what they just submitted
-      // for the Lead to carry it. Qualification has its own event (QualifiedLead, fired
-      // from SurveyFlow); this one stays on subscription, where retargeting depends on it.
-      try {
-        const fbq = (window as any).fbq;
-        if (typeof fbq === 'function') {
-          const match: Record<string, string> = {};
-          if (em) match.em = em;
-          if (ph) match.ph = ph;
-          if (fn) match.fn = fn;
-          if (ln) match.ln = ln;
-          fbq('init', '4560443994198158', match);
-          fbq('track', 'Lead');
-        }
-      } catch {}
-
-      successEl.style.display = 'block';
-      btn.textContent = 'Sent!';
-      closeModal();
-
-      // The page confirms it itself, rather than leaving them on a form that just
-      // emptied. The address is echoed back so a typo is obvious while they still
-      // remember what they typed.
-      const doneEl = document.getElementById('optin-done') as HTMLElement | null;
-      const doneEmail = document.getElementById('optin-done-email') as HTMLElement | null;
-      if (doneEmail) doneEmail.textContent = emailVal.trim();
-      if (doneEl) doneEl.hidden = false;
-      const cta = document.getElementById('optin-cta') as HTMLElement | null;
-      if (cta) cta.style.display = 'none';
-      const note = document.querySelector('.optin-note') as HTMLElement | null;
-      if (note) note.style.display = 'none';
-      doneEl?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } catch {
-      errorEl.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = btnText;
-    }
+  const player = new Plyr('#vsl-player', {
+    // Progress bar and keyboard seeking are both back on — scrubbing is fine as long
+    // as it's constrained to ground already covered. See the 'seeking' clamp below,
+    // which is what actually stops anyone from dragging or arrow-keying ahead.
+    controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'fullscreen'],
+    resetOnEnd: false,
   });
 
-  modalClose.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+  // ── VSL watch tracking ─────────────────────────────────────────────────────
+  // Kept in sessionStorage so /survey can report how much of the video they'd seen
+  // before leaving to book. Two numbers, because they answer different questions:
+  // "watched" is time actually played (a seek forward doesn't earn credit, a rewatch
+  // doesn't double-count), "furthest" is the deepest point they reached. Declared here
+  // (ahead of the book-cta section below) because showBookCta needs furthestSeconds
+  // to set the CTA's initial lock state for a returning, already-subscribed visitor.
+  const WATCH_KEY = 'da_vsl_watch';
+  // Same figures, mirrored into localStorage. sessionStorage alone loses this the
+  // moment the tab closes, so anyone who watches the VSL and comes back later (a
+  // different tab, a bookmark, the next day) to finish the survey or book would
+  // otherwise report as having watched nothing. localStorage survives that; read as
+  // a fallback wherever this data gets sent, never as the primary source.
+  const WATCH_PERSIST_KEY = 'da_vsl_watch_persist';
+  const BOOK_UNLOCK_RATIO = 0.4; // must watch 40% of the VSL to unlock booking
+  let watchedSeconds = 0;
+  let furthestSeconds = 0;
+  let lastTick = 0;
+  let lastSaved = 0;
 
-  // The only way into the form on this page — there is no player to click.
-  document.getElementById('optin-cta')?.addEventListener('click', openModal);
+  try {
+    const prior = JSON.parse(sessionStorage.getItem(WATCH_KEY) || '{}');
+    watchedSeconds = Number(prior.watched) || 0;
+    furthestSeconds = Number(prior.furthest) || 0;
+  } catch { /* nothing recorded yet */ }
+
+  function saveWatch() {
+    const payload = JSON.stringify({
+      watched: Math.round(watchedSeconds),
+      furthest: Math.round(furthestSeconds),
+      duration: Math.round(player.duration || 0),
+    });
+    try { sessionStorage.setItem(WATCH_KEY, payload); } catch { /* storage unavailable — tracking is best-effort */ }
+    try { localStorage.setItem(WATCH_PERSIST_KEY, payload); } catch { /* same */ }
+  }
+
+  // Book-a-call CTA: hidden until the VSL is actually unlocked, so it shows up the
+  // moment subscribing succeeds — and immediately on load for a returning visitor
+  // who already subscribed earlier this session. Even once shown it stays locked
+  // (grey, inert) until 40% of the VSL has been watched.
+  const bookCta = document.getElementById('book-cta') as HTMLElement | null;
+  const bookCtaGate = document.getElementById('book-cta-gate') as HTMLElement | null;
+  const progressWrap = document.getElementById('vsl-progress-wrap') as HTMLElement | null;
+  const progressBar = document.getElementById('vsl-progress-bar') as HTMLElement | null;
+  const progressLabel = document.getElementById('vsl-progress-label') as HTMLElement | null;
+
+  function updateWatchProgressUI() {
+    const dur = player.duration || 0;
+    const pct = dur > 0 ? Math.min(100, Math.round((furthestSeconds / dur) * 100)) : 0;
+    if (progressBar) progressBar.style.width = pct + '%';
+    if (progressLabel) progressLabel.textContent = pct + '% watched';
+
+    const unlocked = dur > 0 && furthestSeconds / dur >= BOOK_UNLOCK_RATIO;
+    if (bookCta) {
+      bookCta.classList.toggle('is-locked', !unlocked);
+      bookCta.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
+    }
+    // This runs on every timeupdate tick regardless of subscription state (the video's
+    // preload="metadata" fires loadedmetadata on its own), so without the subscribed
+    // check the gate line would leak into view before anyone's actually subscribed.
+    // Shown until they pass the 40% mark, then it has nothing left to say.
+    if (bookCtaGate) bookCtaGate.style.display = unlocked ? 'none' : 'block';
+  }
+
+  // Weekly spots left, counted server-side from this week's rows on the booked sheet.
+  // The fallback text stays in place if the request fails.
+  const spotsEl = document.getElementById('book-cta-spots');
+  if (spotsEl) {
+    fetch('/api/spots')
+      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+      .then((data: { remaining?: number }) => {
+        if (typeof data.remaining !== 'number') return;
+        const n = data.remaining;
+        spotsEl.textContent = n === 0
+          ? 'No spots left this week'
+          : n === 1
+            ? '1 spot is available this week'
+            : `${n} spots are available this week`;
+      })
+      .catch(() => {});
+  }
+
+  function showBookCta() {
+    if (bookCta) bookCta.style.display = 'flex';
+    if (progressWrap) progressWrap.style.display = 'flex';
+    updateWatchProgressUI();
+  }
+  showBookCta();
+
+  // A locked CTA is also pointer-events:none in CSS, but that alone won't stop a
+  // keyboard Enter/Space activation — belt and suspenders.
+  bookCta?.addEventListener('click', (e) => {
+    if (bookCta.classList.contains('is-locked')) e.preventDefault();
+  });
+
+  player.on('timeupdate', () => {
+    const dur = player.duration;
+    const t = player.currentTime;
+
+    const now = performance.now();
+    const delta = t - lastTick;
+    const played = isPlaybackStep(delta, now);
+    lastTick = t;
+    lastTickAt = now;
+    if (played) {
+      watchedSeconds += delta;
+      if (t > furthestSeconds) furthestSeconds = t;
+    } else if (t > furthestSeconds + SEEK_CLAMP_BUFFER) {
+      // A skip ahead the 'seeking' clamp didn't catch. Some browsers (Safari) can
+      // deliver a tick at the new position before 'seeking' fires, which used to count
+      // the jump as progress. Only real playback moves furthest, and this snaps back.
+      player.currentTime = furthestSeconds;
+      return;
+    }
+    if (watchedSeconds - lastSaved >= 2) { lastSaved = watchedSeconds; saveWatch(); }
+    updateWatchProgressUI();
+
+    if (!videoCompleteTracked && dur > 0 && t >= dur * 0.8) {
+      videoCompleteTracked = true;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'video_complete' });
+    }
+  });
 </script>
