@@ -114,9 +114,9 @@ import AdClickCapture from '../components/AdClickCapture.astro';
 
     <!-- Shown if no valid token -->
     <div id="no-access" style="display:none; min-height:100vh; display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem; text-align:center;">
-      <h1 style="font-size:1.75rem; font-weight:700; color:#111827;">No cheating allowed! 😏</h1>
-      <p style="font-size:1.1rem; color:#374151;">Please go back and finish the survey first.</p>
-      <button onclick="window.location.href='/survey'" style="margin-top:1rem; padding:0.75rem 2rem; background:linear-gradient(135deg,#2563EB,#3B82F6); color:#fff; font-weight:700; border:none; border-radius:10px; font-size:1rem; cursor:pointer;">
+      <h1 id="no-access-title" style="font-size:1.75rem; font-weight:700; color:#111827;">No cheating allowed! 😏</h1>
+      <p id="no-access-text" style="font-size:1.1rem; color:#374151;">Please go back and finish the survey first.</p>
+      <button id="no-access-btn" onclick="window.location.href='/survey'" style="margin-top:1rem; padding:0.75rem 2rem; background:linear-gradient(135deg,#2563EB,#3B82F6); color:#fff; font-weight:700; border:none; border-radius:10px; font-size:1rem; cursor:pointer;">
         Go Back
       </button>
     </div>
@@ -295,11 +295,12 @@ import AdClickCapture from '../components/AdClickCapture.astro';
           // session. Not documented/linked anywhere; only works if you already know
           // the param.
           const isPreview = new URLSearchParams(location.search).get('preview') === '1';
-          if (tokens.qualified || isPreview) {
-            document.getElementById('main-content').style.display = 'block';
+          var userData = {};
+          try { userData = JSON.parse(sessionStorage.getItem('userData') || '{}'); } catch(_) {}
+          var hasDetails = !!(userData.email && String(userData.email).trim());
 
-            var userData = {};
-            try { userData = JSON.parse(sessionStorage.getItem('userData') || '{}'); } catch(_) {}
+          if ((tokens.qualified && hasDetails) || isPreview) {
+            document.getElementById('main-content').style.display = 'block';
 
             var phoneDigits = (userData.phone || '').replace(/[\s\-()+.]/g, '');
             if (phoneDigits.startsWith('00961')) phoneDigits = phoneDigits.slice(5);
@@ -333,6 +334,14 @@ import AdClickCapture from '../components/AdClickCapture.astro';
               document.getElementById('calendly-widget').style.display = 'block';
             }, 5000);
           } else {
+            if (tokens.qualified && !hasDetails) {
+              var t = document.getElementById('no-access-title');
+              var p = document.getElementById('no-access-text');
+              var b = document.getElementById('no-access-btn');
+              if (t) t.textContent = 'We just need your details again';
+              if (p) p.textContent = "This tab doesn't have them, which happens when a link is opened in a new window. Start again and you'll be back here in a minute.";
+              if (b) { b.textContent = 'Start again'; b.setAttribute('onclick', "window.location.href='/'"); }
+            }
             document.getElementById('no-access').style.display = 'flex';
           }
         } catch(_) {
@@ -443,12 +452,36 @@ import AdClickCapture from '../components/AdClickCapture.astro';
             // us earlier. Send the original too, otherwise their qualified_no_book row
             // (filed under that address) survives the move to the booked list.
             if (stored.email && stored.email.toLowerCase() !== email.toLowerCase()) payload.prev_email = stored.email;
-            fetch('/api/subscribe', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(Object.assign(payload, utms)),
-              keepalive: true,
-            }).catch(function() {});
+            // The booking itself is already made by the time this runs, so a dropped
+            // request means a confirmed call that exists nowhere but Calendly. One
+            // retry covers a transient failure; sendBeacon is the last resort, since
+            // it survives the page being closed on the confirmation screen.
+            var bookingBody = JSON.stringify(Object.assign(payload, utms));
+
+            function writeBooking(attempt) {
+              fetch('/api/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: bookingBody,
+                keepalive: true,
+              }).then(function (res) {
+                return res.json().catch(function () { return {}; });
+              }).then(function (data) {
+                if (data && data.success) return;
+                throw new Error('write rejected');
+              }).catch(function () {
+                if (attempt < 1) {
+                  setTimeout(function () { writeBooking(attempt + 1); }, 1500);
+                  return;
+                }
+                try {
+                  if (navigator.sendBeacon) {
+                    navigator.sendBeacon('/api/subscribe', new Blob([bookingBody], { type: 'application/json' }));
+                  }
+                } catch (_) {}
+              });
+            }
+            writeBooking(0);
           }
         });
       }
