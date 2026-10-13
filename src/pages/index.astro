@@ -155,7 +155,7 @@ const trustpilotReviews = [
     <!-- The sentence runs into the figures: plain text on the left, the stacked result
          on the right finishing it. -->
     <div class="rb-top">
-      <h2 class="rb-heading" id="rb-heading">How we took Karim from<br />testing his first product to</h2>
+      <h2 class="rb-heading" id="rb-heading">Karim went from testing his 1st product to</h2>
 
       <div class="rb-stack">
         <p class="rb-amount">$8,297</p>
@@ -163,7 +163,7 @@ const trustpilotReviews = [
       </div>
     </div>
 
-    <p class="rb-without">Without owning Inventory!</p>
+    <p class="rb-without">without owning Inventory!</p>
 
     <div class="rb-row">
       <div class="rb-copy">
@@ -386,6 +386,20 @@ const trustpilotReviews = [
     /* CTA blue, matching the site's primary rather than the old green. */
     --da-cta:        #001eff;
     --da-cta-light:  #2745ff;
+
+    /* ── Spacing scale ──
+       section: the air above and below a section
+       block:   a heading or lead-in away from the content it introduces
+       gutter:  the page's left/right padding
+       Each interpolates between its phone value and its desktop value on its own,
+       so nothing here needs a media query to restate it. */
+    /* The low end is what a phone gets: 14vw is only 55px at 390px wide, so the
+       minimum is the number that actually applies there. Keeping it at the desktop
+       scale left a screen that was mostly empty. */
+    --sp-section: clamp(68px, 14vw, 176px);
+    --sp-block:   clamp(20px, 2.8vw, 32px);
+    --sp-group:   clamp(36px, 5vw, 56px);
+    --sp-gutter:  clamp(16px, 2.4vw, 24px);
   }
 
   body {
@@ -953,7 +967,9 @@ const trustpilotReviews = [
 
   /* ══════════════ 2. CASE STUDIES ══════════════ */
   .proof-section {
-    padding: 52px 0 60px;
+    /* Top is deliberate, not the scale: it pairs with the hero's bottom to keep the
+       carousel tight under the video while the progress bar and CTA are hidden. */
+    padding: 52px 0 0;
     background: var(--da-bg);
   }
 
@@ -967,8 +983,8 @@ const trustpilotReviews = [
     align-items: center;
     justify-content: center;
     gap: 12px;
-    margin-bottom: 26px;
-    padding: 0 20px;
+    margin-bottom: var(--sp-block);
+    padding: 0 var(--sp-gutter);
   }
 
   .heading-arrow {
@@ -992,8 +1008,8 @@ const trustpilotReviews = [
   .carousel-container {
     position: relative;
     max-width: 1152px;
-    margin: 40px auto 0;
-    padding: 0 24px;
+    margin: var(--sp-block) auto 0;
+    padding: 0 var(--sp-gutter);
   }
 
   .testimonials-swiper { overflow: hidden; }
@@ -1045,7 +1061,7 @@ const trustpilotReviews = [
   /* ══════════════ 3. TRUSTPILOT REVIEWS ══════════════ */
   .tp-section {
     background: var(--da-bg);
-    padding: 64px 24px 72px;
+    padding: var(--sp-section) var(--sp-gutter) 0;
   }
 
   .tp-head {
@@ -1054,7 +1070,7 @@ const trustpilotReviews = [
     justify-content: center;
     flex-wrap: wrap;
     gap: 10px 14px;
-    margin-bottom: 36px;
+    margin-bottom: var(--sp-block);
     text-align: center;
   }
 
@@ -1144,8 +1160,6 @@ const trustpilotReviews = [
   }
 
   @media (max-width: 640px) {
-    .tp-section { padding: 48px 16px 56px; }
-    .tp-head { margin-bottom: 26px; }
     .tp-grid { column-count: 1; column-gap: 14px; }
     .tp-card { margin-bottom: 14px; }
   }
@@ -1154,7 +1168,7 @@ const trustpilotReviews = [
   .footer {
     background: var(--da-bg);
     color: var(--da-ink);
-    padding: 40px 0 0;
+    padding: var(--sp-group) 0 0;
     /* Cast upward, separating it from the section above rather than the page edge
        below — matches the header's shadow, which casts the opposite way for the
        same reason. */
@@ -1279,7 +1293,6 @@ const trustpilotReviews = [
     .site-header-link { font-size: 0.82rem; }
     .headline { max-width: none; }
     .vsl-wrapper { border-radius: 14px; box-shadow: 0 0 0 3px var(--da-blue), 0 16px 40px rgba(0, 30, 255, 0.18); }
-    .carousel-container { padding: 0 26px; }
     /* left:0/right:0 resolve to the container's outer edge regardless of its padding
        (padding never shifts that reference point for an absolutely-positioned child) —
        straddling that edge on mobile meant half the button hung off the viewport itself.
@@ -1303,7 +1316,7 @@ const trustpilotReviews = [
   .stat-strip {
     list-style: none;
     max-width: 1100px;
-    margin: 0 auto 24px;
+    margin: 0 auto var(--sp-block);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     align-items: center;
@@ -1351,7 +1364,9 @@ const trustpilotReviews = [
 
   .fit-section {
     background: var(--da-bg);
-    padding: 64px 24px 72px;
+    /* Last section before the footer, so unlike the others it needs a floor of its
+       own — otherwise the CTA ends up sitting on the footer's edge. */
+    padding: var(--sp-section) var(--sp-gutter) var(--sp-group);
     text-align: center;
   }
 
@@ -1435,7 +1450,7 @@ const trustpilotReviews = [
   .fit-list--yes li::before { background: #16a34a; }
   .fit-list--no  li::before { background: #dc2626; }
 
-  .fit-cta { max-width: 760px; margin: 52px auto 0; }
+  .fit-cta { max-width: 760px; margin: var(--sp-group) auto 0; }
 
   .fit-cta-title {
     font-size: clamp(1.25rem, 3.2vw, 1.85rem);
@@ -1483,10 +1498,8 @@ const trustpilotReviews = [
        column of broken words. The fifth sits across the bottom on its own. */
     .stat-strip { grid-template-columns: repeat(2, 1fr); gap: 18px 0; margin-bottom: 20px; }
     .stat-strip li:nth-child(odd)::before { display: none; }
-    .fit-section { padding: 48px 16px 56px; }
     .fit-card { padding: 20px; border-radius: 14px; }
     .fit-list li { font-size: 0.86rem; }
-    .fit-cta { margin-top: 36px; }
     .fit-cta-btn { width: 100%; justify-content: center; }
   }
 
@@ -1494,7 +1507,7 @@ const trustpilotReviews = [
   /* ══════════════ 2b. RESULTS BREAKDOWN ══════════════ */
   .rb-section {
     background: var(--da-bg);
-    padding: 56px 24px 8px;
+    padding: var(--sp-section) var(--sp-gutter) 0;
     text-align: center;
   }
 
@@ -1510,7 +1523,7 @@ const trustpilotReviews = [
   /* Centred as a pair with only a small gap, so the figures sit against the text
      instead of being pushed to the opposite edge of the page. */
   .rb-top {
-    margin: 0 auto 36px;
+    margin: 0 auto 10px;
     display: flex;
     /* Bottom-aligned: the heading's last line sits on the same line as the figure,
        rather than the two blocks being centred against each other. */
@@ -1521,9 +1534,9 @@ const trustpilotReviews = [
   }
 
   .rb-heading {
-    /* The break is in the markup and the box shrinks to the longer of the two lines.
-       A max-width would leave the box wider than the text and open a gap before the
-       figures that no amount of closing the flex gap can remove. */
+    /* Shrinks to the text so no empty box sits between it and the figures. It runs on
+       one line wherever there is room and wraps on its own when there isn't, rather
+       than being forced with nowrap, which would push the row off a narrow screen. */
     width: fit-content;
     font-size: clamp(1.3rem, 3.4vw, 1.95rem);
     font-weight: 800;
@@ -1562,7 +1575,7 @@ const trustpilotReviews = [
     font-weight: 800;
     letter-spacing: -0.01em;
     color: #000;
-    margin: -22px auto 36px;
+    margin: 0 auto var(--sp-block);
   }
 
   /* A tight pair: the label sits directly on top of the figure, close enough that the
@@ -1682,15 +1695,16 @@ const trustpilotReviews = [
 
 
   @media (max-width: 760px) {
-    .rb-section { padding: 44px 16px 4px; }
     /* Stacked on a phone, with the figure given the room it can't have beside the
        text: heading, then the revenue large, then the line under it. */
     .rb-top { flex-direction: column; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .rb-heading { width: auto; font-size: clamp(1.3rem, 5.6vw, 1.7rem); line-height: 1.25; text-align: center; }
+    /* One line, as on desktop. 42 characters in roughly 358px of usable width needs
+       about 16px, so the size is tied to the viewport and held under that; nowrap
+       keeps it honest if the copy ever grows. */
+    .rb-heading { width: auto; font-size: clamp(0.8rem, 4vw, 1.3rem); line-height: 1.3; text-align: center; white-space: nowrap; }
     .rb-stack { justify-content: center; }
     .rb-amount { font-size: clamp(2.6rem, 13vw, 3.6rem); }
     .rb-days { font-size: clamp(0.8rem, 3vw, 1rem); }
-    .rb-without { margin: 0 auto 26px; }
     .rb-row { grid-template-columns: 1fr; gap: 20px; text-align: center; }
     /* Back into the flow, under the text: there is no column beside it to point
        across, so it points down at the video instead. */
