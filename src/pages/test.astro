@@ -1,0 +1,109 @@
+---
+// Scratch page for checking Brevo delivery against list 16. Shares nothing with the
+// funnel: no Layout, no GTM, no Meta Pixel, no tracking of any kind, no survey, no
+// sheets. A form, one fetch to /api/test-subscribe, and whatever Brevo answers.
+// Its endpoint refuses to run outside dev, so this page is inert if it ever deploys.
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Brevo test — list 16</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .card { width: 100%; max-width: 420px; background: #1e293b; border-radius: 14px; padding: 28px; }
+      h1 { font-size: 1.15rem; margin-bottom: 4px; }
+      .sub { font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px; }
+      label { display: block; font-size: 0.78rem; color: #94a3b8; margin-bottom: 5px; }
+      input {
+        width: 100%; padding: 11px 13px; margin-bottom: 14px; border-radius: 9px;
+        border: 1px solid #334155; background: #0f172a; color: #e2e8f0; font: inherit;
+      }
+      input:focus { outline: none; border-color: #3b82f6; }
+      button {
+        width: 100%; padding: 12px; border: none; border-radius: 9px; cursor: pointer;
+        background: #2563eb; color: #fff; font: inherit; font-weight: 700;
+      }
+      button:disabled { opacity: 0.6; cursor: default; }
+      pre {
+        margin-top: 16px; padding: 12px; border-radius: 9px; background: #0f172a;
+        border: 1px solid #334155; font-size: 0.75rem; white-space: pre-wrap;
+        word-break: break-all; color: #cbd5e1; display: none;
+      }
+      pre.ok { border-color: #16a34a; }
+      pre.bad { border-color: #dc2626; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Brevo test</h1>
+      <p class="sub">Adds a contact to list 16. Nothing else runs: no sheets, no pixel, no survey.</p>
+
+      <form id="f">
+        <label for="n">Name</label>
+        <input id="n" type="text" placeholder="First Last" autocomplete="off" />
+
+        <label for="e">Email</label>
+        <input id="e" type="email" placeholder="you@example.com" autocomplete="off" required />
+
+        <label for="p">Phone</label>
+        <input id="p" type="tel" placeholder="+96170123456" autocomplete="off" />
+
+        <button type="submit">Send to list 16</button>
+      </form>
+
+      <pre id="out"></pre>
+    </div>
+
+    <script is:inline>
+      var form = document.getElementById('f');
+      var out = document.getElementById('out');
+      var btn = form.querySelector('button');
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+        out.style.display = 'none';
+
+        fetch('/api/test-subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: document.getElementById('n').value,
+            email: document.getElementById('e').value,
+            phone: document.getElementById('p').value,
+          }),
+        })
+          .then(function (res) { return res.json().catch(function () { return { success: false, error: 'HTTP ' + res.status }; }); })
+          .then(function (data) {
+            out.className = data.success ? 'ok' : 'bad';
+            out.textContent = (data.success ? (data.status === 201 ? 'Created' : 'Updated') + ' on list ' + data.listId : 'Failed') + '\n\n' + JSON.stringify(data, null, 2);
+            out.style.display = 'block';
+          })
+          .catch(function (err) {
+            out.className = 'bad';
+            out.textContent = String(err);
+            out.style.display = 'block';
+          })
+          .finally(function () {
+            btn.disabled = false;
+            btn.textContent = 'Send to list 16';
+          });
+      });
+    </script>
+  </body>
+</html>
