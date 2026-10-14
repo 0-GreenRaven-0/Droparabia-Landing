@@ -40,6 +40,15 @@ const SHEET_ONLY_LISTS = new Set(['went_to_buy_course']);
 // "survey" is everyone who opened the survey and hasn't finished it yet.
 const NO_BREVO_LISTS = new Set(['survey']);
 
+// Brevo is switched off at the moment. The API key was revoked, so every contact call
+// came back 401 — and because the handler forwards Brevo's status, that 401 reached the
+// visitor as "Could not subscribe", losing the lead even though the sheet write would
+// have been fine. Leads now go to the sheets and to Meta only.
+//
+// To turn it back on: put a working key in BREVO_API_KEY (here and in the Cloudflare
+// dashboard) and set this to true. Nothing else needs changing.
+const BREVO_ENABLED = false;
+
 // The only lists a person submits with a keyboard in front of them, so the only ones
 // where refusing the address lets them fix it. Every other list arrives after the form
 // (the survey's own logs, a Calendly booking, a buy click): the visitor cannot correct
@@ -532,7 +541,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const listId = getListId(list);
-    const skipBrevo = NO_BREVO_LISTS.has(list);
+    const skipBrevo = !BREVO_ENABLED || NO_BREVO_LISTS.has(list);
     const sheetOnly = (SHEET_ONLY_LISTS.has(list) || skipBrevo) && !!getSheetId(list);
     if (!listId && !sheetOnly) {
       return json({ success: false, error: `Unknown or unconfigured list: ${list}` }, 400);

@@ -310,9 +310,14 @@ import AdClickCapture from '../components/AdClickCapture.astro';
             var params = new URLSearchParams();
             if (userData.name)  params.set('name', userData.name);
             if (userData.email) params.set('email', userData.email);
-            if (phoneE164) { params.set('a2', phoneE164); }
+            // a1/a2 count the event's custom questions only — Name and Email are built
+            // in and are not numbered. On this event Phone Number is the first custom
+            // question, so the number goes in a1; a2 is the "anything to help prepare"
+            // box and must be left alone. Re-check this if the event's questions are
+            // ever reordered, because the numbering shifts with them.
+            if (phoneE164) { params.set('a1', phoneE164); }
 
-            var calendlyUrl = 'https://calendly.com/d/cx6h-n22-cr7/45-min-droparabia-advisory-call';
+            var calendlyUrl = 'https://calendly.com/d/d322-m9m-zbg/vsl-landing-page-1-on-1-strategy-call';
             var query = params.toString().replace(/\+/g, '%20');
             if (query) calendlyUrl += '?' + query;
 
