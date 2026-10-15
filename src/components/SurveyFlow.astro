@@ -10,8 +10,13 @@ interface Props {
   /** Sits inside a page that already has its own header and background, rather than
       owning the viewport: no full-screen loader, no 100svh, no repeated wordmark. */
   embedded?: boolean;
+  /** Also log this survey to the standalone intake sheet (/get-to-know-you): one row
+      per person, marked "Didn't finish form" at question zero and updated to
+      "Finished form" at the end. Off everywhere else, so /survey and
+      /get-started/survey keep writing only to the lead pipeline. */
+  intakeLog?: boolean;
 }
-const { collectContact = false, embedded = false } = Astro.props;
+const { collectContact = false, embedded = false, intakeLog = false } = Astro.props;
 ---
 
 <style>
@@ -70,7 +75,7 @@ const { collectContact = false, embedded = false } = Astro.props;
 
 <EmailTypo />
 
-<div class:list={['survey-wrap', embedded && 'survey-wrap--embedded']} id="survey-content" style="display:none;" data-collect-contact={collectContact ? 'true' : 'false'}>
+<div class:list={['survey-wrap', embedded && 'survey-wrap--embedded']} id="survey-content" style="display:none;" data-collect-contact={collectContact ? 'true' : 'false'} data-intake-log={intakeLog ? 'true' : 'false'}>
   <div class="survey-card">
 
     {!embedded && (
@@ -265,6 +270,32 @@ const { collectContact = false, embedded = false } = Astro.props;
   // Brevo out for this list. Once per session, and never after they've finished, so
   // reopening the survey can't pull a qualified or booked lead back onto it.
   var surveyStartLog = Promise.resolve();
+
+  // The standalone intake sheet, on the pages that ask for it. Chained through one
+  // promise so the "didn't finish" row always lands before the "finished" update that
+  // rewrites it — otherwise a fast survey could overwrite its own row with the earlier
+  // state. Failures are swallowed: this log must never stop someone progressing.
+  var intakeLogOn = document.getElementById('survey-content').dataset.intakeLog === 'true';
+  var intakeLogChain = Promise.resolve();
+  function logIntake(status, picked) {
+    if (!intakeLogOn) return;
+    var user = storedUser();
+    if (!isValidEmail(user.email || '')) return;
+    intakeLogChain = intakeLogChain.then(function() {
+      return fetch('/api/get-to-know-you', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        body: JSON.stringify({
+          name: user.name || '',
+          email: user.email || '',
+          phone: user.phone || '',
+          status: status,
+          answers: picked || [],
+        }),
+      });
+    }).catch(function() {});
+  }
   function logSurveyStart() {
     try {
       var tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
@@ -387,6 +418,7 @@ const { collectContact = false, embedded = false } = Astro.props;
 
     // Handed to /choose-schedule so the booked row carries the answers too.
     var picked = collectedAnswers();
+    logIntake('finished', picked);
     try { sessionStorage.setItem('da_survey_answers', JSON.stringify(picked)); } catch(_) {}
 
     var user = storedUser();
@@ -553,6 +585,7 @@ const { collectContact = false, embedded = false } = Astro.props;
       if (data && data.success) storeMatch(user);
     }).catch(function () {});
     logSurveyStart();
+    logIntake('started');
 
     page++;
     pageHistory.push(page);
