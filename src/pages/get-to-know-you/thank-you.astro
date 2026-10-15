@@ -1,0 +1,90 @@
+---
+import AdClickCapture from '../../components/AdClickCapture.astro';
+---
+
+<!-- Where a qualified lead from /get-to-know-you lands. No calendar here: this funnel
+     has the team reach out, so the page only confirms that the form arrived. -->
+<html lang="en">
+  <head>
+    <AdClickCapture />
+    <script is:inline>window.dataLayer = window.dataLayer || [];</script>
+    <!-- Google Tag Manager -->
+    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NTGWNM69');</script>
+    <!-- End Google Tag Manager -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Nothing to index: this page only makes sense at the end of the form. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Thank you — Droparabia</title>
+    <meta name="description" content="Thanks for completing the form. Our team will be in touch soon." />
+    <link rel="icon" type="image/png" href="/Droparabia.png" />
+
+    <style is:global>
+      @font-face { font-family: 'IBrand'; src: url('/fonts/ibrand.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root { --blue-start: #2563eb; --blue-end: #29b6f6; --text: #111118; --text-muted: #55556a; }
+
+      body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        background: #F1F5F9;
+        color: var(--text);
+        min-height: 100svh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        -webkit-font-smoothing: antialiased;
+      }
+      @media (max-width: 768px) { body { background: #fff; } }
+
+      /* The same soft glow behind the headline as the booking confirmation, so the two
+         confirmations read as the same product. */
+      .ty-card { position: relative; max-width: 640px; text-align: center; overflow: hidden; padding: 2.5rem 0; }
+      .ty-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+      }
+
+      .ty-logo { width: 148px; height: auto; margin: 0 auto 1.75rem; display: block; }
+
+      .ty-headline {
+        font-family: 'IBrand', sans-serif;
+        font-weight: normal;
+        font-size: clamp(2.25rem, 7vw, 3.75rem);
+        line-height: 1.05;
+        letter-spacing: 0.01em;
+        margin-bottom: 0.75rem;
+      }
+
+      .ty-headline .hl {
+        background: linear-gradient(90deg, var(--blue-start), var(--blue-end));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: var(--blue-start);
+      }
+
+      .ty-sub { font-size: clamp(1.05rem, 2.6vw, 1.3rem); color: var(--text-muted); line-height: 1.55; }
+    </style>
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NTGWNM69"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <main class="ty-card">
+      <img src="/Droparabia.png" alt="Droparabia" class="ty-logo" width="296" height="80" />
+      <h1 class="ty-headline">Thank you for your <span class="hl">time!</span></h1>
+      <p class="ty-sub">Our team will contact you very soon!</p>
+    </main>
+  </body>
+</html>

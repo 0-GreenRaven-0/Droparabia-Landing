@@ -12,8 +12,8 @@ import { getGoogleAccessToken } from '../../lib/google-auth';
 // the email address, so a person who comes back and finishes later updates their row
 // rather than adding a second one.
 
-const HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Answers', 'Status'];
-const LAST_COL = 'F';
+const HEADERS = ['Name', 'Email', 'Phone', 'Date', 'Answers', 'Status', 'Qualification'];
+const LAST_COL = 'G';
 const EMAIL_COL_INDEX = 1; // B
 
 type Answer = { q: string; a: string };
@@ -142,6 +142,11 @@ export const POST: APIRoute = async ({ request }) => {
       previous[3] || new Date().toLocaleDateString('en-GB'),
       answers.length > 0 ? formatAnswers(answers) : (previous[4] || ''),
       status,
+      // Blank until the survey is finished: at question zero nobody has been judged
+      // yet, and a guess in this column would read as a verdict.
+      typeof body.qualified === 'boolean'
+        ? (body.qualified ? 'Qualified' : 'Unqualified')
+        : (previous[6] || ''),
     ];
 
     // RAW, so nothing in a typed answer is reinterpreted as a formula or a date.

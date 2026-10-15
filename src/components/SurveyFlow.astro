@@ -15,8 +15,18 @@ interface Props {
       "Finished form" at the end. Off everywhere else, so /survey and
       /get-started/survey keep writing only to the lead pipeline. */
   intakeLog?: boolean;
+  /** Where a qualified lead lands. The default books a call; /get-to-know-you sends
+      them to a thank-you page instead, because that funnel has the team reach out
+      rather than the lead pick a slot. Unqualified leads go to the low-ticket offer
+      either way. */
+  qualifiedDest?: string;
 }
-const { collectContact = false, embedded = false, intakeLog = false } = Astro.props;
+const {
+  collectContact = false,
+  embedded = false,
+  intakeLog = false,
+  qualifiedDest = '/choose-schedule',
+} = Astro.props;
 ---
 
 <style>
@@ -75,7 +85,7 @@ const { collectContact = false, embedded = false, intakeLog = false } = Astro.pr
 
 <EmailTypo />
 
-<div class:list={['survey-wrap', embedded && 'survey-wrap--embedded']} id="survey-content" style="display:none;" data-collect-contact={collectContact ? 'true' : 'false'} data-intake-log={intakeLog ? 'true' : 'false'}>
+<div class:list={['survey-wrap', embedded && 'survey-wrap--embedded']} id="survey-content" style="display:none;" data-collect-contact={collectContact ? 'true' : 'false'} data-intake-log={intakeLog ? 'true' : 'false'} data-qualified-dest={qualifiedDest}>
   <div class="survey-card">
 
     {!embedded && (
@@ -277,7 +287,7 @@ const { collectContact = false, embedded = false, intakeLog = false } = Astro.pr
   // state. Failures are swallowed: this log must never stop someone progressing.
   var intakeLogOn = document.getElementById('survey-content').dataset.intakeLog === 'true';
   var intakeLogChain = Promise.resolve();
-  function logIntake(status, picked) {
+  function logIntake(status, picked, qualified) {
     if (!intakeLogOn) return;
     var user = storedUser();
     if (!isValidEmail(user.email || '')) return;
@@ -292,6 +302,9 @@ const { collectContact = false, embedded = false, intakeLog = false } = Astro.pr
           phone: user.phone || '',
           status: status,
           answers: picked || [],
+          // Left out at question zero: nobody is qualified or not until they finish,
+          // and sending it early would stamp the column with a guess.
+          qualified: typeof qualified === 'boolean' ? qualified : null,
         }),
       });
     }).catch(function() {});
@@ -418,7 +431,6 @@ const { collectContact = false, embedded = false, intakeLog = false } = Astro.pr
 
     // Handed to /choose-schedule so the booked row carries the answers too.
     var picked = collectedAnswers();
-    logIntake('finished', picked);
     try { sessionStorage.setItem('da_survey_answers', JSON.stringify(picked)); } catch(_) {}
 
     var user = storedUser();
@@ -431,6 +443,10 @@ const { collectContact = false, embedded = false, intakeLog = false } = Astro.pr
     // was ever reached at all. "Not ready yet" doesn't count against someone who has
     // the funds (see endsSurvey).
     var qualified = !(endsSurvey('budget') || endsSurvey('howSoon'));
+
+    // Logged here, not earlier: the intake sheet records the verdict alongside the
+    // answers, so the call has to come after qualification is decided.
+    logIntake('finished', picked, qualified);
 
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: 'survey_completed', survey_qualified: qualified, user_name: nameVal, user_email: emailVal, user_phone: phoneVal });
@@ -452,7 +468,7 @@ const { collectContact = false, embedded = false, intakeLog = false } = Astro.pr
     } catch(_) {}
 
     var dest = qualified
-      ? '/choose-schedule'
+      ? (document.getElementById('survey-content').dataset.qualifiedDest || '/choose-schedule')
       : '/the-ultimate-copy-program?unq=' + encodeURIComponent(token);
 
     // No stored contact info (they somehow reached the survey without the VSL
