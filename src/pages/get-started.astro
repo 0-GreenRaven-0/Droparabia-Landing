@@ -55,8 +55,6 @@ const trustpilotReviews = [
         // there would look like tracking had broken rather than like a choice.
         (function () {
           try { sessionStorage.setItem('da_headline_variant', 'fomo'); } catch (_) {}
-          window.dataLayer = window.dataLayer || [];
-          window.dataLayer.push({ event: 'headline_variant_assigned', headline_variant: 'fomo' });
         })();
       </script>
 

@@ -394,8 +394,9 @@ import AdClickCapture from '../components/AdClickCapture.astro';
           if (callBooked || window.__daBookingHandled) return;
           callBooked = true;
           window.__daBookingHandled = true;
-          window.dataLayer = window.dataLayer || [];
-          window.dataLayer.push({ event: 'call_booked' });
+          // Google Tag Manager: past both guards above, and the message is already
+          // limited to calendly.com's own origin, so this is one real booking.
+          try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'Booked_Lead' }); } catch(_) {}
           showThankYouView();
 
           var scheduleEventId = newEventId();
@@ -490,13 +491,6 @@ import AdClickCapture from '../components/AdClickCapture.astro';
           }
         });
       }
-
-      window.addEventListener('beforeunload', function() {
-        if (!callBooked) {
-          window.dataLayer = window.dataLayer || [];
-          window.dataLayer.push({ event: 'call_not_booked' });
-        }
-      });
     </script>
 
     <!-- Thank-you view FAQ expand/collapse animation -->

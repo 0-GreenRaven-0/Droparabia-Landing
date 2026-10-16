@@ -56,8 +56,6 @@ const trustpilotReviews = [
         // there would look like tracking had broken rather than like a choice.
         (function () {
           try { sessionStorage.setItem('da_headline_variant', 'fomo'); } catch (_) {}
-          window.dataLayer = window.dataLayer || [];
-          window.dataLayer.push({ event: 'headline_variant_assigned', headline_variant: 'fomo' });
         })();
       </script>
 
@@ -1985,8 +1983,6 @@ const trustpilotReviews = [
 
       sessionStorage.setItem('da_subscribed', '1');
       sessionStorage.setItem('userData', JSON.stringify({ name: nameVal, email: emailVal, phone: smsVal }));
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'subscription_success_modal' });
       // Meta Pixel advanced matching: every page's pixel init reads this back and passes
       // it as { em, ph } (/choose-schedule also passes fn and ln, for Schedule). Plain
       // values; the pixel hashes them itself. The phone becomes digits only with the 961
@@ -2021,6 +2017,14 @@ const trustpilotReviews = [
         }
       } catch {}
 
+      // Google Tag Manager Lead. Same gate as the Meta Lead above — reached only once the
+      // API has confirmed the subscription — and wrapped the same way, so a blocked tag
+      // manager can't drop them into the error path.
+      try {
+        (window as any).dataLayer = (window as any).dataLayer || [];
+        (window as any).dataLayer.push({ event: 'Lead' });
+      } catch {}
+
       successEl.style.display = 'block';
       btn.textContent = 'Starting video...';
       closeModal();
@@ -2050,6 +2054,42 @@ const trustpilotReviews = [
   player.on('ended', saveWatch);
   window.addEventListener('pagehide', saveWatch);
 
+  // Google Tag Manager: Watch_count and Watch_rate.
+  //
+  // Watch_count is the first moment of real playback in a session. It is set from the
+  // restored watch time, so a reload (or coming back to the tab) after they already
+  // watched does not count them a second time. It is deliberately not tied to the
+  // player's 'play' event: an unsubscribed visitor's play click fires that, then gets
+  // paused and shown the modal, and they have not watched anything.
+  let watchCounted = watchedSeconds > 0;
+
+  // Watch_rate is how far they got, as a percentage, using the same definition as the
+  // sheet's VSL % column: the furthest point reached over the video's length. The page
+  // can only report one viewer's figure; GA4 averages it across viewers. It is sent when
+  // they leave or the video ends, and only if they got further than the last report, so
+  // the hidden-then-pagehide pair on a close sends once, and a reload that watched
+  // nothing new sends nothing. The restored figure counts as already reported.
+  let lastRateFurthest = furthestSeconds;
+  function pushWatchRate() {
+    const dur = player.duration || 0;
+    if (!(dur > 0) || watchedSeconds <= 0 || furthestSeconds <= lastRateFurthest) return;
+    lastRateFurthest = furthestSeconds;
+    try {
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      (window as any).dataLayer.push({
+        event: 'Watch_rate',
+        watch_rate: Math.min(100, Math.round((furthestSeconds / dur) * 100)),
+      });
+    } catch {}
+  }
+  player.on('ended', pushWatchRate);
+  window.addEventListener('pagehide', pushWatchRate);
+  // visibilitychange is the one signal mobile browsers reliably give before they
+  // background or discard a tab; pagehide alone misses those.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') pushWatchRate();
+  });
+
   // Let them scrub freely within what they've already watched — rewatching a scene
   // is fine — but snap back any drag/click/arrow-key seek that lands past the
   // furthest point reached. 'seeking' fires with the target time already applied to
@@ -2066,10 +2106,7 @@ const trustpilotReviews = [
   // once it is, for a subscribed visitor who reloaded mid-video.
   player.on('loadedmetadata', updateWatchProgressUI);
 
-  // Fire video_complete when the user reaches 80% of the video
-  let videoCompleteTracked = false;
   player.on('timeupdate', () => {
-    const dur = player.duration;
     const t = player.currentTime;
 
     const now = performance.now();
@@ -2080,6 +2117,13 @@ const trustpilotReviews = [
     if (played) {
       watchedSeconds += delta;
       if (t > furthestSeconds) furthestSeconds = t;
+      if (!watchCounted) {
+        watchCounted = true;
+        try {
+          (window as any).dataLayer = (window as any).dataLayer || [];
+          (window as any).dataLayer.push({ event: 'Watch_count' });
+        } catch {}
+      }
     } else if (t > furthestSeconds + SEEK_CLAMP_BUFFER) {
       // A skip ahead the 'seeking' clamp didn't catch. Some browsers (Safari) can
       // deliver a tick at the new position before 'seeking' fires, which used to count
@@ -2089,11 +2133,5 @@ const trustpilotReviews = [
     }
     if (watchedSeconds - lastSaved >= 2) { lastSaved = watchedSeconds; saveWatch(); }
     updateWatchProgressUI();
-
-    if (!videoCompleteTracked && dur > 0 && t >= dur * 0.8) {
-      videoCompleteTracked = true;
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'video_complete' });
-    }
   });
 </script>

@@ -282,8 +282,6 @@ const {
       var tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}');
       tokens.takeSurvey = Math.random().toString(36).substring(2) + Date.now().toString(36);
       sessionStorage.setItem('userTokens', JSON.stringify(tokens));
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'survey_started' });
     } catch(_) {}
 
     var loaderEl = document.getElementById('survey-loader');
@@ -444,8 +442,12 @@ const {
     // answers, so the call has to come after qualification is decided.
     logIntake('finished', picked, qualified);
 
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: 'survey_completed', survey_qualified: qualified, user_name: nameVal, user_email: emailVal, user_phone: phoneVal });
+    // Google Tag Manager: the verdict. completeSurvey is guarded by `submitted`, so this
+    // runs once per survey, and exactly one of the two events fires.
+    try {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: qualified ? 'Qualified_Lead' : 'Unqualified_Lead' });
+    } catch(_) {}
 
     var tokens = {};
     try { tokens = JSON.parse(sessionStorage.getItem('userTokens') || '{}'); } catch(_) {}
@@ -575,8 +577,6 @@ const {
     contactDone = true;
     var user = { name: nameVal, email: emailVal, phone: phoneVal };
     try { sessionStorage.setItem('userData', JSON.stringify(user)); } catch(_) {}
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: 'subscription_success_get_started' });
 
     // The two are deliberately decoupled: the next question shows straight away, while
     // Lead waits for the API to accept the address. Nobody waits on the network, and an
@@ -594,7 +594,12 @@ const {
     }).then(function (res) {
       return res.json().catch(function () { return {}; });
     }).then(function (data) {
-      if (data && data.success) storeMatch(user);
+      if (data && data.success) {
+        storeMatch(user);
+        // Google Tag Manager Lead, on the server's confirmation like the homepage one.
+        // This is the same subscription (list "vsl"), just made on a different page.
+        try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'Lead' }); } catch(_) {}
+      }
     }).catch(function () {});
     logSurveyStart();
     logIntake('started');
@@ -655,8 +660,6 @@ const {
       if (typeof window.fbq === 'function') {
         window.fbq('trackCustom', 'QualifiedLead', {}, { eventID: id });
       }
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'survey_qualified', event_id: id });
     } catch(_) {}
   }
 
@@ -692,11 +695,4 @@ const {
     pageHistory.push(page);
     updateUI();
   }
-
-  window.addEventListener('beforeunload', function() {
-    if (!submitted) {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'survey_abandoned' });
-    }
-  });
 </script>
