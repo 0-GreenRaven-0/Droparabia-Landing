@@ -596,8 +596,15 @@ import AdClickCapture from '../components/AdClickCapture.astro';
                 A free guide you can download for free, it contains everything you need to know
                 about Dropshipping and how to get started with it in Lebanon.
               </p>
+              <!-- Served from this site rather than Drive: no sign-in wall, no preview
+                   screen, and the file can't be moved or unshared out from under the
+                   button. The spaces in the filename are encoded so the href is a valid
+                   URL. `download` saves it straight away instead of opening the
+                   browser's PDF viewer, and names the saved file; target/rel stay as the
+                   fallback for anything that ignores the attribute. -->
               <a
-                href="https://drive.google.com/file/d/1x_8fS2uGkQ_gUJlWQXInbVxuXqLZp-Lt/view"
+                href="/Local%20Drop%20shipping%20for%20beginners.pdf"
+                download="The Local Dropshipping Guide for Beginners.pdf"
                 target="_blank"
                 rel="noopener"
                 class="unq-btn free-guide-btn"
