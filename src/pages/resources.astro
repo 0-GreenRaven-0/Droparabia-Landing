@@ -1,0 +1,183 @@
+---
+import AdClickCapture from '../components/AdClickCapture.astro';
+
+// A link the team sends out directly, mostly in Instagram DMs. Everything a visitor
+// needs is above or just below the fold: two cards, each with a cover, a title, a line
+// of description and one button. No nav, no funnel, nothing else to do.
+
+const PDF = '/Local%20Drop%20shipping%20for%20beginners.pdf';
+
+const RESOURCES = [
+  {
+    cover: '/free-guide-cover.png',
+    alt: 'The Local Dropshipping Guide for Beginners',
+    title: 'The Local Dropshipping Guide for Beginners',
+    desc: 'Everything you need to know about dropshipping and how to get started with it in Lebanon.',
+    cta: 'Download for free',
+    href: PDF,
+    // Saves the file straight away rather than opening the browser's PDF viewer, and
+    // gives it a readable name on the way down.
+    download: 'The Local Dropshipping Guide for Beginners.pdf',
+    primary: true,
+  },
+  {
+    cover: '/copy-program.png',
+    alt: 'The Ultimate Copy Program',
+    title: 'The Ultimate Copy Program',
+    desc: 'A high-income skill you can learn to sell to online businesses. All you need is a laptop and two hours a day.',
+    cta: 'Learn more',
+    href: '/the-ultimate-copy-program',
+    download: null,
+    primary: false,
+  },
+];
+---
+
+<html lang="en">
+  <head>
+    <AdClickCapture />
+    <script is:inline>window.dataLayer = window.dataLayer || [];</script>
+    <!-- Google Tag Manager -->
+    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NTGWNM69');</script>
+    <!-- End Google Tag Manager -->
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Free Resources | Droparabia</title>
+    <meta name="description" content="Free guides and programs from Droparabia to help you start and grow an online business in Lebanon." />
+    <link rel="icon" type="image/png" href="/Droparabia.png" />
+    <link rel="canonical" href="https://join.droparabia.com/resources" />
+
+    <!-- The link gets pasted into Instagram DMs, so the preview card is the first thing
+         anyone sees. Absolute URLs: a relative one resolves against instagram.com. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://join.droparabia.com/resources" />
+    <meta property="og:title" content="Free Resources | Droparabia" />
+    <meta property="og:description" content="Free guides and programs to help you start and grow an online business in Lebanon." />
+    <meta property="og:image" content="https://join.droparabia.com/free-guide-cover.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Free Resources | Droparabia" />
+    <meta name="twitter:description" content="Free guides and programs to help you start and grow an online business in Lebanon." />
+    <meta name="twitter:image" content="https://join.droparabia.com/free-guide-cover.png" />
+
+    <style is:global>
+      @font-face { font-family: 'IBrand'; src: url('/fonts/ibrand.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --ink: #0f172a;
+        --ink-soft: #475569;
+        --blue: #2563EB;
+        --navy: #16326B;
+        --line: #E2E8F0;
+      }
+
+      body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        background: #F1F5F9;
+        color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+        padding: 2.5rem 1.25rem 3rem;
+      }
+
+      .wrap { max-width: 980px; margin: 0 auto; }
+
+      .masthead { text-align: center; margin-bottom: 2.25rem; }
+      .masthead h1 {
+        font-family: 'IBrand', sans-serif;
+        font-weight: normal;
+        font-size: clamp(2rem, 7vw, 2.9rem);
+        line-height: 1.1;
+      }
+
+      /* Two across where there is room, one on a phone. auto-fit rather than a fixed
+         count so a third card later needs no change here. */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+
+      /* A column, so the button sits on the same line across both cards however long
+         the description runs. */
+      .card {
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 1.75rem 1.5rem 1.5rem;
+        text-align: center;
+      }
+
+      /* A fixed box with contain, not a max-width: the covers are different shapes
+         (the guide is a portrait book, the program a landscape mockup), so sizing them
+         by width left one towering over the other. Each now scales to fit the same
+         area and sits centred in it, so both cards read as equal. */
+      .card-cover {
+        display: block;
+        width: 100%;
+        height: 320px;
+        object-fit: contain;
+        margin: 0 auto 1.25rem;
+        filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.28));
+      }
+
+      .card-title { font-size: 1.15rem; font-weight: 800; line-height: 1.3; margin-bottom: 0.6rem; }
+      /* Pushes the button down, so both cards' buttons align. */
+      .card-desc { font-size: 0.95rem; color: var(--ink-soft); line-height: 1.6; margin-bottom: 1.5rem; flex: 1; }
+
+      .card-cta {
+        display: block;
+        padding: 0.85rem 1.25rem;
+        border-radius: 11px;
+        font-size: 1rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+      .card-cta:hover { transform: translateY(-1px); }
+      .card-cta--primary { background: var(--blue); color: #fff; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); }
+      .card-cta--primary:hover { box-shadow: 0 6px 18px rgba(37, 99, 235, 0.38); }
+      .card-cta--secondary { background: #fff; color: var(--blue); border: 2px solid var(--blue); }
+      .card-cta--secondary:hover { background: #EFF6FF; }
+
+      @media (max-width: 480px) {
+        body { padding: 2rem 1rem 2.5rem; }
+        .card { padding: 1.5rem 1.25rem 1.25rem; }
+        .card-cover { height: 250px; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NTGWNM69"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <div class="wrap">
+      <header class="masthead">
+        <h1>Freebies &amp; other resources</h1>
+      </header>
+
+      <main class="grid">
+        {RESOURCES.map((item) => (
+          <article class="card">
+            <img src={item.cover} alt={item.alt} class="card-cover" width="800" height="1000" />
+            <h2 class="card-title">{item.title}</h2>
+            <p class="card-desc">{item.desc}</p>
+            <a
+              href={item.href}
+              download={item.download}
+              class:list={['card-cta', item.primary ? 'card-cta--primary' : 'card-cta--secondary']}
+            >{item.cta}</a>
+          </article>
+        ))}
+      </main>
+    </div>
+  </body>
+</html>
