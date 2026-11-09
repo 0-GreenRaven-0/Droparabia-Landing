@@ -7,12 +7,16 @@ const SUBSCRIPTION_LABELS: Record<string, string> = {
   '6_months': '6 Months',
 };
 
+// Plain list IDs, not secrets — committed directly so this route works without any
+// Cloudflare env var setup. BREVO_API_KEY (the actual credential) still comes from
+// the environment, same as every other route on this site.
+const LIST_IDS: Record<string, number> = {
+  '6_months': 26,
+  '12_months': 27,
+};
+
 function getListId(subscriptionType: string): number | null {
-  switch (subscriptionType) {
-    case '6_months': return Number(import.meta.env.BREVO_LIST_6_MONTHS) || null;
-    case '12_months': return Number(import.meta.env.BREVO_LIST_12_MONTHS) || null;
-    default: return null;
-  }
+  return LIST_IDS[subscriptionType] ?? null;
 }
 
 function json(data: unknown, status: number): Response {
