@@ -1,0 +1,213 @@
+---
+const title = 'Registration Complete — Droparabia';
+const description = 'The customer has been registered for their Droparabia subscription.';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/Droparabia.png" type="image/png" />
+    <link rel="shortcut icon" href="/Droparabia.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/Droparabia.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preload" href="/fonts/ibrand.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body>
+    <main class="page">
+      <a href="/register" class="brand" aria-label="Droparabia">
+        <img src="/Droparabia.png" alt="" class="brand-logo" width="72" height="72" />
+        <span class="brand-name">Droparabia</span>
+      </a>
+
+      <div class="card">
+        <span class="check-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </span>
+
+        <h1 class="card-title">Customer registered</h1>
+        <p class="card-sub">Their confirmation email is on its way.</p>
+
+        <!-- This screen is seen by whoever just registered the customer, not by the
+             customer — so these are instructions to pass along, not notes addressed to
+             the customer directly. Brevo mail from a new sender routinely lands in
+             Gmail's Promotions tab rather than Primary on the first send, so this heads
+             off the "I never got it" follow-up before it happens.
+             No sender address is set up in this project — the confirmation email's
+             "from" lives in Brevo's own automation — so the second instruction is kept
+             to the action (drag it over, confirm "yes, do this for future emails too")
+             rather than naming an address that might be wrong. -->
+        <div class="promo-note">
+          <p class="promo-lead"><strong>Before you go, let the customer know:</strong></p>
+          <ol class="promo-steps">
+            <li>If the confirmation email isn't in Primary, check the <strong>Promotions</strong> tab — Gmail often sorts a first email from us in there.</li>
+            <li>Once found, drag it into the <strong>Primary</strong> tab (or use the ⋮ menu → Move to → Primary) and confirm "yes" when Gmail asks if it should do this for future emails too — that keeps the rest of their emails from us out of Promotions.</li>
+          </ol>
+        </div>
+
+        <a href="/register" class="again-link">Register another customer</a>
+      </div>
+    </main>
+
+    <style is:global>
+      @font-face {
+        font-family: 'IBrand';
+        src: url('/fonts/ibrand.woff2') format('woff2'),
+             url('/fonts/ibrand.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: block;
+      }
+
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --blue: #2563eb;
+        --blue-light: #eff6ff;
+        --blue-border: #bfdbfe;
+        --white: #ffffff;
+        --gray-50: #f8fafc;
+        --gray-200: #e2e8f0;
+        --gray-500: #64748b;
+        --gray-600: #475569;
+        --gray-900: #0f172a;
+        --green: #16a34a;
+        --green-light: #f0fdf4;
+        --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        --font-brand: 'IBrand', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        --radius: 10px;
+        --radius-lg: 16px;
+      }
+
+      html { background: var(--gray-50); }
+
+      body {
+        font-family: var(--font-body);
+        color: var(--gray-900);
+        background: var(--gray-50);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      img { max-width: 100%; display: block; }
+    </style>
+
+    <style>
+      .page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: clamp(32px, 6vw, 64px) 20px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        margin-bottom: clamp(24px, 4vw, 40px);
+      }
+
+      .brand-logo { width: clamp(40px, 5vw, 56px); height: auto; object-fit: contain; }
+
+      .brand-name {
+        font-family: var(--font-brand);
+        font-size: clamp(1.5rem, 3.4vw, 2rem);
+        line-height: 1;
+        color: var(--gray-900);
+        letter-spacing: 0.01em;
+      }
+
+      .card {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        padding: clamp(28px, 4.5vw, 40px);
+        width: 100%;
+        max-width: 480px;
+        text-align: center;
+      }
+
+      .check-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--green-light);
+        color: var(--green);
+        margin-bottom: 18px;
+      }
+
+      .check-badge svg { width: 26px; height: 26px; }
+
+      .card-title {
+        font-family: var(--font-brand);
+        font-weight: 400;
+        font-size: 1.6rem;
+        color: var(--gray-900);
+        margin-bottom: 6px;
+      }
+
+      .card-sub {
+        font-size: 0.95rem;
+        color: var(--gray-500);
+        margin-bottom: 20px;
+      }
+
+      .promo-note {
+        font-size: 0.85rem;
+        line-height: 1.55;
+        color: var(--gray-600);
+        background: var(--blue-light);
+        border: 1px solid var(--blue-border);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        margin-bottom: 24px;
+        text-align: left;
+      }
+
+      .promo-note strong { color: var(--blue); }
+
+      .promo-lead { margin-bottom: 8px; }
+
+      .promo-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-left: 1.1em;
+      }
+
+      .promo-steps li { padding-left: 2px; }
+
+      .again-link {
+        display: inline-block;
+        padding: 0.7rem 1.4rem;
+        background: linear-gradient(135deg, var(--blue), #3b82f6);
+        color: var(--white);
+        font-weight: 700;
+        font-size: 0.95rem;
+        border-radius: var(--radius);
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+
+      .again-link:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.3);
+      }
+    </style>
+  </body>
+</html>

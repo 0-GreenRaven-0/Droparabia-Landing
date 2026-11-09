@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { siInstagram, siThreads, siYoutube } from 'simple-icons';
 import PhoneCountrySelect from '../components/PhoneCountrySelect.astro';
 import EmailTypo from '../components/EmailTypo.astro';
+import HexBackground from '../components/HexBackground.astro';
 
 // Trustpilot's own rating blocks (512x96) from /public. Only the 5 and 4.5 star blocks
 // exist, which covers every review below; a lower-rated review needs its own asset
@@ -10,7 +11,7 @@ import EmailTypo from '../components/EmailTypo.astro';
 const STAR_BLOCKS: Record<string, string> = { '5': '/stars-5.svg', '4.5': '/stars-4.5.svg' };
 
 // Split into words in the markup below, so each word carries the gradient on its own.
-const HEADLINE = 'How +800 Lebanese built a successful online store without owning a single product';
+const HEADLINE = 'How 800+ Lebanese launched their e-com businesses without owning a single product';
 
 // Real Trustpilot reviews, copied verbatim (newest first). Dates are the review dates
 // shown on Trustpilot; every one of these is 5 stars.
@@ -29,20 +30,23 @@ const trustpilotReviews = [
 
   <EmailTypo />
 
-  <!-- ═══════════ SITE HEADER ═══════════ -->
-  <header class="site-header">
-    <div class="site-header-inner">
-      <a href="/" class="corner-brand" aria-label="Droparabia">
-        <img src="/Droparabia.png" alt="" class="corner-brand-logo" width="40" height="40" />
-        <span class="corner-brand-name">Droparabia</span>
-      </a>
-      <a href="#case-studies" class="site-header-link">Latest Reviews</a>
-    </div>
-  </header>
 
   <!-- ═══════════ 1. HEADLINE + GATED VSL ═══════════ -->
   <section class="hero">
+    <div class="corner-hex-tl">
+      <HexBackground id="corner-hex-tl" cutCorner={false} wholeOnly scale={0.55} roundFarCorner farCornerRadius={0.85} />
+    </div>
+
     <div class="wrap">
+
+      <!-- Stands where the header bar was. Same lockup, centred and much larger, so the
+           page opens on the brand instead of a nav strip. -->
+      <a href="/" class="hero-brand" aria-label="Droparabia">
+        <img src="/Droparabia.png" alt="" class="hero-brand-logo" width="110" height="110" />
+        <span class="hero-brand-name">Droparabia</span>
+      </a>
+
+      <p class="hero-disclaimer">Droparabia provides tools and guidance for building and running an e-commerce business and not a "get-rich-quick" scheme</p>
 
       <!-- One span per word: the gradient is clipped to each word's own height, so every
            word runs black into blue. Across the whole block it would instead stretch over
@@ -59,8 +63,7 @@ const trustpilotReviews = [
         })();
       </script>
 
-      <p class="headline-sub headline-sub--lead headline-sub-red">This isn't old dropshipping, traditional e-com or a money making course</p>
-      <p class="headline-sub headline-sub--detail">It's a platform that finds you <strong>high-selling products</strong> in the Lebanese market &amp; <strong>delivers them to your customer's doorstep</strong></p>
+      <p class="headline-sub">Using an <strong>AI-powered platform</strong> that finds in-demand products for the Lebanese market and <strong>delivers them to your customer's doorstep</strong></p>
 
       <ul class="stat-strip">
         <li><span class="stat-figure">$300K-$400K</span><span class="stat-label">generated in revenue by all sellers</span></li>
@@ -69,11 +72,18 @@ const trustpilotReviews = [
         <li><span class="stat-figure">Official Shopify Partner</span></li>
       </ul>
 
-      <!-- VSL — plain Plyr play button; subscription is gated behind the play click itself -->
-      <div class="vsl-wrapper">
-        <video id="vsl-player" playsinline preload="metadata">
-          <source src="/vsl.mp4" type="video/mp4" />
-        </video>
+      <!-- VSL — plain Plyr play button; subscription is gated behind the play click itself.
+           The stage exists so the hex grid sits behind the player alone rather than the
+           whole hero; its padding is what lets the grid show around the video instead of
+           being completely covered by it. -->
+      <div class="vsl-stage">
+        <HexBackground id="vsl-hex" cutCorner={false} wholeOnly scale={0.62} dropTopCorners alignTopEdge />
+
+        <div class="vsl-wrapper">
+          <video id="vsl-player" playsinline preload="metadata">
+            <source src="/vsl.mp4" type="video/mp4" />
+          </video>
+        </div>
       </div>
 
       <!-- Watch-progress bar — hidden until they subscribe, then tracks how far into
@@ -108,6 +118,10 @@ const trustpilotReviews = [
       Weekly latest results
       <svg class="heading-arrow" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L12 22 M4 15 L12 24 L20 15" stroke="url(#arrowGrad4)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="arrowGrad4" x1="12" y1="2" x2="12" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#06a2d1"/><stop offset="100%" stop-color="#2745ff"/></linearGradient></defs></svg>
     </h2>
+
+    <!-- Sits with the results it qualifies, not in the footer: the claim and the
+         caveat have to be read together. -->
+    <p class="proof-disclaimer">Results vary and depend on each person's effort and circumstances. No earnings are guaranteed. Any results shared are individual experiences, not typical outcomes.</p>
 
     <!-- Carousel ported verbatim from droparabia-official's reviews page
          (CaseStudyCarousels.astro): same slide set with the newest testimonials first,
@@ -148,41 +162,85 @@ const trustpilotReviews = [
     </div>
   </section>
 
-  <!-- ═══════════ 2b. RESULTS BREAKDOWN ═══════════ -->
-  <section class="rb-section" aria-labelledby="rb-heading">
-    <!-- The sentence runs into the figures: plain text on the left, the stacked result
-         on the right finishing it. -->
-    <div class="rb-top">
-      <h2 class="rb-heading" id="rb-heading">Karim went from testing his 1st product to</h2>
 
-      <div class="rb-stack">
-        <p class="rb-amount">$8,297</p>
-        <p class="rb-days">In 90 days</p>
+  <!-- ═══════════ 2b. VIDEO WINS ═══════════ -->
+  <!-- Light section, matching the rest of the page — no separate dark palette.
+       Checklist bullets and two of the three names are placeholders; replace them
+       before this ships. Plain grid, not a carousel: with exactly three cards there's
+       nothing to page through, so no nav buttons either. -->
+  <section class="vt-section" aria-labelledby="vt-heading">
+    <h2 class="vt-heading" id="vt-heading">Recent Success stories</h2>
+
+    <div class="vt-grid">
+      <div class="vt-card-outer">
+        <span class="vt-pill">Karim — Accounting</span>
+        <a class="vt-card" href="https://youtu.be/pmKmT072hV4" target="_blank" rel="noopener" aria-label="Watch on YouTube">
+          <img src="/karim.webp" alt="" class="vt-thumb" loading="lazy" width="480" height="270" />
+          <span class="vt-title">How Karim Made His First $8,297 In 90 Days In Lebanon</span>
+          <span class="vt-play"><svg viewBox="0 0 68 48" aria-hidden="true"><path class="vt-play-bg" d="M66.5 7.7a8.6 8.6 0 0 0-6-6C55.2 0 34 0 34 0S12.8 0 7.5 1.6a8.6 8.6 0 0 0-6 6A89.6 89.6 0 0 0 0 24a89.6 89.6 0 0 0 1.5 16.3 8.6 8.6 0 0 0 6 6C12.8 48 34 48 34 48s21.2 0 26.5-1.6a8.6 8.6 0 0 0 6-6A89.6 89.6 0 0 0 68 24a89.6 89.6 0 0 0-1.5-16.3z"/><path d="M27 34l18-10-18-10z" fill="#fff"/></svg></span>
+          <span class="vt-watch">Watch on YouTube</span>
+        </a>
+        <p class="vt-caption">How Karim Made His First $8,297 In 90 Days In Lebanon</p>
       </div>
-    </div>
 
-    <p class="rb-without">without owning Inventory!</p>
-
-    <div class="rb-row">
-      <div class="rb-copy">
-        <p class="rb-copy-main">Watch the entire story on <img src="/you-tube-tv-logo-png-7779.jpg" alt="YouTube" class="rb-yt-logo" width="716" height="160" loading="lazy" /></p>
-        <img src="/hand-drawn-curved-shape-transparent-arrow-transparent-curve-arrow-free-png.webp" alt="" class="rb-arrow" width="340" height="340" loading="lazy" />
+      <div class="vt-card-outer">
+        <span class="vt-pill">Rahma — Sales Manager</span>
+        <a class="vt-card" href="https://youtu.be/AgI7SHIr2CU" target="_blank" rel="noopener" aria-label="Watch on YouTube">
+          <img src="https://i.ytimg.com/vi/AgI7SHIr2CU/hqdefault.jpg" alt="" class="vt-thumb" loading="lazy" width="480" height="270" />
+          <span class="vt-title">How She Generated $1,600 in 30 Days Selling a High-Ticket Product in Lebanon</span>
+          <span class="vt-play"><svg viewBox="0 0 68 48" aria-hidden="true"><path class="vt-play-bg" d="M66.5 7.7a8.6 8.6 0 0 0-6-6C55.2 0 34 0 34 0S12.8 0 7.5 1.6a8.6 8.6 0 0 0-6 6A89.6 89.6 0 0 0 0 24a89.6 89.6 0 0 0 1.5 16.3 8.6 8.6 0 0 0 6 6C12.8 48 34 48 34 48s21.2 0 26.5-1.6a8.6 8.6 0 0 0 6-6A89.6 89.6 0 0 0 68 24a89.6 89.6 0 0 0-1.5-16.3z"/><path d="M27 34l18-10-18-10z" fill="#fff"/></svg></span>
+          <span class="vt-watch">Watch on YouTube</span>
+        </a>
+        <p class="vt-caption">How She Generated $1,600 in 30 Days Selling a High-Ticket Product in Lebanon</p>
       </div>
 
-      <iframe
-        class="rb-player"
-        src="https://www.youtube-nocookie.com/embed/pmKmT072hV4?rel=0"
-        title="Karim's story"
-        width="480"
-        height="270"
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-      ></iframe>
+      <div class="vt-card-outer">
+        <span class="vt-pill">Antoine — Software Engineer</span>
+        <a class="vt-card" href="https://youtu.be/OxiSd1tXBwY" target="_blank" rel="noopener" aria-label="Watch on YouTube">
+          <img src="https://i.ytimg.com/vi/OxiSd1tXBwY/hqdefault.jpg" alt="" class="vt-thumb" loading="lazy" width="480" height="270" />
+          <span class="vt-title">He Spent Money on Ads and Failed… Here&#39;s What Went Wrong</span>
+          <span class="vt-play"><svg viewBox="0 0 68 48" aria-hidden="true"><path class="vt-play-bg" d="M66.5 7.7a8.6 8.6 0 0 0-6-6C55.2 0 34 0 34 0S12.8 0 7.5 1.6a8.6 8.6 0 0 0-6 6A89.6 89.6 0 0 0 0 24a89.6 89.6 0 0 0 1.5 16.3 8.6 8.6 0 0 0 6 6C12.8 48 34 48 34 48s21.2 0 26.5-1.6a8.6 8.6 0 0 0 6-6A89.6 89.6 0 0 0 68 24a89.6 89.6 0 0 0-1.5-16.3z"/><path d="M27 34l18-10-18-10z" fill="#fff"/></svg></span>
+          <span class="vt-watch">Watch on YouTube</span>
+        </a>
+        <p class="vt-caption">He Spent Money on Ads and Failed… Here&#39;s What Went Wrong</p>
+      </div>
     </div>
   </section>
 
-  <!-- ═══════════ 3. TRUSTPILOT REVIEWS ═══════════ -->
+
+  <!-- ═══════════ 3. WHO IS DROPARABIA FOR ═══════════ -->
+  <section class="fit-section" aria-labelledby="fit-heading">
+    <h2 class="fit-heading" id="fit-heading">Who is Droparabia for?</h2>
+    <div class="fit-grid">
+      <div class="fit-card fit-card--yes">
+        <h3 class="fit-card-title">
+          It's for you if:
+        </h3>
+        <ul class="fit-list fit-list--yes">
+          <li>You're a Lebanese looking to build an online business next to your 9 to 5 or your studies</li>
+          <li>You're an E-com enthusiast seeking a solution to owning inventories, managing them or ordering huge shipments from China</li>
+          <li>You're struggling to build your own e-com business and want a system to help you step-by-step</li>
+          <li>Tired of YouTube tutorials, TikTok/Instagram short guides and systems that only work for the US market and not the Lebanese market</li>
+          <li>Ready to invest into starting your e-com business and you're willing to keep trying even if you fail at first</li>
+        </ul>
+      </div>
+
+      <div class="fit-card fit-card--no">
+        <h3 class="fit-card-title">
+          It's ABSOLUTELY not for you if:
+        </h3>
+        <ul class="fit-list fit-list--no">
+          <li>You're looking for a shortcut to become rich overnight</li>
+          <li>Unwilling or unable to put any kind of effort or invest into building your own business</li>
+          <li>You can't give it a consistent time every week</li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══════════ 4. TRUSTPILOT REVIEWS ═══════════ -->
   <!-- Labelled on the section itself now that the heading is gone, so the reviews are
        still announced as a named region rather than an unlabelled block. -->
   <section class="tp-section" aria-label="What our users say on Trustpilot">
@@ -210,57 +268,24 @@ const trustpilotReviews = [
     </div>
   </section>
 
-  <!-- ═══════════ 4. IS THIS FOR YOU ═══════════ -->
-  <section class="fit-section" aria-labelledby="fit-heading">
-    <h2 class="fit-heading" id="fit-heading">Is DropArabia right for you?</h2>
-    <p class="fit-sub">We only take on sellers we can actually help. Be honest with yourself before you apply.</p>
 
-    <div class="fit-grid">
-      <div class="fit-card">
-        <h3 class="fit-card-title">
-          <span class="fit-icon fit-icon--yes" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-          </span>
-          This IS for you if...
-        </h3>
-        <ul class="fit-list fit-list--yes">
-          <li>You're in Lebanon and want to build an online business next to your studies or job</li>
-          <li>You can invest in starting a real business, but you don't want your money stuck in stock</li>
-          <li>You've watched the YouTube and TikTok advice and still don't have a store running</li>
-          <li>You want someone to show you exactly what to do, step by step</li>
-          <li>You're ready to learn marketing and put in consistent work every week</li>
-        </ul>
-      </div>
-
-      <div class="fit-card">
-        <h3 class="fit-card-title">
-          <span class="fit-icon fit-icon--no" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-          </span>
-          This is NOT for you if...
-        </h3>
-        <ul class="fit-list fit-list--no">
-          <li>You're looking for a shortcut that pays without any effort</li>
-          <li>You expect sales without creating content or running ads</li>
-          <li>You're not willing to invest anything into your own business</li>
-          <li>You expect profit in week one without testing anything</li>
-          <li>You can't give it consistent time every week</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Sends them back up to the player rather than to the survey: the video is still
-         the step that has to come first, and the gate on it is unchanged. -->
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <!-- ═══════════ 5. FINAL CTA ═══════════ -->
+  <!-- Last thing on the page. Sends them back up to the player rather than to the
+       survey: the video is still the step that has to come first, and the gate on it
+       is unchanged. -->
+  <section class="final-cta">
     <div class="fit-cta">
-      <h3 class="fit-cta-title">The products and the delivery are already set up. Your store is waiting for you to start it.</h3>
+      <h3 class="fit-cta-title">Droparabia is ready to help you build &amp; successfully launch your own e-commerce store</h3>
+      <p class="fit-cta-note">The only thing missing is YOU to get started</p>
       <button type="button" class="fit-cta-btn" id="fit-cta-btn">
-        Unlock free training
+        Watch Free Training
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
     </div>
   </section>
 
-  <!-- ═══════════ FOOTER ═══════════ -->
+
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
@@ -365,7 +390,6 @@ const trustpilotReviews = [
 </script>
 
 
-
 <!-- Global: palette, font lock-down, and Plyr internals (Plyr builds its DOM at runtime) -->
 <style is:global>
   :root {
@@ -376,7 +400,7 @@ const trustpilotReviews = [
     --da-navy:       #000c66;
     --da-cyan:       #06a2d1;
     --da-purple:     #7200b0;
-    --da-bg:         #f0f0f0;
+    --da-bg:         #fcfcfc;
     --da-surface:    #ffffff;
     --da-line:       #dcdbd9;
     --da-ink:        #0b1230;
@@ -455,58 +479,6 @@ const trustpilotReviews = [
     padding: 0 20px;
   }
 
-  /* ─── SITE HEADER ─── */
-  .site-header {
-    position: relative;
-    z-index: 5;
-    background: var(--da-bg);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16);
-  }
-
-  .site-header-inner {
-    /* No max-width/centering here on purpose — the logo and the link sit at the
-       browser's actual left/right edges on every screen, not the edges of a boxed,
-       centered container that only reaches them on narrower viewports. */
-    width: 100%;
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .corner-brand {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    text-decoration: none;
-  }
-
-  .corner-brand-logo {
-    width: 36px;
-    height: 36px;
-    object-fit: contain;
-  }
-
-  .corner-brand-name {
-    font-family: var(--font-brand);
-    font-size: 1.5rem;
-    line-height: 1;
-    color: #000;
-    letter-spacing: 0.01em;
-  }
-
-  .site-header-link {
-    font-family: var(--font-brand);
-    font-size: 1.15rem;
-    color: #000;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  .site-header-link:hover {
-    text-decoration: underline;
-  }
 
   .hero {
     position: relative;
@@ -516,42 +488,75 @@ const trustpilotReviews = [
     overflow: hidden;
   }
 
+  .corner-hex-tl {
+    position: absolute;
+    /* Pushed past the page's own edge rather than flush with it, so the cluster reads
+       as continuing in from outside the viewport instead of starting neatly at the
+       corner. .hero clips it at the true page edge (it sits flush at 0,0 itself),
+       which is what actually produces the cut-off-by-the-page look. */
+    top: clamp(-90px, -8vw, -60px);
+    left: clamp(-90px, -8vw, -60px);
+    /* Bigger than before: the curve needs room, and whole (uncut) tiles need more
+       space than a cut grid did to still read as a cluster rather than a sliver. */
+    width: clamp(280px, 32vw, 440px);
+    height: clamp(220px, 25vw, 340px);
+    pointer-events: none;
+  }
+
   .hero > .wrap {
     position: relative;
     z-index: 1;
   }
 
-  .headline {
-    font-size: clamp(1.6rem, 4.4vw, 2.6rem);
-    font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: -0.015em;
-    /* Stays the solid ink colour on its own; the gradient is layered on below, only
-       where the browser can actually clip a background to the text. Without that guard
-       a browser that ignores background-clip renders the headline invisible. */
-    color: var(--da-ink);
-    max-width: 44ch;
-    margin: 0 auto 14px;
+  /* inline-flex, not flex: the hero is already text-align:center, so the lockup
+     centres itself without needing a width or justify-content. */
+  .hero-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(10px, 1.6vw, 20px);
+    text-decoration: none;
+    margin-bottom: clamp(16px, 2.4vw, 28px);
+  }
+
+  .hero-brand-logo {
+    width: clamp(46px, 6vw, 72px);
+    height: auto;
+    object-fit: contain;
+  }
+
+  .hero-brand-name {
+    font-family: var(--font-brand);
+    font-size: clamp(1.7rem, 4.6vw, 2.8rem);
+    line-height: 1;
+    color: #000;
+    letter-spacing: 0.01em;
+  }
+
+  /* Tiny and red, sitting under the logo. Wider than a typical caption on purpose. */
+  .hero-disclaimer {
+    max-width: 900px;
+    margin: 6px auto 0;
+    padding: 0 var(--sp-gutter) 24px;
+    font-size: 0.68rem;
+    line-height: 1.4;
+    font-weight: 600;
+    color: #dc2626;
+    text-align: center;
     text-wrap: balance;
   }
 
-  /* Top-to-bottom within one hue, bright at the top falling into the deep navy — the
-     same move as the gold headline that inspired it, in the brand blue. Vertical on
-     purpose: it reads down each line, so multi-line headlines stay consistent.
-     background-clip: text is what paints the letters instead of the box. */
-  @supports ((background-clip: text) or (-webkit-background-clip: text)) {
-    /* inline-block so each word is its own box and the gradient maps to that word's
-       height, rather than to the line box it happens to sit in. */
-    .headline-word {
-      display: inline-block;
-      /* 0deg runs bottom to top: black at the base of each word, blue at the top. */
-      background: linear-gradient(0deg, #000000, #001994);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      /* Unprefixed alongside it, for engines that clip without the -webkit- alias. */
-      background-clip: text;
-      color: transparent;
-    }
+  .headline {
+    font-family: var(--font-brand);
+    font-size: clamp(1.6rem, 4.4vw, 2.6rem);
+    /* IBrand is declared at normal weight only, so anything heavier would be a
+       synthesised bold rather than a real one. */
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: #000;
+    max-width: 44ch;
+    margin: 0 auto 14px;
+    text-wrap: balance;
   }
 
   .headline-sub {
@@ -620,6 +625,23 @@ const trustpilotReviews = [
   }
 
   /* ─── VSL ─── */
+  .vsl-stage {
+    position: relative;
+    /* The stage is the hex field, so its box decides how thick the ring is. Capped
+       narrower than .wrap: at full 1000px the 660px player left 170px a side, which is
+       two columns of tiles. This leaves roughly one. */
+    max-width: 856px;
+    margin: 0 auto 28px;
+    padding: clamp(40px, 7vw, 97px) 0;
+  }
+
+  /* Above the canvas, and the stage now owns the gap underneath. */
+  .vsl-stage > .vsl-wrapper {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 0;
+  }
+
   .vsl-wrapper {
     max-width: 660px;
     width: 100%;
@@ -629,9 +651,7 @@ const trustpilotReviews = [
     aspect-ratio: 16 / 9;
     background: #000;
     position: relative;
-    box-shadow:
-      0 0 0 4px var(--da-blue),
-      0 24px 60px rgba(0, 30, 255, 0.20);
+    box-shadow: 0 0 0 4px var(--da-blue);
   }
 
   /* Book-a-call CTA, revealed the moment the VSL unlocks (see the Plyr script). */
@@ -972,9 +992,23 @@ const trustpilotReviews = [
     background: var(--da-bg);
   }
 
+  .proof-disclaimer {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 var(--sp-gutter);
+    font-size: 0.68rem;
+    line-height: 1.4;
+    font-weight: 600;
+    color: #dc2626;
+    text-align: center;
+    text-wrap: balance;
+  }
+
   .section-heading {
-    font-size: clamp(1.35rem, 3.6vw, 2rem);
-    font-weight: 800;
+    font-family: var(--font-brand);
+    font-size: clamp(1.7rem, 4.8vw, 2.9rem);
+    /* IBrand ships at normal weight only — 800 would be a synthesised bold. */
+    font-weight: 400;
     letter-spacing: -0.01em;
     color: var(--da-navy);
     text-align: center;
@@ -1016,7 +1050,9 @@ const trustpilotReviews = [
   .swiper-slide {
     overflow: hidden;
     border-radius: 16px;
-    box-shadow: 0 8px 18px -10px rgba(0, 0, 0, 0.16);
+    box-shadow:
+      0 18px 38px -14px rgba(0, 0, 0, 0.30),
+      0 5px 14px -8px rgba(0, 0, 0, 0.18);
   }
 
   .swiper-slide img {
@@ -1056,6 +1092,183 @@ const trustpilotReviews = [
 
   .case-carousel-prev:hover { transform: translate(-50%, -50%) scale(1.1); }
   .case-carousel-next:hover { transform: translate(50%, -50%) scale(1.1); }
+
+  /* ══════════════ 2b. VIDEO WINS ═════════════ */
+  .vt-section {
+    background: var(--da-bg);
+    padding: var(--sp-section) var(--sp-gutter) 0;
+    text-align: center;
+  }
+
+  .vt-heading {
+    font-family: var(--font-brand);
+    font-size: clamp(1.7rem, 4.4vw, 2.6rem);
+    font-weight: 400;
+    color: var(--da-ink);
+    margin-bottom: var(--sp-block);
+  }
+
+  .vt-section, .vt-pill, .vt-badge, .vt-watch, .vt-caption {
+    font-family: var(--font-body);
+  }
+
+  /* Plain 3-up grid — collapsed to one column on mobile below. No carousel: three
+     fixed cards need nothing to page through. */
+  .vt-grid {
+    max-width: 1152px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    text-align: left;
+  }
+
+  .vt-card-outer { display: flex; flex-direction: column; }
+
+  /* Plain name, no pill chrome — centred in IBrand above each card. */
+  .vt-pill {
+    display: block;
+    align-self: center;
+    margin-bottom: 14px;
+    font-family: var(--font-brand);
+    font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+    font-weight: 400;
+    color: var(--da-ink);
+    text-align: center;
+  }
+
+  /* Visibly unfinished on purpose, so a placeholder can't ship by accident — a dashed
+     gold outline instead of the normal pill border. Remove data-placeholder once real
+     copy replaces the text, and the pill reverts to the normal style above. */
+  /* Reuses the same red the compliance disclaimers already use on this page, rather
+     than a fourth accent colour the brand doesn't otherwise have. */
+  .vt-pill[data-placeholder='true'] {
+    border: 1px dashed var(--da-ink-mute);
+    color: var(--da-ink-mute);
+  }
+
+  .vt-card {
+    position: relative;
+    display: block;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #000;
+    aspect-ratio: 16 / 9;
+    box-shadow: 0 14px 32px -16px rgba(0, 0, 0, 0.6);
+  }
+
+  .vt-thumb {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+  }
+
+  .vt-card:hover .vt-thumb { transform: scale(1.04); }
+
+  .vt-badge {
+    position: absolute;
+    left: 14px;
+    bottom: 14px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.1;
+    text-align: left;
+  }
+
+  /* Same gradient as the site's other CTA buttons/highlights, not an invented colour. */
+  .vt-badge--stat {
+    color: #fff;
+    background: linear-gradient(135deg, var(--da-cta) 0%, var(--da-cta-light) 100%);
+  }
+
+  .vt-badge--stat small {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* A category label, not a figure — used where there's no real number to show
+     (card 3), so it never reads as an invented stat. */
+  .vt-badge--tag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--vt-text);
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(2px);
+  }
+
+  .vt-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px;
+    height: 40px;
+    pointer-events: none;
+  }
+
+  .vt-play svg { width: 100%; height: 100%; }
+  .vt-play-bg { fill: #212121; fill-opacity: 0.85; }
+  .vt-card:hover .vt-play-bg { fill: #f00; fill-opacity: 1; }
+
+  .vt-watch {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    padding: 6px 10px;
+    border-radius: 7px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* The video's real, public YouTube title, pulled from its own metadata — not written
+     for this card. A top-down gradient keeps it legible over whatever the thumbnail
+     image looks like; line-clamped to 2 lines so a long title can't push past the
+     card's own height. */
+  .vt-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 14px 22px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.35) 65%, transparent 100%);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: left;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* The same real title already shown on the thumbnail, repeated here as a caption —
+     restates it below the fold of the card instead of a list of claims. */
+  .vt-caption {
+    margin-top: 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--da-ink-soft);
+    text-align: left;
+  }
+
+  @media (max-width: 760px) {
+    .vt-grid { grid-template-columns: 1fr; gap: 24px; }
+  }
 
   /* ══════════════ 3. TRUSTPILOT REVIEWS ══════════════ */
   .tp-section {
@@ -1263,6 +1476,17 @@ const trustpilotReviews = [
 
   /* ══════════════ RESPONSIVE ══════════════ */
   @media (max-width: 640px) {
+    /* Narrower side padding than the gutter token gives it, so the line uses more of
+       the screen instead of wrapping tighter than it needs to. */
+    /* .wrap adds its own 20px side padding, which is the real cap on mobile — the
+       disclaimer's own padding alone (set above) wasn't enough to widen it. Pulled
+       out with a negative margin equal to that so it bleeds to .hero's full width,
+       with a small padding of its own so the text doesn't touch the true edge. */
+    .hero-disclaimer { margin-left: -20px; margin-right: -20px; padding-left: 8px; padding-right: 8px; }
+
+    /* Same idea: the carousel's own side padding is what was capping it, not .wrap. */
+    .carousel-container { padding: 0 8px; }
+
     .headline-sub { font-size: 0.78rem; }
     /* Ordered after .headline-sub so the smaller size wins at equal weight. */
     /* Two classes, matching the desktop rules above: a media query adds no specificity,
@@ -1282,16 +1506,11 @@ const trustpilotReviews = [
     /* The bottom gap can't go below the video's glow: .hero clips its overflow, so a
        shorter padding than the shadow's reach (16px down, 40px blur) shears it off. */
     .hero { padding: 18px 0 26px; }
-    .vsl-wrapper { margin-bottom: 24px; }
+    .vsl-stage { margin-bottom: 24px; padding: 34px 0; }
     .proof-section { padding-top: 18px; }
     .carousel-container { margin-top: 16px; }
-    .site-header-inner { padding: 10px 16px; }
-    .corner-brand { gap: 7px; }
-    .corner-brand-logo { width: 28px; height: 28px; }
-    .corner-brand-name { font-size: 1.15rem; }
-    .site-header-link { font-size: 0.82rem; }
     .headline { max-width: none; }
-    .vsl-wrapper { border-radius: 14px; box-shadow: 0 0 0 3px var(--da-blue), 0 16px 40px rgba(0, 30, 255, 0.18); }
+    .vsl-wrapper { border-radius: 14px; box-shadow: 0 0 0 3px var(--da-blue); }
     /* left:0/right:0 resolve to the container's outer edge regardless of its padding
        (padding never shifts that reference point for an absolutely-positioned child) —
        straddling that edge on mobile meant half the button hung off the viewport itself.
@@ -1315,7 +1534,7 @@ const trustpilotReviews = [
   .stat-strip {
     list-style: none;
     max-width: 1100px;
-    margin: 0 auto var(--sp-block);
+    margin: clamp(20px, 3.5vw, 36px) auto var(--sp-block);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     align-items: center;
@@ -1363,18 +1582,24 @@ const trustpilotReviews = [
 
   .fit-section {
     background: var(--da-bg);
-    /* Last section before the footer, so unlike the others it needs a floor of its
-       own — otherwise the CTA ends up sitting on the footer's edge. */
-    padding: var(--sp-section) var(--sp-gutter) var(--sp-group);
+    /* Top only, like the other mid-page sections: the one below supplies its own gap. */
+    padding: var(--sp-section) var(--sp-gutter) 0;
     text-align: center;
   }
 
   .fit-heading {
-    font-size: clamp(1.35rem, 3.6vw, 2rem);
-    font-weight: 800;
+    font-family: var(--font-brand);
+    font-size: clamp(1.7rem, 4.8vw, 2.9rem);
+    /* IBrand ships at normal weight only. */
+    font-weight: 400;
     letter-spacing: -0.01em;
-    color: var(--da-navy);
-    margin-bottom: 10px;
+    color: #000;
+    /* The section is centred, so the heading needs its own alignment — and the same
+       760px box as .fit-grid, otherwise 'left' would be the section's edge rather than
+       the cards' edge it is meant to line up with. */
+    text-align: left;
+    max-width: 760px;
+    margin: 0 auto 14px;
   }
 
   .fit-sub {
@@ -1387,14 +1612,17 @@ const trustpilotReviews = [
   }
 
   .fit-grid {
-    max-width: 1000px;
+    /* Narrower than the old two-up width: a single stacked column at 1000px would run
+       the list lines far too long to read comfortably. */
+    max-width: 760px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 22px;
   }
 
   .fit-card {
+    position: relative;
     background: #fff;
     border-radius: 16px;
     padding: 24px 24px 26px;
@@ -1402,63 +1630,110 @@ const trustpilotReviews = [
     box-shadow: 0 10px 28px -12px rgba(0, 0, 0, 0.18);
   }
 
+  /* Corner accents only — no border around the card. Each pseudo-element is an L: two
+     sides of a square sit on the card's edge, the other two are transparent, so only
+     the two touching the corner show. ::before marks the top-left, ::after the
+     bottom-right. */
+  .fit-card::before,
+  .fit-card::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-style: solid;
+    border-width: 6px;
+    pointer-events: none;
+  }
+
+  .fit-card::before {
+    top: -3px;
+    left: -3px;
+    border-color: currentColor transparent transparent currentColor;
+    border-top-left-radius: 10px;
+  }
+
+  .fit-card::after {
+    bottom: -3px;
+    right: -3px;
+    border-color: transparent currentColor currentColor transparent;
+    border-bottom-right-radius: 10px;
+  }
+
+  .fit-card--yes { color: #16a34a; }
+  .fit-card--no  { color: #dc2626; }
+
   .fit-card-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.05rem;
+    font-size: 1.25rem;
     font-weight: 800;
-    color: var(--da-navy);
+    color: #000;
     margin-bottom: 18px;
   }
-
-  .fit-icon {
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .fit-icon svg { width: 13px; height: 13px; }
-  .fit-icon--yes { background: rgba(22, 163, 74, 0.12); color: #16a34a; }
-  .fit-icon--no  { background: rgba(220, 38, 38, 0.10); color: #dc2626; }
 
   .fit-list { list-style: none; display: grid; gap: 14px; }
 
   .fit-list li {
     position: relative;
-    padding-left: 20px;
-    font-size: 0.92rem;
-    line-height: 1.5;
-    color: var(--da-ink-soft);
+    padding-left: 28px;
+    font-size: 1.02rem;
+    line-height: 1.55;
+    /* Near-black rather than pure #000 — 'black but slightly muted'. */
+    color: #262626;
   }
 
   .fit-list li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 0.52em;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
+    top: 0.2em;
+    width: 16px;
+    height: 16px;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
   }
 
-  .fit-list--yes li::before { background: #16a34a; }
-  .fit-list--no  li::before { background: #dc2626; }
+  .fit-list--yes li::before {
+    background-color: #16a34a;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M8 5l10 7-10 7z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M8 5l10 7-10 7z'/%3E%3C/svg%3E");
+  }
 
-  .fit-cta { max-width: 760px; margin: var(--sp-group) auto 0; }
+  .fit-list--no li::before {
+    background-color: #dc2626;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M6.5 6.5l11 11'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M6.5 6.5l11 11'/%3E%3C/svg%3E");
+  }
+
+  /* Its own section now rather than a block inside the fit grid, so it carries the
+     page's bottom floor — nothing follows it but the footer. */
+  .final-cta {
+    background: var(--da-bg);
+    padding: var(--sp-section) var(--sp-gutter) var(--sp-group);
+    text-align: center;
+  }
+
+  .fit-cta { max-width: 1100px; margin: 0 auto; }
+
+  .fit-cta-note {
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    font-weight: 600;
+    color: var(--da-ink);
+    margin-top: 10px;
+    margin-bottom: 34px;
+  }
 
   .fit-cta-title {
-    font-size: clamp(1.25rem, 3.2vw, 1.85rem);
-    font-weight: 800;
+    font-family: var(--font-brand);
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    /* IBrand ships at normal weight only — 800 would be a synthesised bold. */
+    font-weight: 400;
     letter-spacing: -0.015em;
-    color: var(--da-navy);
-    line-height: 1.25;
-    /* Carries the spacing the sub-line used to, now that the button follows it. */
-    margin-bottom: 24px;
+    color: #000;
+    line-height: 1.2;
+    margin-bottom: 14px;
     text-wrap: balance;
   }
 
@@ -1487,7 +1762,7 @@ const trustpilotReviews = [
   .fit-cta-btn svg { width: 18px; height: 18px; }
 
   @media (max-width: 860px) {
-    .fit-grid { grid-template-columns: 1fr; gap: 16px; }
+    .fit-grid { gap: 16px; }
   }
 
   @media (max-width: 640px) {
@@ -1503,192 +1778,28 @@ const trustpilotReviews = [
   }
 
 
-  /* ══════════════ 2b. RESULTS BREAKDOWN ══════════════ */
-  .rb-section {
-    background: var(--da-bg);
-    padding: var(--sp-section) var(--sp-gutter) 0;
-    text-align: center;
+  /* ── Desktop only ──
+     The headline and sub both grow here. The headline also escapes .wrap's 1040px:
+     its break point is set by max-width in ch, which scales with the font, so at a
+     larger size 44ch no longer fits inside a 1000px content box and the text would
+     drop to a third line. Widening the box keeps it at two.
+     The negative inline margin is what lets a block exceed its container without
+     touching .wrap itself, which the video and stat strip below also sit in. */
+  @media (min-width: 1024px) {
+    .headline {
+      width: min(1240px, 94vw);
+      max-width: none;
+      margin-inline: calc((100% - min(1240px, 94vw)) / 2);
+      font-size: 3.1rem;
+    }
+
+    /* The sub keeps its 860px column: at this size two lines still fit inside it
+       comfortably, so nothing needs to move. */
+    .headline-sub {
+      font-size: 1.25rem;
+    }
   }
 
-  .rb-kicker {
-    font-size: 0.78rem;
-    font-weight: 800;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--da-blue);
-    margin-bottom: 10px;
-  }
-
-  /* Centred as a pair with only a small gap, so the figures sit against the text
-     instead of being pushed to the opposite edge of the page. */
-  .rb-top {
-    margin: 0 auto 10px;
-    display: flex;
-    /* Bottom-aligned: the heading's last line sits on the same line as the figure,
-       rather than the two blocks being centred against each other. */
-    align-items: flex-end;
-    justify-content: center;
-    gap: 6px;
-    text-align: left;
-  }
-
-  .rb-heading {
-    /* Shrinks to the text so no empty box sits between it and the figures. It runs on
-       one line wherever there is room and wraps on its own when there isn't, rather
-       than being forced with nowrap, which would push the row off a narrow screen. */
-    width: fit-content;
-    font-size: clamp(1.3rem, 3.4vw, 1.95rem);
-    font-weight: 800;
-    letter-spacing: -0.015em;
-    color: #000;
-    line-height: 1.3;
-  }
-
-  /* The label sits beside the figure now, centred against its height. */
-  .rb-stack {
-    display: flex;
-    /* Baseline, not flex-end: it puts the small label's text on the figure's own
-       baseline instead of lining up the boxes and leaving it floating low. */
-    align-items: baseline;
-    gap: 10px;
-    text-align: left;
-  }
-
-  /* Centred in the column, so the text and the arrow under it sit as one group
-     against the middle of the video rather than riding at the top. */
-  /* The text alone is centred against the video. The arrow is taken out of the flow so
-     its height can't drag the text upward off centre. */
-  .rb-copy {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    min-height: 100%;
-  }
-
-  .rb-without {
-    text-align: center;
-    font-size: clamp(1rem, 2.2vw, 1.3rem);
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    color: #000;
-    margin: 0 auto var(--sp-block);
-  }
-
-  /* A tight pair: the label sits directly on top of the figure, close enough that the
-     two read as one block rather than two stacked lines. */
-  .rb-days {
-    font-family: var(--font-brand);
-    font-weight: 400;
-    font-size: clamp(0.95rem, 2vw, 1.3rem);
-    color: #000;
-    line-height: 1;
-    text-transform: uppercase;
-    letter-spacing: 0.01em;
-  }
-
-  .rb-amount {
-    font-family: var(--font-brand);
-    font-weight: 400;
-    font-size: clamp(2.6rem, 8vw, 4.6rem);
-    line-height: 0.95;
-    margin: 2px 0 0;
-    background: linear-gradient(180deg, var(--da-blue) 0%, var(--da-navy) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-
-  .rb-row {
-    max-width: 1040px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1.15fr;
-    /* stretch, not center: the copy column fills the video's height so the text can
-       centre itself against it. */
-    align-items: stretch;
-    gap: 40px;
-    text-align: left;
-  }
-
-  .rb-copy-lead {
-    font-size: clamp(1.1rem, 2.4vw, 1.45rem);
-    font-weight: 700;
-    color: var(--da-ink-mute);
-    margin-bottom: 6px;
-  }
-
-  .rb-copy-main {
-    font-size: clamp(1.35rem, 3.2vw, 2rem);
-    font-weight: 800;
-    letter-spacing: -0.015em;
-    line-height: 1.25;
-    color: #000;
-    text-wrap: balance;
-  }
-
-  /* Points from the line across to the thumbnail. Decorative, so it carries no alt
-     text and is skipped by screen readers. */
-  .rb-arrow {
-    position: absolute;
-    right: 0;
-    top: calc(50% + 2.6em);
-    width: clamp(110px, 14vw, 170px);
-    height: auto;
-  }
-
-  /* Mark in YouTube's own red, wordmark in the heading colour, kept on one line so the
-     lockup never splits across a line break. */
-  /* The file is a JPEG on a white background, which would otherwise sit as a white
-     block on the page's grey. multiply drops the white and keeps the red and black,
-     so it reads as a transparent logo without needing the asset re-cut. */
-  .rb-yt-logo {
-    display: inline-block;
-    height: 1.05em;
-    width: auto;
-    vertical-align: -0.16em;
-    margin-left: 0.12em;
-    mix-blend-mode: multiply;
-  }
-
-  /* Fixed 480x270, not fluid: the row's column is wider than the video wants to be.
-     min() is only there so it shrinks rather than overflows on a narrow phone, and the
-     ratio keeps the height honest when it does. */
-  .rb-player {
-    display: block;
-    align-self: center;
-    justify-self: center;
-    width: min(480px, 100%);
-    height: auto;
-    aspect-ratio: 16 / 9;
-    border: 0;
-    border-radius: 16px;
-    box-shadow: 0 18px 44px -18px rgba(0, 0, 0, 0.45);
-  }
-
-
-  @media (max-width: 760px) {
-    /* Stacked on a phone, with the figure given the room it can't have beside the
-       text: heading, then the revenue large, then the line under it. */
-    .rb-top { flex-direction: column; align-items: center; gap: 8px; margin-bottom: 8px; }
-    /* One line, as on desktop. 42 characters in roughly 358px of usable width needs
-       about 16px, so the size is tied to the viewport and held under that; nowrap
-       keeps it honest if the copy ever grows. */
-    .rb-heading { width: auto; font-size: clamp(0.8rem, 4vw, 1.3rem); line-height: 1.3; text-align: center; white-space: nowrap; }
-    .rb-stack { justify-content: center; }
-    .rb-amount { font-size: clamp(2.6rem, 13vw, 3.6rem); }
-    .rb-days { font-size: clamp(0.8rem, 3vw, 1rem); }
-    .rb-row { grid-template-columns: 1fr; gap: 20px; text-align: center; }
-    /* Back into the flow, under the text: there is no column beside it to point
-       across, so it points down at the video instead. */
-    .rb-copy { min-height: 0; }
-    /* Hidden on a phone: it was drawn to point across at a column that isn't there
-       once everything stacks. */
-    .rb-arrow { display: none; }
-  }
 </style>
 
 

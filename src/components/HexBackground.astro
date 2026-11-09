@@ -46,6 +46,33 @@ interface Props {
 	// on the page there's nothing below it to clash with, so the clearance just reads as a
 	// blank gap instead. Set true to shrink it down to almost nothing.
 	bottomFlush?: boolean;
+	// Keeps only this fraction of the hexes, scattered — 1 is the full grid, 0.2 leaves
+	// roughly a fifth of them. Which ones survive is decided by a hash of the cell's own
+	// row/column, so the pattern is random-looking but identical on every render: it does
+	// not reshuffle when the section resizes or the canvas is rebuilt.
+	density?: number;
+	// Draws only hexes that fit entirely inside the canvas, dropping any that would be
+	// clipped by an edge. The grid normally guards just its bottom edge, so without this
+	// the top and sides show half-hexes. Also turns off that bottom clearance, since
+	// this rule already covers it.
+	wholeOnly?: boolean;
+	// Multiplier on the hex radius. Below 1 gives smaller tiles, and therefore more of
+	// them in the same box, since the grid is sized from the radius.
+	scale?: number;
+	// Drops the tile at each end of the topmost visible row. Those two sit above the
+	// content with nothing beside them, so they read as strays rather than part of the
+	// frame.
+	dropTopCorners?: boolean;
+	// Rounds off the canvas's bottom-right corner (in its own local box, independent of
+	// where that box sits on the page) by dropping whole hexes outside a quarter-circle
+	// boundary there — never slicing one, only ever keeping or dropping it whole, the
+	// same rule wholeOnly uses. Meant for a decoration anchored at a page's top-left
+	// corner: that corner of the box stays sharp against the page edge, and the far,
+	// inward corner sweeps away instead of ending in a hard right angle.
+	roundFarCorner?: boolean;
+	// How far the curve reaches in, as a fraction of the box's shorter side. 1 is a
+	// sweeping curve that eats deep into the box; smaller values round off only the tip.
+	farCornerRadius?: number;
 }
 const {
 	id = "hex-bg",
@@ -61,6 +88,12 @@ const {
 	fadeHeight = 0.6,
 	fadeBottom = false,
 	bottomFlush = false,
+	density = 1,
+	wholeOnly = false,
+	scale = 1,
+	dropTopCorners = false,
+	roundFarCorner = false,
+	farCornerRadius = 1,
 } = Astro.props;
 ---
 
@@ -80,6 +113,12 @@ const {
 	data-fade-height={fadeHeight}
 	data-fade-bottom={fadeBottom}
 	data-bottom-flush={bottomFlush}
+	data-density={density}
+	data-whole-only={wholeOnly}
+	data-scale={scale}
+	data-drop-top-corners={dropTopCorners}
+	data-round-far-corner={roundFarCorner}
+	data-far-corner-radius={farCornerRadius}
 ></canvas>
 
 <style>
@@ -107,7 +146,12 @@ const {
 	import * as THREE from "three";
 
 	document.querySelectorAll<HTMLCanvasElement>("canvas[data-cut-corner]").forEach((canvas) => {
-		const section = canvas.closest("section") ?? canvas.parentElement;
+		// The canvas is absolutely positioned at inset:0, so the box it actually fills is
+		// its offset parent — i.e. its own parent element. closest("section") was wrong
+		// whenever the canvas sits in a wrapper inside a section: the camera got sized to
+		// the section while the canvas was stretched to the wrapper, warping every hex by
+		// the ratio between them. parentElement is the same element in the simple case.
+		const section = canvas.parentElement ?? canvas.closest("section");
 		if (!(section instanceof HTMLElement)) return;
 		const cutCorner = canvas.dataset.cutCorner === "true";
 		const cutSide = canvas.dataset.cutSide === "right" ? "right" : "left";
@@ -123,11 +167,24 @@ const {
 		const fadeHeight = Math.max(0, parseFloat(canvas.dataset.fadeHeight ?? "0.6"));
 		const fadeBottom = canvas.dataset.fadeBottom === "true";
 		const bottomFlush = canvas.dataset.bottomFlush === "true";
+		const density = Math.min(1, Math.max(0, parseFloat(canvas.dataset.density ?? "1")));
+		const wholeOnly = canvas.dataset.wholeOnly === "true";
+		const scale = Math.max(0.05, parseFloat(canvas.dataset.scale ?? "1"));
+		const dropTopCorners = canvas.dataset.dropTopCorners === "true";
+		const roundFarCorner = canvas.dataset.roundFarCorner === "true";
+		const farCornerRadius = Math.max(0, Math.min(1, parseFloat(canvas.dataset.farCornerRadius ?? "1")));
+
+		// Deterministic per-cell value in [0,1). The classic sin-fract hash: no RNG state,
+		// so the same cell always yields the same number and the scatter is stable.
+		function cellNoise(c: number, r: number): number {
+			const n = Math.sin(c * 127.1 + r * 311.7) * 43758.5453;
+			return n - Math.floor(n);
+		}
 
 		// Hex radius in CSS pixels — world units are mapped 1:1 to pixels via the ortho camera.
 		// Smaller on narrow screens so the tiling reads at roughly the same visual density
 		// as on desktop, instead of a few oversized hexes dominating a small viewport.
-		const HEX_R = window.innerWidth < 640 ? 32 : window.innerWidth < 1024 ? 60 : 78;
+		const HEX_R = (window.innerWidth < 640 ? 32 : window.innerWidth < 1024 ? 60 : 78) * scale;
 		const GAP = 1.0; // edges nearly touching — just enough seam to read as tiled hexes
 		// Each corner is trimmed back along its two edges, then joined with a curve instead
 		// of a sharp point.
@@ -160,8 +217,8 @@ const {
 		// gets the identical gradient across its own face, not one gradient spread across
 		// the whole grid.
 		const GRADIENT_STOPS: [number, string][] = [
-			[0.41, "#d0d0d0"],
-			[0.6, "#c0c0c0"],
+			[0.41, "#c2c2c2"],
+			[0.6, "#b0b0b0"],
 		];
 		function hexToRGB(hex: string): [number, number, number] {
 			const n = parseInt(hex.slice(1), 16);
@@ -289,6 +346,11 @@ const {
 			}
 
 			let i = 0;
+			// Collected first, committed below: dropTopCorners has to see the whole grid
+			// before it can tell which tiles are the ends of the top row.
+			const cellX = new Float32Array(count);
+			const cellY = new Float32Array(count);
+			const cellHidden: boolean[] = new Array(count).fill(true);
 			for (let r = 0; r < ROWS; r++) {
 				for (let c = 0; c < COLS; c++) {
 					const x = (HEX_R * Math.sqrt(3) * (c + (r % 2) / 2) - (COLS * HEX_R * Math.sqrt(3)) / 2) * GAP;
@@ -311,21 +373,72 @@ const {
 					const topEdge = rect.height / 2 - HEX_R * 1.5 * fadeHeight;
 					const fadeMissing = fadeTop && y > topEdge;
 
+					// Thinned out to a scatter when density < 1.
+					const sparseMissing = density < 1 && cellNoise(c, r) > density;
+
+					// A hex's own half-extents: sqrt(3)/2 * R across the flats, R to the points.
+					const clipped =
+						wholeOnly &&
+						(Math.abs(x) + (HEX_R * Math.sqrt(3)) / 2 > rect.width / 2 ||
+							Math.abs(y) + HEX_R > rect.height / 2);
+
+					// Standard rounded-rect corner construction: a circle of radius R is inscribed
+					// so its two tangent lines land on the box's right and bottom edges. Anything
+					// past the right edge OR the bottom edge is already handled by wholeOnly above;
+					// this only drops the square wedge between those edges and the circle — the
+					// bit that would otherwise be a hard corner.
+					const farR = Math.min(rect.width, rect.height) * farCornerRadius;
+					const farCx = rect.width / 2 - farR;
+					const farCy = -rect.height / 2 + farR;
+					const roundMissing =
+						roundFarCorner &&
+						x > farCx &&
+						y < farCy &&
+						Math.hypot(x - farCx, y - farCy) > farR - HEX_R;
+
 					const missing =
+						sparseMissing ||
+						clipped ||
+						roundMissing ||
 						outOfReveal ||
 						outOfRevealRows ||
 						fadeMissing ||
-						y < bottomEdge ||
+						(!wholeOnly && y < bottomEdge) ||
 						(cutCorner && (x - cornerX) * cutNormalX + (y - cornerY) * cutNormalY < cutDistance);
 
-					dummy.position.set(x, y, 0);
-					dummy.rotation.set(0, 0, 0);
-					dummy.scale.setScalar(missing ? 0 : 1);
-					dummy.updateMatrix();
-					nextMesh.setMatrixAt(i, dummy.matrix);
+					cellX[i] = x;
+					cellY[i] = y;
+					cellHidden[i] = missing;
 					i++;
 				}
 			}
+			if (dropTopCorners) {
+				// The topmost surviving tile's y, then everything sharing that row within
+				// half a row pitch — row centres are exact, the tolerance just absorbs float drift.
+				let topY = -Infinity;
+				for (let k = 0; k < i; k++) if (!cellHidden[k] && cellY[k] > topY) topY = cellY[k];
+				if (topY > -Infinity) {
+					const tol = HEX_R * 0.75;
+					let leftK = -1, rightK = -1;
+					let minX = Infinity, maxX = -Infinity;
+					for (let k = 0; k < i; k++) {
+						if (cellHidden[k] || Math.abs(cellY[k] - topY) > tol) continue;
+						if (cellX[k] < minX) { minX = cellX[k]; leftK = k; }
+						if (cellX[k] > maxX) { maxX = cellX[k]; rightK = k; }
+					}
+					if (leftK >= 0) cellHidden[leftK] = true;
+					if (rightK >= 0 && rightK !== leftK) cellHidden[rightK] = true;
+				}
+			}
+
+			for (let k = 0; k < i; k++) {
+				dummy.position.set(cellX[k], cellY[k], 0);
+				dummy.rotation.set(0, 0, 0);
+				dummy.scale.setScalar(cellHidden[k] ? 0 : 1);
+				dummy.updateMatrix();
+				nextMesh.setMatrixAt(k, dummy.matrix);
+			}
+
 			nextMesh.instanceMatrix.needsUpdate = true;
 
 			if (mesh) scene.remove(mesh);
