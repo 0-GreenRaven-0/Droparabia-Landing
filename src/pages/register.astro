@@ -1,4 +1,6 @@
 ---
+import PhoneCountrySelect from '../components/PhoneCountrySelect.astro';
+
 const title = 'Customer Registration — Droparabia';
 const description = 'Register a customer for their Droparabia subscription.';
 ---
@@ -45,6 +47,15 @@ const description = 'Register a customer for their Droparabia subscription.';
           </div>
 
           <div class="field">
+            <label for="phone">Customer's phone number</label>
+            <div class="phone-row">
+              <PhoneCountrySelect inputId="phone-country" name="SMS__COUNTRY_CODE" variant="plain" />
+              <input type="tel" id="phone" name="phone" placeholder="70 123 456" autocomplete="off" inputmode="tel" required />
+            </div>
+            <p class="field-err" id="phone-err">Please enter a valid phone number for the country you picked</p>
+          </div>
+
+          <div class="field">
             <label>Subscription type</label>
             <div class="plan-options">
               <label class="plan-option">
@@ -72,21 +83,52 @@ const description = 'Register a customer for their Droparabia subscription.';
       const errorEl = document.getElementById('form-error') as HTMLElement;
       const successEl = document.getElementById('form-success') as HTMLElement;
 
+      const phoneErrEl = document.getElementById('phone-err') as HTMLElement;
+
+      // Same convention as the main site's forms: strips a leading trunk zero or a
+      // re-typed country code off whatever they typed, so "0 70 123 456" and
+      // "+961 70 123 456" both resolve to the same national number.
+      function nationalDigits(dial: string, raw: string): string {
+        let d = (raw || '').replace(/\D/g, '');
+        if (d.indexOf('00' + dial) === 0) d = d.slice(dial.length + 2);
+        else if (d.indexOf(dial) === 0 && d.length > dial.length + 5) d = d.slice(dial.length);
+        return d.replace(/^0+/, '');
+      }
+
+      // Lebanese numbers keep the stricter 7–8 digit check already used elsewhere on
+      // the site; any other country only needs a plausible length.
+      function isValidPhone(dial: string, raw: string): boolean {
+        const d = nationalDigits(dial, raw);
+        if (dial === '961') return /^\d{7,8}$/.test(d);
+        return d.length >= 5 && (dial + d).length <= 15;
+      }
+
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         errorEl.style.display = 'none';
         successEl.style.display = 'none';
+        phoneErrEl.style.display = 'none';
 
         const firstName = (document.getElementById('first-name') as HTMLInputElement).value.trim();
         const lastName = (document.getElementById('last-name') as HTMLInputElement).value.trim();
         const email = (document.getElementById('email') as HTMLInputElement).value.trim();
+        const phoneRaw = (document.getElementById('phone') as HTMLInputElement).value.trim();
+        const dial = (form.querySelector('[name="SMS__COUNTRY_CODE"]') as HTMLInputElement)?.value || '961';
         const subscriptionType = (form.querySelector('input[name="subscriptionType"]:checked') as HTMLInputElement)?.value;
 
-        if (!firstName || !lastName || !email || !subscriptionType) {
+        if (!firstName || !lastName || !email || !phoneRaw || !subscriptionType) {
           errorEl.textContent = 'Please fill in every field.';
           errorEl.style.display = 'block';
           return;
         }
+
+        if (!isValidPhone(dial, phoneRaw)) {
+          phoneErrEl.style.display = 'block';
+          return;
+        }
+
+        // Full E.164 (e.g. +96170123456) — the format Brevo's SMS attribute expects.
+        const phone = '+' + dial + nationalDigits(dial, phoneRaw);
 
         submitBtn.disabled = true;
         submitBtn.textContent = 'Registering…';
@@ -95,7 +137,7 @@ const description = 'Register a customer for their Droparabia subscription.';
           const res = await fetch('/api/register-subscribe', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ firstName, lastName, email, subscriptionType }),
+            body: JSON.stringify({ firstName, lastName, email, phone, subscriptionType }),
           });
           const data = await res.json();
 
@@ -257,6 +299,39 @@ const description = 'Register a customer for their Droparabia subscription.';
       .field-name + .field-name {
         border-left: 1px solid var(--gray-200);
         padding-left: 10px;
+      }
+
+      /* Same boxed treatment as .field-row above, with the country picker (its
+         "plain" variant, so it brings no border of its own) taking the left edge. */
+      .phone-row {
+        display: flex;
+        align-items: stretch;
+        gap: 8px;
+        border: 1.5px solid var(--gray-200);
+        border-radius: var(--radius);
+        padding: 10px 12px;
+        background: var(--white);
+      }
+
+      .phone-row:focus-within {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      }
+
+      .phone-row input {
+        border: none;
+        outline: none;
+        font-size: 0.95rem;
+        font-family: var(--font-body);
+        color: var(--gray-900);
+        background: transparent;
+        width: 100%;
+      }
+
+      .field-err {
+        display: none;
+        font-size: 0.78rem;
+        color: var(--red);
       }
 
       .field {
