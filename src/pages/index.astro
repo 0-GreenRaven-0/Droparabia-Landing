@@ -16,11 +16,13 @@ const HEADLINE = 'How 800+ Lebanese launched their e-com businesses without owni
 // Real Trustpilot reviews, copied verbatim (newest first). Dates are the review dates
 // shown on Trustpilot; every one of these is 5 stars.
 const trustpilotReviews = [
+  { name: 'Hussein H.', date: 'Oct 31, 2026', stars: 5, text: "It is incredibly user-friendly, well-organized, and easy to navigate, even for beginners. It makes getting started in e-commerce much easier.\n\nWhat makes it even more valuable is the opportunity it offers during these challenging times of economic instability. In a country like Lebanon, where finding stable income opportunities isn't always easy, platforms like DropArabia can open new doors, encourage entrepreneurship, and help people build additional sources of income.\n\nHonestly, it's a great investment for anyone looking to enter the world of e-commerce. Highly recommended!" },
+  { name: 'Liana Ammar', date: 'Oct 15, 2026', stars: 5, text: 'I you want to enter in the e-com world, or dropshipping, Droparabia is a great place to start. You will learn from A to Z all the steps to reach your first sales. A very helpful and friendly team will be accompanying you. And they are always making adjustments to the platform to make it more user-friendly. I highly recommend Droparabia for all those who want to start your journey in e-com or dropshipping.' },
+  { name: 'nagi', date: 'Oct 11, 2026', stars: 5, text: "what makes my experience with Droparabia stand out is the community. Starting in e-commerce with no previous experience comes with many questions, and being surrounded by people who share the same goals makes the journey feel more challenging. You feel part of something, and that gives you motivation to keep moving forward. Helpful support and great guidance also make the difference. I'm still learning and building my store, so I can't speak about long term results yet, but I appreciate having both, a direction to follow and a community to learn alongside. For me, that combination is the biggest strength of Droparabia.\nNagi Salameh" },
   { name: 'Michel Hsan', date: 'Sep 27, 2026', stars: 5, text: 'This application significantly helps reduce shipping costs by allowing you to source the product without having to handle the shipping process yourself.' },
   { name: 'geo kazan', date: 'Aug 29, 2026', stars: 5, text: 'The system works if you stay consistent and put enough effort' },
-  { name: 'Karim Sabeh', date: 'Jul 27, 2026', stars: 5, text: 'I use it personally it is beginner friendly and you can make a living from it' },
+  { name: 'Karim Sabeh', date: 'Jul 16, 2026', stars: 5, text: 'AMAZING program it helps lebanese make a living from home and iam taking thousand of dollars its now a routine its not a side job everyone is helpful and you have logistics and support teams beside you also with inventory without paying upfront, very recommended to join i make 3-9k a month from it from my laptop w iam 15 yearss old' },
   { name: 'Karim Moghnieh', date: 'Jun 18, 2026', stars: 5, text: 'Professional, reliable, and knowledgeable team. Helped spark out my career in freelancing!' },
-  { name: 'Hhh Mmm', date: 'Jun 17, 2026', stars: 5, text: 'One of the best programs\nIt gave me a real opportunity to grow and to be financially independent\nVery professional team thank you for this helpful and easy program' },
   { name: 'MD Tech', date: 'Jun 16, 2026', stars: 5, text: "It's a very successful system and provides professional courses and continuous feedback and support for students. High quality products, excellent storage and packaging and smooth money transactions.\n\nVery recommended for people who want to start a small e-com business with a small capitol" },
   { name: 'Tarek', date: 'May 26, 2026', stars: 5, text: 'Smooth experience using this app. The platform is easy to use and order processing is simple. Definitely a useful app for anyone running a dropshipping business.' },
 ];
@@ -176,7 +178,6 @@ const trustpilotReviews = [
         <span class="vt-pill">Karim — Accounting</span>
         <a class="vt-card" href="https://youtu.be/pmKmT072hV4" target="_blank" rel="noopener" aria-label="Watch on YouTube">
           <img src="/karim.webp" alt="" class="vt-thumb" loading="lazy" width="480" height="270" />
-          <span class="vt-title">How Karim Made His First $8,297 In 90 Days In Lebanon</span>
           <span class="vt-play"><svg viewBox="0 0 68 48" aria-hidden="true"><path class="vt-play-bg" d="M66.5 7.7a8.6 8.6 0 0 0-6-6C55.2 0 34 0 34 0S12.8 0 7.5 1.6a8.6 8.6 0 0 0-6 6A89.6 89.6 0 0 0 0 24a89.6 89.6 0 0 0 1.5 16.3 8.6 8.6 0 0 0 6 6C12.8 48 34 48 34 48s21.2 0 26.5-1.6a8.6 8.6 0 0 0 6-6A89.6 89.6 0 0 0 68 24a89.6 89.6 0 0 0-1.5-16.3z"/><path d="M27 34l18-10-18-10z" fill="#fff"/></svg></span>
           <span class="vt-watch">Watch on YouTube</span>
         </a>
@@ -187,7 +188,6 @@ const trustpilotReviews = [
         <span class="vt-pill">Rahma — Sales Manager</span>
         <a class="vt-card" href="https://youtu.be/AgI7SHIr2CU" target="_blank" rel="noopener" aria-label="Watch on YouTube">
           <img src="https://i.ytimg.com/vi/AgI7SHIr2CU/hqdefault.jpg" alt="" class="vt-thumb" loading="lazy" width="480" height="270" />
-          <span class="vt-title">How She Generated $1,600 in 30 Days Selling a High-Ticket Product in Lebanon</span>
           <span class="vt-play"><svg viewBox="0 0 68 48" aria-hidden="true"><path class="vt-play-bg" d="M66.5 7.7a8.6 8.6 0 0 0-6-6C55.2 0 34 0 34 0S12.8 0 7.5 1.6a8.6 8.6 0 0 0-6 6A89.6 89.6 0 0 0 0 24a89.6 89.6 0 0 0 1.5 16.3 8.6 8.6 0 0 0 6 6C12.8 48 34 48 34 48s21.2 0 26.5-1.6a8.6 8.6 0 0 0 6-6A89.6 89.6 0 0 0 68 24a89.6 89.6 0 0 0-1.5-16.3z"/><path d="M27 34l18-10-18-10z" fill="#fff"/></svg></span>
           <span class="vt-watch">Watch on YouTube</span>
         </a>
@@ -198,7 +198,6 @@ const trustpilotReviews = [
         <span class="vt-pill">Antoine — Software Engineer</span>
         <a class="vt-card" href="https://youtu.be/OxiSd1tXBwY" target="_blank" rel="noopener" aria-label="Watch on YouTube">
           <img src="https://i.ytimg.com/vi/OxiSd1tXBwY/hqdefault.jpg" alt="" class="vt-thumb" loading="lazy" width="480" height="270" />
-          <span class="vt-title">He Spent Money on Ads and Failed… Here&#39;s What Went Wrong</span>
           <span class="vt-play"><svg viewBox="0 0 68 48" aria-hidden="true"><path class="vt-play-bg" d="M66.5 7.7a8.6 8.6 0 0 0-6-6C55.2 0 34 0 34 0S12.8 0 7.5 1.6a8.6 8.6 0 0 0-6 6A89.6 89.6 0 0 0 0 24a89.6 89.6 0 0 0 1.5 16.3 8.6 8.6 0 0 0 6 6C12.8 48 34 48 34 48s21.2 0 26.5-1.6a8.6 8.6 0 0 0 6-6A89.6 89.6 0 0 0 68 24a89.6 89.6 0 0 0-1.5-16.3z"/><path d="M27 34l18-10-18-10z" fill="#fff"/></svg></span>
           <span class="vt-watch">Watch on YouTube</span>
         </a>
@@ -246,11 +245,11 @@ const trustpilotReviews = [
   <section class="tp-section" aria-label="What our users say on Trustpilot">
     <div class="tp-head">
       <img src="/Trustpilot_Logo_(2022).svg.png" alt="Trustpilot" class="tp-head-logo" width="300" height="74" loading="lazy" />
-      <!-- Overall TrustScore as shown on Trustpilot (4.3), which Trustpilot draws as four
+      <!-- Overall TrustScore as shown on Trustpilot (4.4), which Trustpilot draws as four
            full stars and a half. The span carries the label, so the image is decorative. -->
-      <span class="tp-rating" role="img" aria-label="Rated 4.3 out of 5 on Trustpilot">
+      <span class="tp-rating" role="img" aria-label="Rated 4.4 out of 5 on Trustpilot">
         <img src={STAR_BLOCKS['4.5']} alt="" aria-hidden="true" class="tp-stars-img tp-stars-img--head" width="512" height="96" loading="lazy" />
-        <span class="tp-score">4.3</span>
+        <span class="tp-score">4.4</span>
       </span>
     </div>
 
@@ -1231,28 +1230,6 @@ const trustpilotReviews = [
     color: #fff;
     background: rgba(0, 0, 0, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  /* The video's real, public YouTube title, pulled from its own metadata — not written
-     for this card. A top-down gradient keeps it legible over whatever the thumbnail
-     image looks like; line-clamped to 2 lines so a long title can't push past the
-     card's own height. */
-  .vt-title {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: 12px 14px 22px;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.35) 65%, transparent 100%);
-    color: #fff;
-    font-size: 0.85rem;
-    font-weight: 700;
-    line-height: 1.3;
-    text-align: left;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
 
   /* The same real title already shown on the thumbnail, repeated here as a caption —
