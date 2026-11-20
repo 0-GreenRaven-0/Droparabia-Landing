@@ -32,3 +32,8 @@ pnpm-debug.log*
 # Raw video masters — kept locally only, never deployed (see public/vsl.mp4 for the compressed web copy)
 video-masters/
 .dev.vars
+
+# Stray VSL source/backup files, not the deployed asset (that's public/vsl.mp4)
+VSL/
+public/updated vsl.mp4
+public/vsl_new.mp4

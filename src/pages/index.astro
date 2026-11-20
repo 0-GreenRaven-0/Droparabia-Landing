@@ -83,7 +83,8 @@ const trustpilotReviews = [
 
         <div class="vsl-wrapper">
           <video id="vsl-player" playsinline preload="metadata">
-            <source src="/vsl.mp4" type="video/mp4" />
+            <source src="/vsl-480.mp4" type="video/mp4" size="480" />
+            <source src="/vsl-360.mp4" type="video/mp4" size="360" />
           </video>
         </div>
       </div>
@@ -1806,7 +1807,11 @@ const trustpilotReviews = [
     // Progress bar and keyboard seeking are both back on — scrubbing is fine as long
     // as it's constrained to ground already covered. See the 'seeking' clamp below,
     // which is what actually stops anyone from dragging or arrow-keying ahead.
-    controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'fullscreen'],
+    controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'settings', 'fullscreen'],
+    settings: ['quality'],
+    // Read from the <source size="..."> attributes on the <video> above — Plyr swaps
+    // the underlying src on change and restores currentTime/play state itself.
+    quality: { default: 480, options: [480, 360] },
     resetOnEnd: false,
   });
 
