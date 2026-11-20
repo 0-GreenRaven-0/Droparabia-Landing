@@ -106,8 +106,6 @@ const trustpilotReviews = [
       <p class="book-cta-gate" id="book-cta-gate" style="display:none">Watch at least 40% of the tutorial to see if you qualify to access Droparabia</p>
       <a href="/survey" class="book-cta is-locked" id="book-cta" style="display:none" aria-disabled="true">
         See if you qualify
-        <!-- Replaced with the live count from /api/spots (17 per week, resets Monday 12 AM Beirut time) -->
-        <span class="book-cta-sub" id="book-cta-spots">Limited spots are available this week</span>
       </a>
 
     </div>
@@ -678,12 +676,6 @@ const trustpilotReviews = [
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 6px 32px rgba(0, 30, 255, 0.50);
   }
 
-  .book-cta-sub {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.85);
-  }
-
   /* Watch-progress bar, shown once subscribed. */
   .vsl-progress-wrap {
     max-width: 420px;
@@ -752,10 +744,6 @@ const trustpilotReviews = [
   .book-cta.is-locked:hover {
     transform: none;
     box-shadow: none;
-  }
-
-  .book-cta.is-locked .book-cta-sub {
-    color: var(--da-ink-mute);
   }
 
   /* ─── VSL SUBSCRIPTION MODAL ─── */
@@ -1940,24 +1928,6 @@ const trustpilotReviews = [
       const subscribed = !!sessionStorage.getItem('da_subscribed');
       bookCtaGate.style.display = subscribed && !unlocked ? 'block' : 'none';
     }
-  }
-
-  // Weekly spots left, counted server-side from this week's rows on the booked sheet.
-  // The fallback text stays in place if the request fails.
-  const spotsEl = document.getElementById('book-cta-spots');
-  if (spotsEl) {
-    fetch('/api/spots')
-      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
-      .then((data: { remaining?: number }) => {
-        if (typeof data.remaining !== 'number') return;
-        const n = data.remaining;
-        spotsEl.textContent = n === 0
-          ? 'No spots left this week'
-          : n === 1
-            ? '1 spot is available this week'
-            : `${n} spots are available this week`;
-      })
-      .catch(() => {});
   }
 
   function showBookCta() {
