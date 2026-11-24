@@ -231,7 +231,7 @@ function formatClock(totalSeconds: number): string {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
 
-function buildTrafficSource(source: string, medium: string, referrer: string, entry = ''): string {
+function buildTrafficSource(source: string, medium: string, referrer: string, entry = '', fbc = ''): string {
   const s = (source || '').toLowerCase().trim();
   const m = (medium || '').toLowerCase().trim();
 
@@ -266,6 +266,13 @@ function buildTrafficSource(source: string, medium: string, referrer: string, en
       return host;
     } catch { return referrer; }
   }
+
+  // No UTM and no referrer — but Meta only attaches fbclid to links clicked from inside
+  // its own ad/app surfaces, so its presence still proves a Meta-sourced visit even when
+  // the ad itself wasn't UTM-tagged (or an in-app browser stripped the referrer entirely).
+  // Without this, that traffic silently falls into Direct Visit and looks like it never
+  // happened.
+  if (fbc) return 'Meta Paid Ad (Untagged)';
 
   return 'Direct Visit';
 }
@@ -518,7 +525,7 @@ export const POST: APIRoute = async ({ request }) => {
         const isPaid = (utm_medium || '').toLowerCase().trim() === 'paid';
         const row = [
           'Anonymous', '', '', new Date().toLocaleDateString('en-GB'),
-          buildTrafficSource(utm_source || '', utm_medium || '', referrer || '', typeof body.entry === 'string' ? body.entry : ''),
+          buildTrafficSource(utm_source || '', utm_medium || '', referrer || '', typeof body.entry === 'string' ? body.entry : '', cleanFbCookie(body.fbc)),
           isPaid ? (utm_campaign || '') : '',
           isPaid ? (utm_content  || '') : '',
           isPaid ? (utm_term     || '') : '',
@@ -632,7 +639,7 @@ export const POST: APIRoute = async ({ request }) => {
       const displayPhone = parsedPhone.display;
       const date         = new Date().toLocaleDateString('en-GB');
       const isPaid        = (utm_medium || '').toLowerCase().trim() === 'paid';
-      const trafficSource = buildTrafficSource(utm_source || '', utm_medium || '', referrer || '', typeof body.entry === 'string' ? body.entry : '');
+      const trafficSource = buildTrafficSource(utm_source || '', utm_medium || '', referrer || '', typeof body.entry === 'string' ? body.entry : '', cleanFbCookie(body.fbc));
       const campaignName  = isPaid ? (utm_campaign || '') : '';
       const creative      = isPaid ? (utm_content  || '') : '';
       const hook          = isPaid ? (utm_term     || '') : '';
