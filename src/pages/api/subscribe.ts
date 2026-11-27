@@ -355,15 +355,43 @@ async function removeEmailFromSheet(spreadsheetId: string, email: string, token:
 // that happened. Reopening the survey, re-watching the VSL or clicking buy used to delete
 // the booking row of anyone who had already booked, taking its ad attribution with it.
 // A genuine rebooking updates that row in place instead (findRowByEmail / updateSheetRow).
-async function removeEmailFromAllSheets(email: string, token: string): Promise<void> {
-  const ids = [
+function movableSheetIds(): string[] {
+  return [
     import.meta.env.GOOGLE_SHEET_VSL,
     import.meta.env.GOOGLE_SHEET_SURVEY,
     import.meta.env.GOOGLE_SHEET_QUALIFIED_NO_BOOK,
     import.meta.env.GOOGLE_SHEET_UNQUALIFIED,
     import.meta.env.GOOGLE_SHEET_WENT_TO_BUY_COURSE,
   ].filter(Boolean) as string[];
-  await Promise.all(ids.map(id => removeEmailFromSheet(id, email, token)));
+}
+
+async function removeEmailFromAllSheets(email: string, token: string): Promise<void> {
+  await Promise.all(movableSheetIds().map(id => removeEmailFromSheet(id, email, token)));
+}
+
+// A lead's real ad attribution lives on whatever row they already have, not on the
+// request that moves them: sessionStorage is gone within one tab close, and even the
+// fbc cookie can be stale or absent by the time someone comes back to book days later.
+// Read every sheet the move below is about to delete from, BEFORE it runs, and hand back
+// whichever row still has this email — there's at most one, since a lead sits in exactly
+// one of these sheets until it's moved. The caller only uses this to fill in whatever its
+// own fresh request is missing, so a real UTM/fbc on the new submission still wins.
+async function getCarriedAttribution(
+  email: string, token: string,
+): Promise<{ trafficSource: string; campaignName: string; creative: string; hook: string; fbc: string; fbp: string } | null> {
+  const hits = await Promise.all(movableSheetIds().map((id) => findRowByEmail(id, [email], token)));
+  const hit = hits.find((h): h is NonNullable<typeof h> => h !== null);
+  if (!hit) return null;
+
+  const col = (name: string) => hit.values[SHEET_HEADERS.indexOf(name)] || '';
+  return {
+    trafficSource: col('Traffic Source'),
+    campaignName:  col('Campaign Name'),
+    creative:      col('Creative'),
+    hook:          col('Hook'),
+    fbc:           col('fbc'),
+    fbp:           col('fbp'),
+  };
 }
 
 // ── Booked sheet: update in place rather than delete and re-append ──
@@ -638,11 +666,13 @@ export const POST: APIRoute = async ({ request }) => {
     if (sheetId && credsJson) {
       const displayPhone = parsedPhone.display;
       const date         = new Date().toLocaleDateString('en-GB');
-      const isPaid        = (utm_medium || '').toLowerCase().trim() === 'paid';
-      const trafficSource = buildTrafficSource(utm_source || '', utm_medium || '', referrer || '', typeof body.entry === 'string' ? body.entry : '', cleanFbCookie(body.fbc));
-      const campaignName  = isPaid ? (utm_campaign || '') : '';
-      const creative      = isPaid ? (utm_content  || '') : '';
-      const hook          = isPaid ? (utm_term     || '') : '';
+      const isPaid = (utm_medium || '').toLowerCase().trim() === 'paid';
+      // 'let', not 'const': getCarriedAttribution (below, once the sheet token exists)
+      // fills in whichever of these the current request itself has nothing for.
+      let trafficSource = buildTrafficSource(utm_source || '', utm_medium || '', referrer || '', typeof body.entry === 'string' ? body.entry : '', cleanFbCookie(body.fbc));
+      let campaignName   = isPaid ? (utm_campaign || '') : '';
+      let creative       = isPaid ? (utm_content  || '') : '';
+      let hook           = isPaid ? (utm_term     || '') : '';
 
       // Which A/B/C hero hook was on screen when they signed up.
       const headlineVariant = typeof headline === 'string' ? headline : '';
@@ -676,11 +706,28 @@ export const POST: APIRoute = async ({ request }) => {
       const phoneE164 = parsedPhone.e164.replace('+', '');
       const emailNormalized = String(email).trim().toLowerCase();
       const { first: firstNameLc, last: lastNameLc } = splitName(name);
-      const fbc = cleanFbCookie(body.fbc);
-      const fbp = cleanFbCookie(body.fbp);
+      let fbc = cleanFbCookie(body.fbc);
+      let fbp = cleanFbCookie(body.fbp);
 
       await (async () => {
         const token = await getGoogleAccessToken(credsJson);
+
+        // Read the row this email already has, if any, before removeEmailFromAllSheets
+        // below deletes it out from under us — that delete is what was quietly discarding
+        // the original ad attribution on every move. Only fills gaps the current request
+        // itself left: a real UTM/fbc on this submission is never overwritten.
+        const carried = await getCarriedAttribution(email, token);
+        if (carried) {
+          if (trafficSource === 'Direct Visit' && carried.trafficSource && carried.trafficSource !== 'Direct Visit') {
+            trafficSource = carried.trafficSource;
+            if (!campaignName) campaignName = carried.campaignName;
+            if (!creative)     creative     = carried.creative;
+            if (!hook)         hook         = carried.hook;
+          }
+          if (!fbc && carried.fbc) fbc = carried.fbc;
+          if (!fbp && carried.fbp) fbp = carried.fbp;
+        }
+
         await removeEmailFromAllSheets(email, token);
         if (hasPreviousEmail) await removeEmailFromAllSheets(previousEmail, token);
 
